@@ -42,14 +42,7 @@ RUN echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
 
 RUN echo 'export PATH=$PATH:/usr/local/pgsql/bin/' >> /etc/profile
 
-ADD data/environment /etc/environment
-ADD data/postgresql-9.3.5 /etc/init.d/postgresql-9.3.5
-RUN chmod +x /etc/init.d/postgresql-9.3.5
-RUN mkdir -p /var/log/postgresql-9.3.5/ && chown postgres:postgres /var/log/postgresql-9.3.5/
 RUN mkdir /home/postgres && chown postgres:postgres /home/postgres
-
-RUN locale-gen en_US.UTF-8
-RUN locale-gen es_ES.UTF-8
 
 # Build GDAL 1.11.2
 WORKDIR /usr/local/src/
