@@ -47,7 +47,7 @@ Then create a temporary container to create the data storage. In the container,
 /data will be always the data storage:
 
 ```
-docker run --rm -v /whatever/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2 -t -i geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2 /bin/bash
+docker run --rm -v /whatever/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2:/data -t -i geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2 /bin/bash
 
 chown postgres:postgres /data
 
