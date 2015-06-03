@@ -3,7 +3,7 @@
 # POSTGIS=2.1.4 GEOS=3.4.2 PROJ=4.8.0 GDAL=GDAL 1.9.2 LIBXML=2.7.6 LIBJSON TOPOLOGY RASTER
 #
 # Version: 0.0.1
-FROM ubuntu:latest
+FROM ubuntu:14.04
 
 MAINTAINER Alberto Asuero "alberto.asuero@geographica.gs"
 
