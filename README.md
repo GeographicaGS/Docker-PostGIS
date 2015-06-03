@@ -1,5 +1,4 @@
 #Docker PostGIS
-=================================================
 
 ##Why?
 
@@ -22,10 +21,10 @@ Compiled from source, this is what this image contains:
   - Gdal-1.9.2
 
 ##Usage Pattern
--------------
+
 Build the image directly from GitHub (this can take a while):
 ```
-docker build -t=geographica/postgresql-9.3-5-postgis-2.1.4 https://github.com/GeographicaGS/Docker-PostgreSQL-9.1.2-PostGIS-2.1.4.git
+docker build -t=geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2 https://github.com/GeographicaGS/Docker-PostgreSQL-9.1.2-PostGIS-2.1.4.git
 ```
 
 or pull it from Docker Hub:
@@ -33,10 +32,15 @@ or pull it from Docker Hub:
 docker pull geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2
 ```
 
+or:
+```
+docker build -t=geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2 .
+```
+
 Create a folder in the host to contain the data storage. We like to persist the
 data storage in the host and not in the container:
 ```
-    mkdir /whatever/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2
+mkdir /whatever/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2
 ```
 
 Then create a temporary container to create the data storage. In the container,
