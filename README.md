@@ -14,40 +14,39 @@ Because:
 
 Compiled from source, this is what this image contains:
 
-  - PostgreSQL 9.3.5;
-  - PROJ 4.8.0.
+  - PostgreSQL 9.4.4; 
+  - PROJ 4.9.1. - 4.9.1
   - GEOS 3.4.2;
-  - PostGIS 2.1.4.
-  - Gdal-1.9.2
-
+  - PostGIS 2.1.7. - 2.1.7
+  - Gdal-1.11.2 - 1.11.2
 ##Usage Pattern
 
 Build the image directly from GitHub (this can take a while):
 ```
-docker build -t=geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2 https://github.com/GeographicaGS/Docker-PostgreSQL-9.1.2-PostGIS-2.1.4.git
+docker build -t=geographica/postgis:postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2 https://github.com/GeographicaGS/Docker-PostgreSQL-9.1.2-PostGIS-2.1.7.git
 ```
 
 or pull it from Docker Hub:
 ```
-docker pull geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2
+docker pull geographica/postgis:postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2
 ```
 
 or:
 ```
-docker build -t=geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2 .
+docker build -t=geographica/postgis:postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2 .
 ```
 
 Create a folder in the host to contain the data storage. We like to persist the
 data storage in the host and not in the container:
 ```
-mkdir /whatever/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2
+mkdir /whatever/postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2
 ```
 
 Then create a temporary container to create the data storage. In the container,
 /data will be always the data storage:
 
 ```
-docker run --rm -v /whatever/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2:/data -t -i geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2 /bin/bash
+docker run --rm -v /whatever/postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2:/data -t -i geographica/postgis:postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2 /bin/bash
 
 chown postgres:postgres /data
 
@@ -73,7 +72,7 @@ data storage:
 
     
 ```
-docker run -i -t --name="postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2" -v /whatever/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2:/data/ -p 5455:5432 geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2
+docker run -i -t --name="postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2" -v /whatever/postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2:/data/ -p 5455:5432 geographica/postgis:postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2
 ```
 
 In the case of complex database deployment scripts that uses data in CSV files,
@@ -81,7 +80,7 @@ for example, don't forget to make the containing folder available to the
 container, for the server in it has to be able to see the files, not just the
 local psql process. For example:
 ```
-docker run -p 5454:5432 --name postgres-elcano -v /home/malkab/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2-data/:/data/ -v /home/git/Elcano-iepg/database/:/home/git/Elcano-iepg/database/ -i -t geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2
+docker run -p 5454:5432 --name postgres-elcano -v /home/malkab/postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2-data/:/data/ -v /home/git/Elcano-iepg/database/:/home/git/Elcano-iepg/database/ -i -t geographica/postgis:postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2
 ```
 
 in this case, __-i__ and __-t__ are used so the container and the database can
@@ -93,9 +92,9 @@ This container will be permanent and we can start and attach to it in the usual
 way:
 
 ```
-docker start postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2
+docker start postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2
 
-docker attach postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2
+docker attach postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2
 ```
 The server can be accessed the usual way, at port 5455:
 ```
@@ -105,8 +104,8 @@ Also an interactive use of the image is possible, if you need for example access
 to __psql__ because you don't have one installed in the host:
 
 ```
-    docker run -i -t --rm -v /whatever/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2-data/:/data/ -p 5455:5432
-    geographica/postgresql-9.3.5-postgis-2.1.4-gdal-1.9.2 /bin/bash
+    docker run -i -t --rm -v /whatever/postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2-data/:/data/ -p 5455:5432
+    geographica/postgis:postgresql-9.4.4-postgis-2.1.7-gdal-1.11.2 /bin/bash
 ```
 and start the server manually:
 

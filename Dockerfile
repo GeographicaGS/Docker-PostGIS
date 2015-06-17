@@ -1,6 +1,6 @@
 #
-# PostgreSQL 9.3.5
-# POSTGIS=2.1.4 GEOS=3.4.2 PROJ=4.8.0 GDAL=GDAL 1.9.2 LIBXML=2.7.6 LIBJSON TOPOLOGY RASTER
+# PostgreSQL 9.4.4
+# POSTGIS=2.1.7 GEOS=3.4.2 PROJ=4.9.1 GDAL=GDAL 1.11.2 LIBXML=2.7.6 LIBJSON TOPOLOGY RASTER
 #
 # Version: 0.0.1
 FROM ubuntu:14.04
@@ -11,10 +11,10 @@ RUN apt-get update && apt-get install -y build-essential gcc-4.7 python python-d
 
 RUN ["mkdir", "-p", "/usr/local/src/"]
 
-# Build Proj4 4.8.0
+# Build Proj4 4.9.1
 WORKDIR /usr/local/src/
-RUN wget http://download.osgeo.org/proj/proj-4.8.0.tar.gz && tar xvzf proj-4.8.0.tar.gz
-WORKDIR /usr/local/src/proj-4.8.0
+RUN wget http://download.osgeo.org/proj/proj-4.9.1.tar.gz && tar xvzf proj-4.9.1.tar.gz
+WORKDIR /usr/local/src/proj-4.9.1
 RUN ./configure CC='gcc-4.7 -m64' && make && make install
 
 # Build GEOSS 3.4.2
@@ -23,10 +23,10 @@ RUN wget http://download.osgeo.org/geos/geos-3.4.2.tar.bz2 && tar xvjf geos-3.4.
 WORKDIR /usr/local/src/geos-3.4.2
 RUN ./configure CC='gcc-4.7 -m64' && make && make install
 
-# Build PostgreSQL 9.3.5
+# Build PostgreSQL 9.4.4
 WORKDIR /usr/local/src/
-RUN wget https://ftp.postgresql.org/pub/source/v9.3.5/postgresql-9.3.5.tar.bz2 && tar xvjf postgresql-9.3.5.tar.bz2
-WORKDIR postgresql-9.3.5
+RUN wget https://ftp.postgresql.org/pub/source/v9.4.4/postgresql-9.4.4.tar.bz2 && tar xvjf postgresql-9.4.4.tar.bz2
+WORKDIR postgresql-9.4.4
 RUN ./configure --prefix=/usr/local  --with-python  CC='gcc-4.7 -m64'&& make && make install 
 WORKDIR contrib
 RUN make all && make install
@@ -34,21 +34,21 @@ RUN make all && make install
 ENV POSTGRES_PASSWD postgres
 RUN groupadd postgres && useradd -r postgres -g postgres && echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e && echo 'export PATH=$PATH:/usr/local/pgsql/bin/' >> /etc/profile && mkdir /home/postgres && chown postgres:postgres /home/postgres
 
-# Build GDAL 1.9.2
+# Build GDAL 1.11.2
 WORKDIR /usr/local/src/
-RUN wget http://download.osgeo.org/gdal/gdal-1.9.2.tar.gz && tar xvxf gdal-1.9.2.tar.gz
-WORKDIR gdal-1.9.2
+RUN wget http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz && tar xvxf gdal-1.11.2.tar.gz
+WORKDIR gdal-1.11.2
 RUN ./configure  CC='gcc-4.7 -m64' && make && make install && ldconfig
 
-# Build PostGIS-2.1.4
+# Build PostGIS-2.1.7
 WORKDIR /usr/local/src/
-RUN wget http://download.osgeo.org/postgis/source/postgis-2.1.4.tar.gz && tar xvxf postgis-2.1.4.tar.gz
-WORKDIR postgis-2.1.4
+RUN wget http://download.osgeo.org/postgis/source/postgis-2.1.7.tar.gz && tar xvxf postgis-2.1.7.tar.gz
+WORKDIR postgis-2.1.7
 RUN ./configure --with-raster --with-topology CC='gcc-4.7 -m64' && make && make install
 
-# Postinstallation clean
+# Postinstallation 
 WORKDIR /usr/local/
-RUN rm -Rf src && locale-gen en_US.UTF-8 && locale-gen es_ES.UTF-8
+RUN rm -Rf src && locale-gen en_US.UTF-8 && locale-gen es_ES.UTF-8 && ldconfig
 
 EXPOSE 5432
 
