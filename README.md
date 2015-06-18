@@ -14,11 +14,12 @@ Because:
 
 Compiled from source, this is what this image contains:
 
-  - PostgreSQL 9.4.4; 
-  - PROJ 4.9.1. - 4.9.1
-  - GEOS 3.4.2;
-  - PostGIS 2.1.7. - 2.1.7
-  - Gdal-1.11.2 - 1.11.2
+  - PostgreSQL 9.4.4
+  - PROJ 4.9.1
+  - GEOS 3.4.2
+  - PostGIS 2.1.7
+  - Gdal-1.11.2
+  
 ##Usage Pattern
 
 Build the image directly from GitHub (this can take a while):
