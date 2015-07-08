@@ -44,7 +44,9 @@ Each Docker tag in this repository addresses changes in library versions bundled
 
 - don't forget to update the first line of this README.md warning about the README.md version to tell the user about the README.md being read;
 
-- don't forget to push the tag to DockerHub with exactly the same name as the branch containing its build code.
+- don't forget to push the tag to DockerHub with exactly the same name as the branch containing its build code;
+
+- also a GIT tag can be a nice add-on.
 
 Usage Pattern
 -------------
