@@ -16,13 +16,13 @@ What does this Docker image contains?
 Compiled from source, this is what this image contains, in different versions:
 
 - PostgreSQL;
-- PROJ, patched to support the NTv2 Spanish national grid for datum shiftings between ED50 and ETRS89;
+- PROJ.4, patched to support the NTv2 Spanish national grid for datum shiftings between ED50 and ETRS89;
 - GEOS;
 - PostGIS, also patched to support the spanish national grid.
 
 Versions
 --------
-Each version combination is a tag and a branch in GitHub, and a tag in Docker Hub. These are the available versions:
+Each version combination is a branch in GitHub and a tag in Docker Hub. These are the available versions:
 
 - __postgresql-9.1.2-postgis-1.5.8:__ PostgreSQL 9.1.2, PROJ 4.8.0, GEOS 3.4.2, PostGIS 1.5.8, compliled from source, plus PROJ patched with the spanish ED50-ETRS89 datum shifting national grid;
 
@@ -57,7 +57,7 @@ Build the image directly from Git (this can take a while, don't forget to checko
 ```Shell
 cd gitfolder
 
-git checkout tagbranch
+git checkout rightbranch
 
 docker build -t="geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-Patched" .
 ```
