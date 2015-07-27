@@ -36,7 +36,6 @@ useradd -r postgres -g postgres
 echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
 
 # Compilation of GEOS
-
 cd src/geos-3.4.2 ; ./configure ; cd ../..
 
 cd src/geos-3.4.2 ; make ; cd ../..
@@ -44,7 +43,6 @@ cd src/geos-3.4.2 ; make ; cd ../..
 cd src/geos-3.4.2 ; make install ; cd ../..
 
 # Compilation of Proj 4
-
 mv src/proj-datumgrid/* src/proj-4.9.1/nad
 
 mv src/pj_datums.c src/proj-4.9.1/src
@@ -64,7 +62,6 @@ cd src/proj-4.9.1 ; make install ; cd ../..
 ldconfig
 
 # Compilation of GDAL
-
 cd src/gdal-1.11.2 ; ./configure ; cd ../..
 
 cd src/gdal-1.11.2 ; make ; cd ../..
@@ -74,7 +71,6 @@ cd src/gdal-1.11.2 ; make install ; cd ../..
 ldconfig
 
 # Compilation of PostGIS
-
 mv src/spatial_ref_sys.sql src/postgis-2.1.7/
 
 cd src/postgis-2.1.7 ; ./configure ; cd ../..
@@ -88,5 +84,13 @@ locale-gen en_US.UTF-8
 locale-gen es_ES.UTF-8
 
 # Clean up
-
 rm -Rf src
+
+# Create data store
+mkdir -p ${POSTGRES_DATA_FOLDER}
+
+chown postgres:postgres ${POSTGRES_DATA_FOLDER}
+
+chmod 700 ${POSTGRES_DATA_FOLDER}
+
+su postgres -c "initdb --encoding=${ENCODING} --locale=${LOCALE} --lc-collate=${COLLATE} --lc-monetary=${LC_MONETARY} --lc-numeric=${LC_NUMERIC} --lc-time=${LC_TIME} -D ${POSTGRES_DATA_FOLDER}"

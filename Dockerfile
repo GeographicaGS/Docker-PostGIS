@@ -1,11 +1,17 @@
-# Version: 0.0.1
-FROM ubuntu:latest
+FROM debian:latest
 
 MAINTAINER Juan Pedro Perez "jp.alcantara@geographica.gs"
 
 # Environment
 ENV POSTGRES_PASSWD postgres
 ENV ROOTDIR /usr/local
+ENV POSTGRES_DATA_FOLDER /data
+ENV ENCODING UTF-8
+ENV LOCALE es_ES.UTF-8
+ENV COLLATE es_ES.UTF-8
+ENV LC_MONETARY es_ES.UTF-8
+ENV LC_NUMERIC es_ES.UTF-8
+ENV LC_TIME es_ES.UTF-8
 
 # Load of assets
 WORKDIR $ROOTDIR
@@ -27,4 +33,5 @@ RUN src/compile.sh
 
 # Final touches
 EXPOSE 5432
+VOLUME $POSTGRES_DATA_FOLDER
 CMD su postgres -c 'postgres -D /data'
