@@ -35,4 +35,5 @@ RUN src/compile.sh
 # Final touches
 EXPOSE 5432
 VOLUME $POSTGRES_DATA_FOLDER
-CMD su postgres -c 'postgres -D /data'
+CMD /usr/local/bin/run.sh
+

@@ -19,6 +19,7 @@ cd src ; tar -xvf postgis-2.1.7.tar.gz ; cd ..
 
 cd src ; tar -xvf gdal-1.11.2.tar.gz ; cd ..
 
+
 # Compilation of PostgreSQL
 cd src/postgresql-9.3.5 ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib ; cd ../..
 
@@ -36,12 +37,14 @@ useradd -r postgres -g postgres
 
 echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
 
+
 # Compilation of GEOS
 cd src/geos-3.4.2 ; ./configure ; cd ../..
 
 cd src/geos-3.4.2 ; make ; cd ../..
 
 cd src/geos-3.4.2 ; make install ; cd ../..
+
 
 # Compilation of Proj 4
 mv src/proj-datumgrid/* src/proj-4.9.1/nad
@@ -52,7 +55,7 @@ mv src/epsg src/proj-4.9.1/nad/
 
 mv src/PENR2009.gsb src/proj-4.9.1/nad/
 
-chown -R 142957:5000 src/proj-4.9.1
+# chown -R 142957:5000 src/proj-4.9.1
 
 cd src/proj-4.9.1 ; ./configure ; cd ../..
 
@@ -62,6 +65,7 @@ cd src/proj-4.9.1 ; make install ; cd ../..
 
 ldconfig
 
+
 # Compilation of GDAL
 cd src/gdal-1.11.2 ; ./configure ; cd ../..
 
@@ -70,6 +74,7 @@ cd src/gdal-1.11.2 ; make ; cd ../..
 cd src/gdal-1.11.2 ; make install ; cd ../..
 
 ldconfig
+
 
 # Compilation of PostGIS
 mv src/spatial_ref_sys.sql src/postgis-2.1.7/
@@ -84,5 +89,10 @@ locale-gen en_US.UTF-8
 
 locale-gen es_ES.UTF-8
 
+
 # Clean up
 rm -Rf /usr/local/src
+
+chmod 755 /usr/local/bin/run.sh
+
+chown postgres:postgres /usr/local/bin/run.sh
