@@ -36,4 +36,3 @@ RUN src/compile.sh
 EXPOSE 5432
 VOLUME $POSTGRES_DATA_FOLDER
 CMD /usr/local/bin/run.sh
-

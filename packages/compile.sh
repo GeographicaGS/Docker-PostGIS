@@ -35,8 +35,6 @@ groupadd postgres
 
 useradd -r postgres -g postgres
 
-echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
-
 
 # Compilation of GEOS
 cd src/geos-3.4.2 ; ./configure ; cd ../..

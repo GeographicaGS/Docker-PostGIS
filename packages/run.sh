@@ -2,6 +2,7 @@
 mkdir -p ${POSTGRES_DATA_FOLDER}
 chown postgres:postgres ${POSTGRES_DATA_FOLDER}
 chmod 700 ${POSTGRES_DATA_FOLDER}
+echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
 
 # Check if data folder is empty. If it is, start the dataserver
 if ! ["$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
@@ -13,8 +14,8 @@ if ! ["$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
     su postgres -c "echo \"listen_addresses='*'\" >> /data/postgresql.conf"
 
     # Establish postgres user password and run the database
-    su postgres -c "postgres -D /data" && su postgres -c "psql -h localhost -U postgres -p 5432 -c \"alter role postgres password '${POSTGRES_PASSWD}';\""
-else
-    # Start the database    
-    su postgres -c "postgres -D $POSTGRES_DATA_FOLDER"
+    su postgres -c "pg_ctl -w -D /data start" && su postgres -c "psql -h localhost -U postgres -p 5432 -c \"alter role postgres password '${POSTGRES_PASSWD}';\"" && su postgres -c "pg_ctl -w -D /data stop"
 fi
+
+# Start the database    
+su postgres -c "postgres -D $POSTGRES_DATA_FOLDER"
