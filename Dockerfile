@@ -13,7 +13,7 @@ ENV LC_MONETARY es_ES.UTF-8
 ENV LC_NUMERIC es_ES.UTF-8
 ENV LC_TIME es_ES.UTF-8
 
-# Load of assets
+# Load assets
 WORKDIR $ROOTDIR/
 ADD https://ftp.postgresql.org/pub/source/v9.3.5/postgresql-9.3.5.tar.bz2 $ROOTDIR/src/
 ADD http://download.osgeo.org/geos/geos-3.4.2.tar.bz2 $ROOTDIR/src/
