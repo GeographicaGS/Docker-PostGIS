@@ -36,17 +36,13 @@ Guidelines for Creating New Docker Tags in this Repository
 ----------------------------------------------------------
 Each Docker tag in this repository addresses changes in library versions bundled together. Follow this guidelines when creating new Docker tags for this repo:
 
-- to create new tags, make a GIT branch with a descriptive name. Each tag must match its branch in name;
+- to create and maintain new Docker tags, make a GIT branch with a descriptive name. Each tag must match its branch in name. Do not use GIT tags to support Docker tags, for branches does exactly the same job and does it better in this case. Never destroy those branches and keep them open;
 
 - the master branch should reflect the most updated README.md. This means that the master branch may not point to the most "advanced" branch in terms of library versions. But always refer to the master README.md for the most updated information;
 
-- don't forget to document detailed information about the new branch / tag in the former section;
+- don't forget to document detailed information about the new GIT branch / Docker tag in the former section;
 
-- don't forget to update the first line of this README.md warning about the README.md version to tell the user about the README.md being read;
-
-- don't forget to push the tag to DockerHub with exactly the same name as the branch containing its build code;
-
-- also a GIT tag can be a nice add-on.
+- don't forget to update the first line of this README.md warning about the README.md version to tell the user about the README.md being read.
 
 Usage Pattern
 -------------
@@ -55,8 +51,6 @@ Check Dockerfile for important environmental variables.
 Build the image directly from Git (this can take a while, don't forget to checkout the right branch):
 
 ```Shell
-cd gitfolder
-
 git checkout tagbranch
 
 docker build -t="geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-Patched" .
