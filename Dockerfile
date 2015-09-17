@@ -34,5 +34,8 @@ RUN src/compile.sh
 
 # Final touches
 EXPOSE 5432
+
+# Volumes
 VOLUME $POSTGRES_DATA_FOLDER
+
 CMD /usr/local/bin/run.sh
