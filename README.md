@@ -23,9 +23,9 @@ Usually compiled from source, this repository contains several combinations of v
 
 - GEOS;
 
-- GDAL;
+- GDAL, also patched;
 
-- PostGIS, also patched to support the spanish national grid.
+- PostGIS, patched.
 
 Versions
 --------
