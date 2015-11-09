@@ -3,6 +3,8 @@ Docker Images for PostgreSQL / PostGIS
 
 This repository contains several dockerized version combinations of PostgreSQL, Proj.4, GEOS, PostGIS, and GDAL, most of them compiled from source.
 
+Branches of version combinations are about to be deprecated. No longer are GIT branches to be used to manage different version combinations, from now hereafter a folder will be created to store all information about each combination.
+
 Why?
 ----
 Because:
