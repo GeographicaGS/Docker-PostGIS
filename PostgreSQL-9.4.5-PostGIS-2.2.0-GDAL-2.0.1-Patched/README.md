@@ -36,9 +36,6 @@ docker pull geographica/postgis:postgresql-9.4.5-postgis-2.2.0-gdal-2.0.1-patche
 ```
 
 If you want an specific locale version:
-```Shell
-docker pull geographica/postgis:postgresql-9.4.5-postgis-2.2.0-gdal-2.0.1-patched-es_ES
-```
 
 
 The image uses several environment variables. Refer to the Dockerfile for a complete list. The most important one is __POSTGRES_PASSWD__, the password for the user POSTGRES.
@@ -51,9 +48,6 @@ docker run -p 5432:5432 --name postgis-2.2 geographica/postgis:postgresql-9.4.5-
 ```
 
 ## Production enviroment
-
-
-, create containers this way:
 
 ```Shell
 docker run -d -P --name whatever -e "POSTGRES_PASSWD="md5"$(printf '%s' "change_this_password" "postgres" | md5sum | cut -d ' ' -f 1)" geographica/postgis:postgresql-9.4.5-postgis-2.2.0-gdal-2.0.1-patched 
