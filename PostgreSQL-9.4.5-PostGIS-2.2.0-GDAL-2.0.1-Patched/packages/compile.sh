@@ -63,6 +63,8 @@ cd src ; tar -xvf proj-datumgrid-1.5.tar.gz -C proj-datumgrid ; cd ..
 
 cd src ; tar -xvf postgis-${POSTGIS_VERSION}.tar.gz ; cd ..
 
+cd src ; tar -xvf gdal-${GDAL_VERSION}.tar.gz ; cd ..
+
 
 # Compilation of PostgreSQL
 cd src/postgresql-${PG_VERSION} ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib ; cd ../..
@@ -131,8 +133,8 @@ cd src/postgis-${POSTGIS_VERSION} ; make install ; cd ../..
 
 ldconfig
 
-# Clean up
-apt-get clean && rm -rf /var/lib/apt/lists/* && rm -Rf /usr/local/src && apt-get remove -y --purge build-essential gcc-4.7 python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev 
+# Clean up
+apt-get clean && rm -rf /var/lib/apt/lists/* && rm -Rf /usr/local/src && apt-get remove -y --purge build-essential gcc-4.7 && apt-get -y autoremove
 
 chmod 755 /usr/local/bin/run
 
