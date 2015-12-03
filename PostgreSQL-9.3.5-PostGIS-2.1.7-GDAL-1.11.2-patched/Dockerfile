@@ -25,8 +25,8 @@ ADD packages/proj4-patch/nad/PENR2009.gsb $ROOTDIR/src/
 ADD http://download.osgeo.org/postgis/source/postgis-2.1.7.tar.gz $ROOTDIR/src/
 ADD packages/postgis-patch/spatial_ref_sys.sql $ROOTDIR/src/
 ADD http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz $ROOTDIR/src/
-ADD packages/compile.sh $ROOTDIR/src/
 ADD packages/run.sh /usr/local/bin/
+ADD packages/compile.sh $ROOTDIR/src/
 
 # Compilation
 RUN chmod 777 src/compile.sh
@@ -38,4 +38,4 @@ EXPOSE 5432
 # Volumes
 VOLUME $POSTGRES_DATA_FOLDER
 
-CMD /usr/local/bin/run.sh
+ENTRYPOINT ["/usr/local/bin/run.sh"]

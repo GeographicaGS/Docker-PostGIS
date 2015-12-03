@@ -1,14 +1,16 @@
+#!/bin/bash
+set -e
+
 # Create data store
 mkdir -p ${POSTGRES_DATA_FOLDER}
 chown postgres:postgres ${POSTGRES_DATA_FOLDER}
 chmod 700 ${POSTGRES_DATA_FOLDER}
-echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
 
 # Check if data folder is empty. If it is, start the dataserver
-if ! ["$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
+if ! [ "$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
     su postgres -c "initdb --encoding=${ENCODING} --locale=${LOCALE} --lc-collate=${COLLATE} --lc-monetary=${LC_MONETARY} --lc-numeric=${LC_NUMERIC} --lc-time=${LC_TIME} -D ${POSTGRES_DATA_FOLDER}"
     
-    # Modify basic configutarion
+    # Modify basic configuration
     su postgres -c "echo \"host all all 0.0.0.0/0 md5\" >> $POSTGRES_DATA_FOLDER/pg_hba.conf"
     su postgres -c "echo \"listen_addresses='*'\" >> $POSTGRES_DATA_FOLDER/postgresql.conf"
 
@@ -17,4 +19,4 @@ if ! ["$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
 fi
 
 # Start the database    
-su postgres -c "postgres -D $POSTGRES_DATA_FOLDER"
+exec gosu postgres postgres -D $POSTGRES_DATA_FOLDER
