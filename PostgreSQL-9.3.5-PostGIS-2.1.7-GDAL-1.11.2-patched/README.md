@@ -36,7 +36,9 @@ The image uses several environment variables. Refer to the Dockerfile for a comp
 The image exposes port 5432 and a volume designated by enviroment variable __POSTGRES_DATA_FOLDER__. In a production enviroment, create containers this way:
 
 ```Shell
-docker run -d -P --name whatever -e "POSTGRES_PASSWD="md5"$(printf '%s' "change_this_password" "postgres" | md5sum | cut -d ' ' -f 1)" geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-patched 
+export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
+docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
+geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-patched 
 ```
 
 This generates a MD5 hashed password for the user __postgres__, hidden even to the _docker inspect_ command. Keep in mind that to provide a MD5-hashed password to PostgreSQL it has to be the hash of __passwordusername__ and be prefixed by __md5__.
