@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # Create data store
 mkdir -p ${POSTGRES_DATA_FOLDER}
@@ -16,6 +15,9 @@ if ! [ "$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
 
     # Establish postgres user password and run the database
     su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} start" && su postgres -c "psql -h localhost -U postgres -p 5432 -c \"alter role postgres password '${POSTGRES_PASSWD}';\"" && su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
+
+    # Execute scripts
+    python /usr/local/bin/run_psql_scripts
 fi
 
 # Start the database    

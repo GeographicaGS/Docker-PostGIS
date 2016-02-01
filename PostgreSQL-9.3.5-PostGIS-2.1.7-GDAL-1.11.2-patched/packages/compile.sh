@@ -58,8 +58,6 @@ mv src/epsg src/proj-4.9.1/nad/
 
 mv src/PENR2009.gsb src/proj-4.9.1/nad/
 
-# chown -R 142957:5000 src/proj-4.9.1
-
 cd src/proj-4.9.1 ; ./configure ; cd ../..
 
 cd src/proj-4.9.1 ; make ; cd ../..
@@ -93,6 +91,7 @@ locale-gen en_US.UTF-8
 locale-gen es_ES.UTF-8
 
 ldconfig
+
 
 # Clean up
 rm -Rf /usr/local/src
