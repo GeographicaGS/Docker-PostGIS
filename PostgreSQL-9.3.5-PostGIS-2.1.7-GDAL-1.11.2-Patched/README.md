@@ -45,6 +45,22 @@ This generates a MD5 hashed password for the user __postgres__, hidden even to t
 
 The image creates containers that initializes automatically a datastore, setting the password for user __postgres__. 
 
+
+Executing psql Scripts on Start Up
+----------------------------------
+The image can run psql scripts on container's start up. To do so, put scripts inside the container (via a child container image that ADD them from the Dockerfile or mounting a volume) and configure the __PSQL_SCRIPTS__ environment variable. This variable can contain full paths to psql scripts separated by semicolons (;) that will be executed in order on container startup. For example:
+
+```Shell
+export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
+docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
+-v /localscripts/:/psql_scripts/ \
+-e "PSQL_SCRIPTS=/psql_scripts/script1.sql;/psql_scripts/script2.sql" \
+geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-patched 
+```
+
+_script1.sql_ and _script2.sql_ will be executed on container startup.
+
+
 Killing the Container
 ---------------------
 This container will handle signals send to it with _docker kill_ properly, so the database is shut down proper and tidily. Thus:

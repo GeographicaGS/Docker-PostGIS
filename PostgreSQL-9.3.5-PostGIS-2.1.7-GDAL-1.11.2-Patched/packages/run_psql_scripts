@@ -9,7 +9,6 @@ psqlscripts = os.environ["PSQL_SCRIPTS"].split(";")
 
 for psqlscript in psqlscripts:
     call([
-        "PGPASSWORD=$POSTGRES_PASSWD",
         "psql",
         "-h", "localhost",
         "-p", "5432",

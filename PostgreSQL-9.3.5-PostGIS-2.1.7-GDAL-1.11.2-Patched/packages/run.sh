@@ -14,11 +14,8 @@ if ! [ "$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
     su postgres -c "echo \"listen_addresses='*'\" >> $POSTGRES_DATA_FOLDER/postgresql.conf"
 
     # Establish postgres user password and run the database
-    su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} start" && su postgres -c "psql -h localhost -U postgres -p 5432 -c \"alter role postgres password '${POSTGRES_PASSWD}';\"" && su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
-
-    # Execute scripts
-    python /usr/local/bin/run_psql_scripts
+    su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} start" ; su postgres -c "psql -h localhost -U postgres -p 5432 -c \"alter role postgres password '${POSTGRES_PASSWD}';\"" ; python /usr/local/bin/run_psql_scripts ; su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
 fi
 
-# Start the database    
+# Start the database
 exec gosu postgres postgres -D $POSTGRES_DATA_FOLDER
