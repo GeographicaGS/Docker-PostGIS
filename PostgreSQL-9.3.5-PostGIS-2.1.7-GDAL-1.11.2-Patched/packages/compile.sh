@@ -80,7 +80,7 @@ ldconfig
 # Compilation of PostGIS
 mv src/spatial_ref_sys.sql src/postgis-2.1.7/
 
-cd src/postgis-2.1.7 ; ./configure ; cd ../..
+cd src/postgis-2.1.7 ; ./configure --with-topology ; cd ../..
 
 cd src/postgis-2.1.7 ; make ; cd ../..
 
