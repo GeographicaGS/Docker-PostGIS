@@ -10,17 +10,17 @@ curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/downloa
 # Untar
 cd src ; tar -xjvf postgresql-9.3.5.tar.bz2 ; cd ..
 
-# cd src ; tar -xjvf geos-3.4.2.tar.bz2 ; cd ..
+cd src ; tar -xjvf geos-3.4.2.tar.bz2 ; cd ..
 
-# cd src ; tar -xvf proj-4.9.1.tar.gz ; cd ..
+cd src ; tar -xvf proj-4.9.1.tar.gz ; cd ..
 
-# cd src ; mkdir -p proj-datumgrid ; cd ..
+cd src ; mkdir -p proj-datumgrid ; cd ..
 
-# cd src ; tar -xvf proj-datumgrid-1.5.tar.gz -C proj-datumgrid ; cd ..
+cd src ; tar -xvf proj-datumgrid-1.5.tar.gz -C proj-datumgrid ; cd ..
 
-# cd src ; tar -xvf postgis-2.1.7.tar.gz ; cd ..
+cd src ; tar -xvf postgis-2.1.7.tar.gz ; cd ..
 
-# cd src ; tar -xvf gdal-1.11.2.tar.gz ; cd ..
+cd src ; tar -xvf gdal-1.11.2.tar.gz ; cd ..
 
 
 # Compilation of PostgreSQL
