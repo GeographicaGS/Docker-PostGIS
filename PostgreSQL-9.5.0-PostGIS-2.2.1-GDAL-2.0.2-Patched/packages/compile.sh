@@ -40,6 +40,8 @@ cd src ; tar -xvf gdal-1.11.2.tar.gz ; cd ..
 
 # ldconfig
 
+
+
 # # Compilation of GEOS
 # cd src/geos-3.4.2 ; ./configure ; cd ../..
 
