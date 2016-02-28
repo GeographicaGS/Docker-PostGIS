@@ -15,15 +15,15 @@ ENV PSQL_SCRIPTS /usr/local/Dummy_psql_command.sql;/usr/local/Dummy_psql_command
 WORKDIR $ROOTDIR/
 ADD packages/Dummy_psql_command.sql $ROOTDIR
 ADD https://ftp.postgresql.org/pub/source/v9.5.0/postgresql-9.5.0.tar.bz2 $ROOTDIR/src/
-ADD http://download.osgeo.org/geos/geos-3.4.2.tar.bz2 $ROOTDIR/src/
-ADD http://download.osgeo.org/proj/proj-4.9.1.tar.gz $ROOTDIR/src/
+ADD http://download.osgeo.org/geos/geos-3.5.0.tar.bz2 $ROOTDIR/src/
+ADD http://download.osgeo.org/proj/proj-4.9.2.tar.gz $ROOTDIR/src/
 ADD packages/proj4-patch/src/pj_datums.c $ROOTDIR/src/
 ADD http://download.osgeo.org/proj/proj-datumgrid-1.5.tar.gz $ROOTDIR/src/
 ADD packages/proj4-patch/nad/epsg $ROOTDIR/src/
 ADD packages/proj4-patch/nad/PENR2009.gsb $ROOTDIR/src/
-ADD http://download.osgeo.org/postgis/source/postgis-2.1.7.tar.gz $ROOTDIR/src/
+ADD http://download.osgeo.org/postgis/source/postgis-2.2.1.tar.gz $ROOTDIR/src/
 ADD packages/postgis-patch/spatial_ref_sys.sql $ROOTDIR/src/
-ADD http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz $ROOTDIR/src/
+ADD http://download.osgeo.org/gdal/2.0.2/gdal-2.0.2.tar.gz $ROOTDIR/src/
 ADD packages/run.sh /usr/local/bin/
 ADD packages/run_psql_scripts /usr/local/bin/
 ADD packages/compile.sh $ROOTDIR/src/
@@ -42,12 +42,12 @@ RUN curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/dow
 
 # Untar
 RUN cd src ; tar -xjvf postgresql-9.5.0.tar.bz2 ; cd ..
-# RUN cd src ; tar -xjvf geos-3.4.2.tar.bz2 ; cd ..
-# RUN cd src ; tar -xvf proj-4.9.1.tar.gz ; cd ..
-# RUN cd src ; mkdir -p proj-datumgrid ; cd ..
-# RUN cd src ; tar -xvf proj-datumgrid-1.5.tar.gz -C proj-datumgrid ; cd ..
-# RUN cd src ; tar -xvf postgis-2.1.7.tar.gz ; cd ..
-# RUN cd src ; tar -xvf gdal-1.11.2.tar.gz ; cd ..
+RUN cd src ; tar -xjvf geos-3.5.0.tar.bz2 ; cd ..
+RUN cd src ; tar -xvf proj-4.9.2.tar.gz ; cd ..
+RUN cd src ; mkdir -p proj-datumgrid ; cd ..
+RUN cd src ; tar -xvf proj-datumgrid-1.5.tar.gz -C proj-datumgrid ; cd ..
+RUN cd src ; tar -xvf postgis-2.2.1.tar.gz ; cd ..
+RUN cd src ; tar -xvf gdal-2.0.2.tar.gz ; cd ..
 
 # Compilation of PostgreSQL
 RUN cd src/postgresql-9.5.0 ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib ; cd ../..
@@ -68,6 +68,20 @@ RUN ldconfig
 
 
 
+
+
+
+
+
+
+# Compilation of GEOS
+RUN cd src/geos-3.5.0 ; ./configure ; cd ../..
+
+RUN cd src/geos-3.5.0 ; make ; cd ../..
+
+RUN cd src/geos-3.5.0 ; make install ; cd ../..
+
+RUN ldconfig
 
 
 

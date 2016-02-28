@@ -24,21 +24,21 @@ cd src ; tar -xvf gdal-1.11.2.tar.gz ; cd ..
 
 
 # Compilation of PostgreSQL
-# cd src/postgresql-9.5.0 ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib ; cd ../..
+cd src/postgresql-9.5.0 ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib ; cd ../..
 
-# cd src/postgresql-9.5.0 ; make ; cd ../..
+cd src/postgresql-9.5.0 ; make ; cd ../..
 
-# cd src/postgresql-9.5.0 ; make install ; cd ../..
+cd src/postgresql-9.5.0 ; make install ; cd ../..
 
-# cd src/postgresql-9.5.0/contrib ; make all ; cd ../../..
+cd src/postgresql-9.5.0/contrib ; make all ; cd ../../..
 
-# cd src/postgresql-9.5.0/contrib ; make install ; cd ../../..
+cd src/postgresql-9.5.0/contrib ; make install ; cd ../../..
 
-# groupadd postgres
+groupadd postgres
 
-# useradd -r postgres -g postgres
+useradd -r postgres -g postgres
 
-# ldconfig
+ldconfig
 
 
 
