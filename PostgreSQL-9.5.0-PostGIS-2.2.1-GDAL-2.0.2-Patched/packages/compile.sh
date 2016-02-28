@@ -42,62 +42,62 @@ ldconfig
 
 
 
-# # Compilation of GEOS
-# cd src/geos-3.4.2 ; ./configure ; cd ../..
+# Compilation of GEOS
+cd src/geos-3.4.2 ; ./configure ; cd ../..
 
-# cd src/geos-3.4.2 ; make ; cd ../..
+cd src/geos-3.4.2 ; make ; cd ../..
 
-# cd src/geos-3.4.2 ; make install ; cd ../..
+cd src/geos-3.4.2 ; make install ; cd ../..
 
-# ldconfig
+ldconfig
 
-# # Compilation of Proj 4
-# mv src/proj-datumgrid/* src/proj-4.9.1/nad
+# Compilation of Proj 4
+mv src/proj-datumgrid/* src/proj-4.9.1/nad
 
-# mv src/pj_datums.c src/proj-4.9.1/src
+mv src/pj_datums.c src/proj-4.9.1/src
 
-# mv src/epsg src/proj-4.9.1/nad/
+mv src/epsg src/proj-4.9.1/nad/
 
-# mv src/PENR2009.gsb src/proj-4.9.1/nad/
+mv src/PENR2009.gsb src/proj-4.9.1/nad/
 
-# cd src/proj-4.9.1 ; ./configure ; cd ../..
+cd src/proj-4.9.1 ; ./configure ; cd ../..
 
-# cd src/proj-4.9.1 ; make ; cd ../..
+cd src/proj-4.9.1 ; make ; cd ../..
 
-# cd src/proj-4.9.1 ; make install ; cd ../..
+cd src/proj-4.9.1 ; make install ; cd ../..
 
-# ldconfig
-
-
-# # Compilation of GDAL
-# cd src/gdal-1.11.2 ; ./configure ; cd ../..
-
-# cd src/gdal-1.11.2 ; make ; cd ../..
-
-# cd src/gdal-1.11.2 ; make install ; cd ../..
-
-# ldconfig
+ldconfig
 
 
-# # Compilation of PostGIS
-# mv src/spatial_ref_sys.sql src/postgis-2.1.7/
+# Compilation of GDAL
+cd src/gdal-1.11.2 ; ./configure ; cd ../..
 
-# cd src/postgis-2.1.7 ; ./configure --with-topology ; cd ../..
+cd src/gdal-1.11.2 ; make ; cd ../..
 
-# cd src/postgis-2.1.7 ; make ; cd ../..
+cd src/gdal-1.11.2 ; make install ; cd ../..
 
-# cd src/postgis-2.1.7 ; make install ; cd ../..
-
-# locale-gen en_US.UTF-8
-
-# locale-gen es_ES.UTF-8
-
-# ldconfig
+ldconfig
 
 
-# # Clean up
-# rm -Rf /usr/local/src
+# Compilation of PostGIS
+mv src/spatial_ref_sys.sql src/postgis-2.1.7/
 
-# chmod 755 /usr/local/bin/run.sh
+cd src/postgis-2.1.7 ; ./configure --with-topology ; cd ../..
 
-# chown postgres:postgres /usr/local/bin/run.sh
+cd src/postgis-2.1.7 ; make ; cd ../..
+
+cd src/postgis-2.1.7 ; make install ; cd ../..
+
+locale-gen en_US.UTF-8
+
+locale-gen es_ES.UTF-8
+
+ldconfig
+
+
+# Clean up
+rm -Rf /usr/local/src
+
+chmod 755 /usr/local/bin/run.sh
+
+chown postgres:postgres /usr/local/bin/run.sh
