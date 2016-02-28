@@ -27,6 +27,7 @@ ADD http://download.osgeo.org/gdal/2.0.2/gdal-2.0.2.tar.gz $ROOTDIR/src/
 ADD packages/run.sh /usr/local/bin/
 ADD packages/run_psql_scripts /usr/local/bin/
 ADD packages/compile.sh $ROOTDIR/src/
+ADD https://codeload.github.com/CGAL/cgal/tar.gz/releases/CGAL-4.7 $ROOTDIR/src/
 
 
 # All this should go to compile.sh latter
@@ -48,6 +49,8 @@ RUN cd src ; mkdir -p proj-datumgrid ; cd ..
 RUN cd src ; tar -xvf proj-datumgrid-1.5.tar.gz -C proj-datumgrid ; cd ..
 RUN cd src ; tar -xvf postgis-2.2.1.tar.gz ; cd ..
 RUN cd src ; tar -xvf gdal-2.0.2.tar.gz ; cd ..
+RUN cd src ; tar -xvf cgal-releases-CGAL-4.7.tar.gz ; cd ..
+
 
 # Compilation of PostgreSQL
 RUN cd src/postgresql-9.5.0 ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib ; cd ../..
@@ -115,7 +118,7 @@ RUN ldconfig
 
 
 # Compilation of PostGIS
-RUN mv src/spatial_ref_sys.sql src/postgis-2.1.7/
+RUN mv src/spatial_ref_sys.sql src/postgis-2.2.1/
 
 RUN cd src/postgis-2.2.1 ; ./configure --with-topology ; cd ../..
 
