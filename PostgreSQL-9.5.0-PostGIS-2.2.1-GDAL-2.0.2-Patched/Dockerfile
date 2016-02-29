@@ -117,20 +117,24 @@ RUN cd src/gdal-2.0.2 ; make install ; cd ../..
 RUN ldconfig
 
 
+
+
+
+
 # Compilation of PostGIS
-RUN mv src/spatial_ref_sys.sql src/postgis-2.2.1/
+# RUN mv src/spatial_ref_sys.sql src/postgis-2.2.1/
 
-RUN cd src/postgis-2.2.1 ; ./configure --with-topology ; cd ../..
+# RUN cd src/postgis-2.2.1 ; ./configure --with-topology ; cd ../..
 
-RUN cd src/postgis-2.2.1 ; make ; cd ../..
+# RUN cd src/postgis-2.2.1 ; make ; cd ../..
 
-RUN cd src/postgis-2.2.1 ; make install ; cd ../..
+# RUN cd src/postgis-2.2.1 ; make install ; cd ../..
 
-RUN locale-gen en_US.UTF-8
+# RUN locale-gen en_US.UTF-8
 
-RUN locale-gen es_ES.UTF-8
+# RUN locale-gen es_ES.UTF-8
 
-RUN ldconfig
+# RUN ldconfig
 
 
 
