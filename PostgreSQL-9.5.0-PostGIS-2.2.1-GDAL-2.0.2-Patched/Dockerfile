@@ -27,12 +27,14 @@ ADD http://download.osgeo.org/gdal/2.0.2/gdal-2.0.2.tar.gz $ROOTDIR/src/
 ADD packages/run.sh /usr/local/bin/
 ADD packages/run_psql_scripts /usr/local/bin/
 ADD packages/compile.sh $ROOTDIR/src/
-ADD https://codeload.github.com/CGAL/cgal/tar.gz/releases/CGAL-4.7 $ROOTDIR/src/
+ADD https://github.com/CGAL/cgal/archive/releases/CGAL-4.6.3.tar.gz $ROOTDIR/src/
+ADD packages/gdal-patch-2.0.2/ $ROOTDIR/src
+ADD https://codeload.github.com/Oslandia/SFCGAL/tar.gz/v1.3.0 $ROOTDIR/src
 
 
 # All this should go to compile.sh latter
 
-RUN apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev curl
+RUN apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev curl cmake libgmp-dev libmpfr-dev libboost-dev libboost-thread-dev libboost-system-dev
 
 
 # Grab gosu
@@ -49,8 +51,8 @@ RUN cd src ; mkdir -p proj-datumgrid ; cd ..
 RUN cd src ; tar -xvf proj-datumgrid-1.5.tar.gz -C proj-datumgrid ; cd ..
 RUN cd src ; tar -xvf postgis-2.2.1.tar.gz ; cd ..
 RUN cd src ; tar -xvf gdal-2.0.2.tar.gz ; cd ..
-RUN cd src ; tar -xvf cgal-releases-CGAL-4.7.tar.gz ; cd ..
-
+RUN cd src ; tar -xvf CGAL-4.6.3.tar.gz ; cd ..
+RUN cd src ; tar -xzvf SFCGAL-1.3.0.tar.gz ; cd ..
 
 # Compilation of PostgreSQL
 RUN cd src/postgresql-9.5.0 ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib ; cd ../..
@@ -114,10 +116,30 @@ RUN cd src/gdal-2.0.2 ; make ; cd ../..
 
 RUN cd src/gdal-2.0.2 ; make install ; cd ../..
 
+RUN mv src/data/* /usr/local/share/gdal
+
 RUN ldconfig
 
 
 
+
+# Compilation of CGAL
+RUN cd src/cgal-releases-CGAL-4.6.3 ; cmake -DWITH_CGAL=ON -DWITH_CGAL_Core=ON -DWITH_CGAL_ImageIO=OFF -DWITH_CGAL_Qt3=OFF -DWITH_CGAL_Qt5=OFF -DWITH_tests=OFF -DWITH_examples=OFF -DWITH_demos=OFF -DCMAKE_BUILD_TYPE=Release . ; cd ../..
+
+RUN cd src/cgal-releases-CGAL-4.6.3 ; make ; cd ../..
+
+RUN cd src/cgal-releases-CGAL-4.6.3 ; make install ; cd ../..
+
+
+
+
+# Compilation of SFCGAL
+
+RUN cd src/SFCGAL-1.3.0 ; cmake . ; cd ../..
+
+RUN cd src/SFCGAL-1.3.0 ; make ; cd ../..
+
+RUN cd src/SFCGAL-1.3.0 ; make install ; cd ../..
 
 
 
