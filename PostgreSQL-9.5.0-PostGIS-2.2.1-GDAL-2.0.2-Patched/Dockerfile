@@ -140,7 +140,7 @@ RUN ldconfig
 
 
 
-RUN rm -Rf /usr/local/src
+# RUN rm -Rf /usr/local/src
 
 RUN chmod 755 /usr/local/bin/run.sh
 

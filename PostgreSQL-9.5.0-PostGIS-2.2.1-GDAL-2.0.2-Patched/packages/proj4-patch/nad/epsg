@@ -3018,7 +3018,7 @@
 # ETRS89 / LCC Europe
 <3034> +proj=lcc +lat_1=35 +lat_2=65 +lat_0=52 +lon_0=10 +x_0=4000000 +y_0=2800000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
 # ETRS89 / LAEA Europe
-<3035> +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
+<3035> +proj=laea +lat_0=52 +datum=ETRS89 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
 # Moznet / UTM zone 36S
 <3036> +proj=utm +zone=36 +south +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
 # Moznet / UTM zone 37S
@@ -7148,9 +7148,9 @@
 # ED50 / UTM zone 28N
 <23028> +proj=utm +zone=28 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs  <>
 # ED50 / UTM zone 29N
-<23029> +proj=utm +zone=29 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs  <>
+<23029> +proj=utm +zone=29 +datum=ED50 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs  <>
 # ED50 / UTM zone 30N
-<23030> +proj=utm +zone=30 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs  <>
+<23030> +proj=utm +zone=30 +datum=ED50 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs  <>
 # ED50 / UTM zone 31N
 <23031> +proj=utm +zone=31 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs  <>
 # ED50 / UTM zone 32N
@@ -7402,9 +7402,9 @@
 # ETRS89 / UTM zone 28N
 <25828> +proj=utm +zone=28 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
 # ETRS89 / UTM zone 29N
-<25829> +proj=utm +zone=29 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
+<25829> +proj=utm +zone=29 +datum=ETRS89 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
 # ETRS89 / UTM zone 30N
-<25830> +proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
+<25830> +proj=utm +zone=30 +datum=ETRS89 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
 # ETRS89 / UTM zone 31N
 <25831> +proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs  <>
 # ETRS89 / UTM zone 32N
