@@ -7,7 +7,7 @@ chmod 700 ${POSTGRES_DATA_FOLDER}
 
 # Check if data folder is empty. If it is, start the dataserver
 if ! [ "$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
-    su postgres -c "initdb --encoding=${ENCODING} --locale=${LOCALE} --lc-collate=${LOCALE} --lc-monetary=${LOCALE} --lc-numeric=${LOCALE} --lc-time=${LOCALE} -D ${POSTGRES_DATA_FOLDER}"
+    su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"
     
     # Modify basic configuration
     su postgres -c "echo \"host all all 0.0.0.0/0 md5\" >> $POSTGRES_DATA_FOLDER/pg_hba.conf"
