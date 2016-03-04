@@ -1,5 +1,7 @@
-# Compilation of PostgreSQL 9., GEOS 3, Proj 4.9.1, GDAL , and PostGIS 2
+# Compilation of PostgreSQL, GEOS, Proj4, GDAL, CGAL, SFCGAL, and PostGIS 2
 
+# Locale
+locale-gen ${LANG}
 
 # Update and apt-get basic packages
 apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev curl cmake libgmp-dev libmpfr-dev libboost-dev libboost-thread-dev libboost-system-dev
@@ -21,10 +23,6 @@ cd src ; tar -xvf postgis-${POSTGIS_VERSION}.tar.gz ; cd ..
 cd src ; tar -xvf gdal-${GDAL_VERSION}.tar.gz ; cd ..
 cd src ; tar -xvf CGAL-${CGAL_VERSION}.tar.gz ; cd ..
 cd src ; tar -xzvf SFCGAL-${SFCGAL_VERSION}.tar.gz ; cd ..
-
-
-# Locale
-locale-gen ${LANG}
 
 
 # Compilation of PostgreSQL
@@ -126,3 +124,9 @@ rm -Rf /usr/local/src
 chmod 755 /usr/local/bin/run.sh
 
 chown postgres:postgres /usr/local/bin/run.sh
+
+chmod 755 /usr/local/bin/make_backups
+
+chown postgres:postgres /usr/local/bin/make_backups
+
+chmod -R 644 /usr/local/share/gdal

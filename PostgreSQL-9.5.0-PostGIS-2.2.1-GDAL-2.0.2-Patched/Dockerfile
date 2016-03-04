@@ -7,6 +7,7 @@ MAINTAINER Juan Pedro Perez "jp.alcantara@geographica.gs"
 ENV POSTGRES_PASSWD postgres
 ENV ROOTDIR /usr/local/
 ENV POSTGRES_DATA_FOLDER /data
+ENV POSTGRES_BACKUPS_FOLDER /backups
 ENV PG_VERSION 9.5.0
 ENV GEOS_VERSION 3.5.0
 ENV PROJ4_VERSION 4.9.2
@@ -17,7 +18,12 @@ ENV SFCGAL_VERSION 1.3.0
 ENV ENCODING UTF-8
 ENV LOCALE es_ES
 ENV LANG ${LOCALE}.${ENCODING}
-ENV PSQL_SCRIPTS /usr/local/Dummy_psql_command.sql;/usr/local/Dummy_psql_command.sql
+ENV PSQL_SCRIPTS /usr/local/Dummy_psql_command.sql
+ENV TERM xterm
+ENV GDAL_DATA /usr/local/share/gdal
+ENV CREATE_USER null
+ENV CREATE_USER_PASSWD null
+ENV BACKUP_DB null
 
 
 # Load assets
@@ -26,6 +32,7 @@ ADD packages/Dummy_psql_command.sql $ROOTDIR
 ADD packages/run.sh /usr/local/bin/
 ADD packages/run_psql_scripts /usr/local/bin/
 ADD packages/compile.sh $ROOTDIR/src/
+ADD packages/make_backups /usr/local/bin
 
 ADD https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.bz2 $ROOTDIR/src/
 
@@ -58,5 +65,6 @@ EXPOSE 5432
 
 # Volumes
 VOLUME $POSTGRES_DATA_FOLDER
+VOLUME $POSTGRES_BACKUPS_FOLDER
 
 ENTRYPOINT ["/usr/local/bin/run.sh"]
