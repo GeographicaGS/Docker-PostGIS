@@ -1,17 +1,20 @@
 #!/bin/bash
 
-# Create data store
-mkdir -p ${POSTGRES_DATA_FOLDER}
-chown postgres:postgres ${POSTGRES_DATA_FOLDER}
-chmod 700 ${POSTGRES_DATA_FOLDER}
+# Dependant env variables
+LANG=${LOCALE}.${ENCODING}
 
-# Create backups folder
-mkdir -p ${POSTGRES_BACKUPS_FOLDER}
-chown postgres:postgres ${POSTGRES_BACKUPS_FOLDER}
-chmod 700 ${POSTGRES_BACKUPS_FOLDER}
 
 # Check if data folder is empty. If it is, start the dataserver
-if ! [ "$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
+if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
+    # Modify data store
+    chown postgres:postgres ${POSTGRES_DATA_FOLDER}
+    chmod 700 ${POSTGRES_DATA_FOLDER}
+
+    # Create backups folder
+    mkdir -p ${POSTGRES_BACKUPS_FOLDER}
+    chown postgres:postgres ${POSTGRES_BACKUPS_FOLDER}
+    chmod 700 ${POSTGRES_BACKUPS_FOLDER}
+    
     # Create datastore
     su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"
     
@@ -35,6 +38,7 @@ if ! [ "$(ls -A ${POSTGRES_DATA_FOLDER})" ]; then
     # Stop the server
     su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
 fi
+
 
 # Start the database
 exec gosu postgres postgres -D $POSTGRES_DATA_FOLDER

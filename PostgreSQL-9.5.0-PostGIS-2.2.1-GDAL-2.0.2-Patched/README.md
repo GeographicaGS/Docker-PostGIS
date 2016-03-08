@@ -19,8 +19,8 @@ This Dockerfile compiles the following software:
 - __CGAL 4.7.__
 
 
-Usage Pattern
--------------
+Image Creation
+--------------
 
 Build the image directly from Git (this can take a long time):
 
@@ -34,17 +34,17 @@ or pull it from Docker Hub:
 docker pull geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 ```
 
-The image uses several environment variables. Refer to the Dockerfile for a complete list. The most important one is __POSTGRES_PASSWD__, the password for the user POSTGRES.
-
 The image exposes port 5432, a volume designated by enviroment variable __POSTGRES_DATA_FOLDER__ with the data folder, and another one __POSTGRES_BACKUPS_FOLDER__ for database backups.
 
 
 Container Creation
 ------------------
 
-There are several options available to create containers. The most simple one is:
+There are several options available to create containers. Check __container_creation_examples__ for testing. The most simple one:
 
 ```Shell
+# Simple.sh
+
 docker run -d -P --name pgcontainer \ geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 ```
 
@@ -73,27 +73,33 @@ Containers can be configured by means of setting environmental variables:
 Some examples of container initializations:
 
 ```Shell
+# With_passwords.sh
+
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
-geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-patched 
+geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched 
 ```
 
-This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](Passwords) for details.
+This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](Passwords) for details:
 
 ```Shell
+# Create_user.sh
+
 docker run -d -P --name ageworkshoptestpg -e "LOCALE=es_ES" -e "CREATE_USER=project"  \
 -e "CREATE_USER_PASSWD=project_pass" \
-geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-patched
+geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 ```
 
 This will create the container with a spanish locale, and will create on startup an user and database called _project_, being _project_pass_ the password for the _project_ user. Additionaly, the _project_ database is set to be automatically backed up.
 
 ```Shell
-docker run -d -P --name ageworkshoptestpg -v ./demo_scripts/:/init_scripts/ \
+# With_scripts.sh
+
+docker run -d -P --name ageworkshoptestpg -v /home/demo_scripts/:/init_scripts/ \
 -e "LOCALE=es_ES" -e "CREATE_USER=project"  \
--e "CREATE_USER_PASSWD=project_pass" -e "BACKUP_DB=project" -e \
+-e "CREATE_USER_PASSWD=project_pass" -e "BACKUP_DB=project" \
 -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" \
-geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-patched
+geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 ```
 
 This one creates a container with a hard-mounted volume from local _demo_scripts_ to container's _/init_scripts_ where a couple of psql scripts will be stored. Creates an user and database called _project_ and executes on it the two mentioned scripts.
@@ -120,7 +126,7 @@ export USERPASSWD="md5"$(printf '%s' "userpass" ${USER} | md5sum | cut -d ' ' -f
 export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -e "CREATE_USER=${USER}" -e "CREATE_USER_PASSWD=${USERPASSWD}" \
-geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-patched 
+geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 ```
 
 Ugly, but effective. Keep in mind, however, that if you use provisioning methods like bash scripts or _Docker Compose_ others will still be able to read passwords from these sources, so keep them safe.
@@ -136,10 +142,10 @@ export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d 
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -v /localscripts/:/psql_scripts/ \
 -e "PSQL_SCRIPTS=/psql_scripts/script1.sql;/psql_scripts/script2.sql" \
-geographica/postgis:postgresql-9.3.5-postgis-2.1.7-gdal-1.11.2-patched 
+geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 ```
 
-_script1.sql_ and _script2.sql_ will be executed on container startup.
+_script1.sql_ and _script2.sql_ will be executed on container startup. Scripts are executed as _postgres_.
 
 
 Backing Up Databases
