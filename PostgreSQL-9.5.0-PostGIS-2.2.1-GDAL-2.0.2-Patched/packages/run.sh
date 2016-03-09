@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# Dependant env variables
-LANG=${LOCALE}.${ENCODING}
-
 
 # Check if data folder is empty. If it is, start the dataserver
 if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
+    # Locale generation
+    LANG=${LOCALE}.${ENCODING}
+    locale-gen ${LANG}
+
     # Modify data store
     chown postgres:postgres ${POSTGRES_DATA_FOLDER}
     chmod 700 ${POSTGRES_DATA_FOLDER}
@@ -17,10 +18,15 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
     
     # Create datastore
     su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"
+
+    # Erase default configuration and initialize it
+    su postgres -c "rm ${POSTGRES_DATA_FOLDER}/pg_hba.conf"
+    su postgres -c "pg_hba_conf a \"${PG_HBA}\""
     
     # Modify basic configuration
-    su postgres -c "echo \"host all all 0.0.0.0/0 md5\" >> $POSTGRES_DATA_FOLDER/pg_hba.conf"
-    su postgres -c "echo \"listen_addresses='*'\" >> $POSTGRES_DATA_FOLDER/postgresql.conf"
+    su postgres -c "rm ${POSTGRES_DATA_FOLDER}/postgresql.conf"
+    PG_CONF="${PG_CONF}#lc_messages='${LANG}'#lc_monetary='${LANG}'#lc_numeric='${LANG}'#lc_time='${LANG}'"
+    su postgres -c "postgresql_conf a \"${PG_CONF}\""
 
     # Establish postgres user password and run the database
     su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} start"

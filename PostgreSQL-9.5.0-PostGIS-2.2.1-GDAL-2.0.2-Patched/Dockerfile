@@ -23,6 +23,8 @@ ENV GDAL_DATA /usr/local/share/gdal
 ENV CREATE_USER null
 ENV CREATE_USER_PASSWD null
 ENV BACKUP_DB null
+ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5"
+ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
 
 
 # Load assets
@@ -32,6 +34,8 @@ ADD packages/run.sh /usr/local/bin/
 ADD packages/run_psql_scripts /usr/local/bin/
 ADD packages/compile.sh $ROOTDIR/src/
 ADD packages/make_backups /usr/local/bin
+ADD packages/pg_hba_conf /usr/local/bin
+ADD packages/postgresql_conf /usr/local/bin
 
 ADD https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.bz2 $ROOTDIR/src/
 
@@ -57,6 +61,8 @@ ADD https://codeload.github.com/Oslandia/SFCGAL/tar.gz/v${SFCGAL_VERSION} $ROOTD
 
 # Compilation
 RUN chmod 777 src/compile.sh
+RUN chmod 777 /usr/local/bin/pg_hba_conf
+RUN chmod 777 /usr/local/bin/postgresql_conf
 RUN src/compile.sh
 
 # Final touches

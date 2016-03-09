@@ -1,9 +1,5 @@
 # Compilation of PostgreSQL, GEOS, Proj4, GDAL, CGAL, SFCGAL, and PostGIS 2
 
-# Locale
-LANG=${LOCALE}.${ENCODING}
-locale-gen ${LANG}
-
 
 # Update and apt-get basic packages
 apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev curl cmake libgmp-dev libmpfr-dev libboost-dev libboost-thread-dev libboost-system-dev
@@ -85,6 +81,8 @@ mv src/epsg.wkt /usr/local/share/gdal
 
 mv src/gcs.csv /usr/local/share/gdal
 
+chmod 644 /usr/local/share/gdal/*
+
 ldconfig
 
 
@@ -121,7 +119,7 @@ ldconfig
 
 
 # Clean up
-# rm -Rf /usr/local/src
+rm -Rf /usr/local/src
 
 chmod 755 /usr/local/bin/run.sh
 
@@ -131,4 +129,3 @@ chmod 755 /usr/local/bin/make_backups
 
 chown postgres:postgres /usr/local/bin/make_backups
 
-# chmod -R 644 /usr/local/share/gdal
