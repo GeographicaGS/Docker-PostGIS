@@ -121,7 +121,7 @@ ldconfig
 
 
 # Clean up
-rm -Rf /usr/local/src
+# rm -Rf /usr/local/src
 
 chmod 755 /usr/local/bin/run.sh
 
@@ -131,4 +131,4 @@ chmod 755 /usr/local/bin/make_backups
 
 chown postgres:postgres /usr/local/bin/make_backups
 
-chmod -R 644 /usr/local/share/gdal
+# chmod -R 644 /usr/local/share/gdal
