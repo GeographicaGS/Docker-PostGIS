@@ -23,7 +23,7 @@ ENV GDAL_DATA /usr/local/share/gdal
 ENV CREATE_USER null
 ENV CREATE_USER_PASSWD null
 ENV BACKUP_DB null
-ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5"
+ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
 
 
@@ -61,8 +61,6 @@ ADD https://codeload.github.com/Oslandia/SFCGAL/tar.gz/v${SFCGAL_VERSION} $ROOTD
 
 # Compilation
 RUN chmod 777 src/compile.sh
-RUN chmod 777 /usr/local/bin/pg_hba_conf
-RUN chmod 777 /usr/local/bin/postgresql_conf
 RUN src/compile.sh
 
 # Final touches

@@ -129,3 +129,6 @@ chmod 755 /usr/local/bin/make_backups
 
 chown postgres:postgres /usr/local/bin/make_backups
 
+chmod 777 /usr/local/bin/pg_hba_conf
+
+chmod 777 /usr/local/bin/postgresql_conf

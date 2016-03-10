@@ -16,7 +16,9 @@ This Dockerfile compiles the following software:
 
 - __Postgis 2.2.1:__ patched as well;
 
-- __CGAL 4.7.__
+- __CGAL 4.6.3;__
+
+- __SFCGAL 1.3.0.__
 
 
 Image Creation
@@ -68,7 +70,11 @@ Containers can be configured by means of setting environmental variables:
 
 - __CREATE_USER_PASSWD:__ set the password for the aforementioned user. See [Passwords](Passwords) for more details. Defaults to _null_;
 
-- __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases](Backing Up Databases) for details.
+- __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases](Backing Up Databases) for details;
+
+- __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](Configuring the Data Store) for details;
+
+- __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](Configuring the Data Store) for details.
 
 Some examples of container initializations:
 
@@ -164,13 +170,13 @@ This image provides a simple method to backup databases with __pg_dump__. Databa
 To back up databases, a __docker exec__ is needed:
 
 ```shell
-docker exec containername make_backups
+docker exec -ti containername make_backups
 ```
 
 This command accepts data base names as arguments that overrides any __BACKUP_DB__ value:
 
 ```shell
-docker exec containername make_backups database_a database_b
+docker exec -ti containername make_backups database_a database_b
 ```
 
 Backups are stored at __POSTGRES_BACKUPS_FOLDER__, which is a exposed volume. Usage patterns may be hard mounting the volume (somewhat dirty) or better linking it to a SFTP or data container for remote retrieval. Backups are time stamped and the backup file has the following format:
@@ -178,6 +184,52 @@ Backups are stored at __POSTGRES_BACKUPS_FOLDER__, which is a exposed volume. Us
 ```text
 [container hash]-[ISO time stamp]-[database name].backup
 ```
+
+
+Configuring the Data Store
+--------------------------
+
+The image allows for configuration of _pg_hba.conf_ and _postgresql.conf_ data store files at creation time and later. This is advanced stuff, refer to the PostgreSQL documentation for details.
+
+_pg_hba.conf_ configuration is handled by a script called __pg_hba_conf__. _pg_hba_conf_ has three modes of operation:
+
+```Shell
+[1] pg_hba_conf l
+
+[2] pg_hba_conf a "line 1#line 2#...#line n"
+
+[3] pg_hba_conf d "line 1#line 2#...#line n"
+```
+
+which means:
+
+- __[1]__ prints current contents of _pg_hba.conf_;
+
+- __[2]__ adds lines to _pg_hba.conf_;
+
+- __[3]__ deletes lines from _pg_hba.conf_.
+
+This commands can be issued by standard Docker's __exec__:
+
+```Shell
+docker exec -ti whatevercontainer pg_hba_conf a "host all all 23.123.22.1/32 trust#host all all 93.32.12.3/32 md5"
+```
+
+but at startup it is controlled by an environment variable, __PG_HBA__, which defaults to:
+
+```txt
+ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
+```
+
+Modify this variable to configure at creation time. Obviously, for testing purposes, direct commands can be issued via __exec__.
+
+Configuration of __postgresql.conf__ follows an identical procedure. Command is __postgresql_conf__ and has the same syntax as __pg_hba_conf__. The environmental variable is __PG_CONF__, which defaults to:
+
+```txt
+ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
+```
+
+At creation time, language, encoding, and locale info is added based on env variables __LOCALE__ and __ENCODING__.
 
 
 Killing the Container
