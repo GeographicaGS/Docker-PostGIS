@@ -229,7 +229,8 @@ Modify this variable to configure at creation time. Obviously, for testing purpo
 Configuration of __postgresql.conf__ follows an identical procedure. Command is __postgresql_conf__ and has the same syntax as __pg_hba_conf__. The environmental variable is __PG_CONF__, which defaults to:
 
 ```txt
-ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB# \ dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
+ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB# \
+dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
 ```
 
 At creation time, language, encoding, and locale info is added based on env variables __LOCALE__ and __ENCODING__.
