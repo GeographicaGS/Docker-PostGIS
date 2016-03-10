@@ -47,14 +47,15 @@ There are several options available to create containers. Check __container_crea
 ```Shell
 # Simple.sh
 
-docker run -d -P --name pgcontainer \ geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+docker run -d -P --name pgcontainer \
+geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 ```
 
 This will create a container with two volumes, __/data__ and __/backups__, for storing the data store and backups, respectively. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
 
 Containers can be configured by means of setting environmental variables:
 
-- __POSTGRES_PASSWD:__ set the password for user postgres. See [Passwords](Passwords) for more details. Defaults to _postgres_;
+- __POSTGRES_PASSWD:__ set the password for user postgres. See [Passwords](#Passwords) for more details. Defaults to _postgres_;
 
 - __POSTGRES_DATA_FOLDER:__ in the rare case the data store folder is to be changed. Defaults to _/data_;
 
@@ -64,17 +65,17 @@ Containers can be configured by means of setting environmental variables:
 
 - __LOCALE:__ locale for the data store and the default database, if any. Defaults to _en_US_;
 
-- __PSQL_SCRIPTS:__ psql scripts to be executed on the data store once created. See [Executing psql Scripts on Start Up](Executing psql Scripts on Start Up) for more details;
+- __PSQL_SCRIPTS:__ psql scripts to be executed on the data store once created. See [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up) for more details;
 
 - __CREATE_USER:__ creates an user and a default database with this owner at startup. Defaults to _null_, in which case no user and database will be created (very bad luck if you want your user and database to be called 'null' :| );
 
-- __CREATE_USER_PASSWD:__ set the password for the aforementioned user. See [Passwords](Passwords) for more details. Defaults to _null_;
+- __CREATE_USER_PASSWD:__ set the password for the aforementioned user. See [Passwords](#Passwords) for more details. Defaults to _null_;
 
-- __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases](Backing Up Databases) for details;
+- __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases](#Backing Up Databases) for details;
 
-- __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](Configuring the Data Store) for details;
+- __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
-- __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](Configuring the Data Store) for details.
+- __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](#Configuring the Data Store) for details.
 
 Some examples of container initializations:
 
@@ -86,7 +87,7 @@ docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched 
 ```
 
-This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](Passwords) for details:
+This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](#Passwords) for details:
 
 ```Shell
 # Create_user.sh
@@ -212,13 +213,15 @@ which means:
 This commands can be issued by standard Docker's __exec__:
 
 ```Shell
-docker exec -ti whatevercontainer pg_hba_conf a "host all all 23.123.22.1/32 trust#host all all 93.32.12.3/32 md5"
+docker exec -ti whatevercontainer pg_hba_conf a \
+"host all all 23.123.22.1/32 trust#host all all 93.32.12.3/32 md5"
 ```
 
 but at startup it is controlled by an environment variable, __PG_HBA__, which defaults to:
 
 ```txt
-ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
+ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 \
+trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ```
 
 Modify this variable to configure at creation time. Obviously, for testing purposes, direct commands can be issued via __exec__.
@@ -226,7 +229,7 @@ Modify this variable to configure at creation time. Obviously, for testing purpo
 Configuration of __postgresql.conf__ follows an identical procedure. Command is __postgresql_conf__ and has the same syntax as __pg_hba_conf__. The environmental variable is __PG_CONF__, which defaults to:
 
 ```txt
-ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
+ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB# \ dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
 ```
 
 At creation time, language, encoding, and locale info is added based on env variables __LOCALE__ and __ENCODING__.
