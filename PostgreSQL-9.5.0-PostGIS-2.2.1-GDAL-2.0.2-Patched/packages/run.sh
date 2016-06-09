@@ -8,6 +8,9 @@ locale-gen ${LANG}
 
 # Check if data folder is empty. If it is, start the dataserver
 if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
+    # Change UID and GID for postgres
+    usermod -u 
+    
     echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e    
     
     # Modify data store
