@@ -8,11 +8,6 @@ locale-gen ${LANG}
 
 # Check if data folder is empty. If it is, start the dataserver
 if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
-    # Change UID and GID for postgres
-    usermod -u 
-    
-    echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e    
-    
     # Modify data store
     mkdir -p ${POSTGRES_DATA_FOLDER}    
     chown postgres:postgres ${POSTGRES_DATA_FOLDER}
@@ -22,6 +17,24 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
     mkdir -p ${POSTGRES_BACKUPS_FOLDER}
     chown postgres:postgres ${POSTGRES_BACKUPS_FOLDER}
     chmod 700 ${POSTGRES_BACKUPS_FOLDER}
+
+    PARENT="$(dirname $POSTGRES_DATA_FOLDER)"
+    DIR="$(basename $POSTGRES_DATA_FOLDER)"
+
+    USER_ID=`ls -lahn ${PARENT} | grep ${DIR} | awk {'print $3'}`
+    GROUP_ID=`ls -lahn ${PARENT} | grep ${DIR} | awk {'print $4'}`
+
+    CURRENT_USER_ID=`id -u postgres`
+    CURRENT_GROUP_ID=`id -G postgres`
+    
+    # Change UID and GID for postgres
+    usermod -u $USER_ID postgres
+    groupmod -g $GROUP_ID postgres
+    find / -user $CURRENT_USER_ID -exec chown -h $USER_ID {} \;
+    find / -group $CURRENT_GROUP_ID -exec chgrp -h $GROUP_ID {} \;
+    usermod -g $GROUP_ID user
+    
+    echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e    
     
     # Create datastore
     su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"

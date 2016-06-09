@@ -14,6 +14,7 @@ ENV PROJ4_VERSION 4.9.2
 ENV POSTGIS_VERSION 2.2.1
 ENV GDAL_VERSION 2.0.2
 ENV CGAL_VERSION 4.6.3
+ENV GOSU_VERSION 1.9
 ENV SFCGAL_VERSION 1.3.0
 ENV ENCODING UTF-8
 ENV LOCALE en_US
@@ -23,7 +24,7 @@ ENV GDAL_DATA /usr/local/share/gdal
 ENV CREATE_USER null
 ENV CREATE_USER_PASSWD null
 ENV BACKUP_DB null
-ENV PG_RESTORE --version
+ENV PG_RESTORE -V
 ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
 
