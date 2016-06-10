@@ -34,10 +34,6 @@ cd src/postgresql-${PG_VERSION}/contrib ; make all ; cd ../../..
 
 cd src/postgresql-${PG_VERSION}/contrib ; make install ; cd ../../..
 
-groupadd postgres
-
-useradd -r postgres -g postgres
-
 ldconfig
 
 
@@ -123,11 +119,11 @@ rm -Rf /usr/local/src
 
 chmod 755 /usr/local/bin/run.sh
 
-chown postgres:postgres /usr/local/bin/run.sh
+# chown postgres:postgres /usr/local/bin/run.sh
 
 chmod 755 /usr/local/bin/make_backups
 
-chown postgres:postgres /usr/local/bin/make_backups
+# chown postgres:postgres /usr/local/bin/make_backups
 
 chmod 777 /usr/local/bin/pg_hba_conf
 

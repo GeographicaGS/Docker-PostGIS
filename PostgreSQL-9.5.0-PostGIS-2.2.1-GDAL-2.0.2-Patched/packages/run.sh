@@ -8,33 +8,34 @@ locale-gen ${LANG}
 
 # Check if data folder is empty. If it is, start the dataserver
 if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
+    echo Initilizing datastore...
+    
+    UID_DATA="$(folder_uid ${POSTGRES_DATA_FOLDER})"
+    GID_DATA="$(folder_gid ${POSTGRES_DATA_FOLDER})"
+
+    echo Datafolder UID: $UID_DATA, GID: $GID_DATA
+    
+    if [ $UID_DATA = 0 ]; then
+	echo Identified root user, default postgres user created
+
+	groupadd -g $GID postgres
+	useradd -r --home $POSTGRES_DATA_FOLDER --uid $UID --gid $GID postgres
+    else
+	echo Identified custom user, remapping postgres user
+
+	groupadd -g $GID_DATA postgres
+	useradd -r --home $POSTGRES_DATA_FOLDER --uid $UID_DATA --gid $GID_DATA postgres
+    fi
+
+    echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
+    
     # Modify data store
-    mkdir -p ${POSTGRES_DATA_FOLDER}    
     chown postgres:postgres ${POSTGRES_DATA_FOLDER}
     chmod 700 ${POSTGRES_DATA_FOLDER}
 
-    # Create backups folder
-    mkdir -p ${POSTGRES_BACKUPS_FOLDER}
-    chown postgres:postgres ${POSTGRES_BACKUPS_FOLDER}
-    chmod 700 ${POSTGRES_BACKUPS_FOLDER}
-
-    PARENT="$(dirname $POSTGRES_DATA_FOLDER)"
-    DIR="$(basename $POSTGRES_DATA_FOLDER)"
-
-    USER_ID=`ls -lahn ${PARENT} | grep ${DIR} | awk {'print $3'}`
-    GROUP_ID=`ls -lahn ${PARENT} | grep ${DIR} | awk {'print $4'}`
-
-    CURRENT_USER_ID=`id -u postgres`
-    CURRENT_GROUP_ID=`id -G postgres`
-    
-    # Change UID and GID for postgres
-    usermod -u $USER_ID postgres
-    groupmod -g $GROUP_ID postgres
-    find / -user $CURRENT_USER_ID -exec chown -h $USER_ID {} \;
-    find / -group $CURRENT_GROUP_ID -exec chgrp -h $GROUP_ID {} \;
-    usermod -g $GROUP_ID user
-    
-    echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e    
+    # Modify output folder
+    chown postgres:postgres ${POSTGRES_OUTPUT_FOLDER}
+    chmod 700 ${POSTGRES_OUTPUT_FOLDER}
     
     # Create datastore
     su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"
@@ -66,6 +67,11 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
     
     # Stop the server
     su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
+
+else
+    
+    echo Datastore already exists...
+    
 fi
 
 

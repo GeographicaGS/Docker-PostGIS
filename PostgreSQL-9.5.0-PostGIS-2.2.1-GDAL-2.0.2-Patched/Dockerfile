@@ -7,7 +7,7 @@ MAINTAINER Juan Pedro Perez "jp.alcantara@geographica.gs"
 ENV POSTGRES_PASSWD postgres
 ENV ROOTDIR /usr/local/
 ENV POSTGRES_DATA_FOLDER /data
-ENV POSTGRES_BACKUPS_FOLDER /backups
+ENV POSTGRES_OUTPUT_FOLDER /output
 ENV PG_VERSION 9.5.0
 ENV GEOS_VERSION 3.5.0
 ENV PROJ4_VERSION 4.9.2
@@ -25,6 +25,8 @@ ENV CREATE_USER null
 ENV CREATE_USER_PASSWD null
 ENV BACKUP_DB null
 ENV PG_RESTORE -V
+ENV UID 1000
+ENV GID 1000
 ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
 
@@ -39,6 +41,8 @@ ADD packages/compile.sh $ROOTDIR/src/
 ADD packages/make_backups /usr/local/bin
 ADD packages/pg_hba_conf /usr/local/bin
 ADD packages/postgresql_conf /usr/local/bin
+ADD packages/folder_gid /usr/local/bin
+ADD packages/folder_uid /usr/local/bin
 
 ADD https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.bz2 $ROOTDIR/src/
 
@@ -71,6 +75,6 @@ EXPOSE 5432
 
 # Volumes
 VOLUME $POSTGRES_DATA_FOLDER
-VOLUME $POSTGRES_BACKUPS_FOLDER
+VOLUME $POSTGRES_OUTPUT_FOLDER
 
 ENTRYPOINT ["/usr/local/bin/run.sh"]
