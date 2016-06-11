@@ -8,10 +8,11 @@ import os
 psqlscripts = os.environ["PSQL_SCRIPTS"].split(";")
 
 for psqlscript in psqlscripts:
-    call([
-        "psql",
-        "-h", "localhost",
-        "-p", "5432",
-        "-U", "postgres",
-        "-f", psqlscript
-        ])
+    if pgsqlscript<>"null":
+        call([
+            "psql",
+            "-h", "localhost",
+            "-p", "5432",
+            "-U", "postgres",
+            "-f", psqlscript
+            ])

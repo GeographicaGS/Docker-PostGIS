@@ -13,18 +13,47 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
     UID_DATA="$(folder_uid ${POSTGRES_DATA_FOLDER})"
     GID_DATA="$(folder_gid ${POSTGRES_DATA_FOLDER})"
 
-    echo Datafolder UID: $UID_DATA, GID: $GID_DATA
+    UID_OUT="$(folder_uid ${POSTGRES_OUTPUT_FOLDER})"
+    GID_OUT="$(folder_gid ${POSTGRES_OUTPUT_FOLDER})"    
+
+    set -- "$UGID"
+    IFS=";"; declare -a Array=($*)
+    UUID="${Array[0]}"
+    UGID="${Array[1]}"
+
+    echo kkk: $UUID, $UGID
     
-    if [ $UID_DATA = 0 ]; then
-	echo Identified root user, default postgres user created
+    echo Datafolder UID: $UID_DATA, GID: $GID_DATA
 
-	groupadd -g $GID postgres
-	useradd -r --home $POSTGRES_DATA_FOLDER --uid $UID --gid $GID postgres
+    # User and group ID precedence
+    if [ ! $UUID = "null" ] && [ ! $UGID = "null" ]; then
+	FUID=$UUID
+	FGID=$UGID
+
+	echo Identified custom user ID: $FUID, $FGID
+    elif [ ! $UID_OUT = 0 ] && [ ! $GID_OUT = 0 ]; then
+	FUID=$UID_OUT
+	FGID=$GID_OUT
+
+	echo Identified output folder user ID: $FUID, $FGID
+    elif [ ! $UID_DATA = 0 ] && [ ! $GID_DATA = 0 ]; then
+	FUID=$UID_DATA
+	FGID=$GID_DATA
+
+	echo Identified data folder user ID: $FUID, $FGID
     else
-	echo Identified custom user, remapping postgres user
+	FUID=-1
+	FGID=-1
 
-	groupadd -g $GID_DATA postgres
-	useradd -r --home $POSTGRES_DATA_FOLDER --uid $UID_DATA --gid $GID_DATA postgres
+	echo User ID to be determined by system
+    fi
+
+    if [ $FUID = -1 ] && [ $FGID = -1 ]; then
+    	groupadd postgres
+    	useradd -r --home $POSTGRES_DATA_FOLDER -g postgres postgres
+    else
+    	groupadd -g $FGID postgres
+    	useradd -r --home $POSTGRES_DATA_FOLDER --uid $FUID --gid $FGID postgres	
     fi
 
     echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e

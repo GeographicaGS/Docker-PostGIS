@@ -3,6 +3,9 @@
 # Sets the base folder to mount volumes for testing
 HOST_BASE=/home/malkab/Desktop/Docker_PostGIS_Tests
 
+# Time to wait for containers to launch the DB process
+WAIT_TIME=15
+
 # Host user and group to test user mapping
 USER=malkab
 GROUP=malkab
@@ -14,48 +17,136 @@ UGID=1000
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 
-# The simplest, for basic debugging
+# # The simplest, for basic debugging
 
-docker run -d --name "test_00" -P geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
-
-
-# Change UID and GID from postgres user to match that of /data host mounted volume
-
-mkdir -p $HOST_BASE/test_01_data
-chown -R $USER:$GROUP $HOST_BASE
-
-docker run -d --name "test_01" -v $HOST_BASE/test_01_data:/data -P geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+# docker run -d --name "test_00" -P \
+#        geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 
 
-# Testing locale generation and user creation
+# # Change UID and GID from postgres user to match that of /data host mounted volume
 
-docker run -d -P --name "test_02" -e "LOCALE=ru_RU" -e "CREATE_USER=project" -e "CREATE_USER_PASSWD=project_pass" geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+# mkdir -p $HOST_BASE/test_01_data
+# chown -R $USER:$GROUP $HOST_BASE
 
-
-# Testing encrypted password
-
-export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && docker run -d -P --name "test_03" -e "POSTGRES_PASSWD=${PGPASSWD}" -P geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched 
-
-
-# Testing launch of psql scripts
-
-docker run -d --name "test_04" -P -v $DIR/SQL_Scripts:/init_scripts -e "LOCALE=es_ES" -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" -e "CREATE_USER=project" -e "CREATE_USER_PASSWD=project_pass" geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+# docker run -d -P --name "test_01" \
+#        -v $HOST_BASE/test_01_data:/data \
+#        geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 
 
-# Testing backup of user database
+# # Testing locale generation and user creation
 
-mkdir -p $HOST_BASE/test_05_output
+# docker run -d -P --name "test_02" \
+#        -e "LOCALE=ru_RU" \
+#        -e "CREATE_USER=project" \
+#        -e "CREATE_USER_PASSWD=project_pass" \
+#        geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+
+
+# # Testing encrypted password
+
+# export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
+#     docker run -d -P --name "test_03" \
+# 	   -e "POSTGRES_PASSWD=${PGPASSWD}" \
+# 	   geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched 
+
+
+# # Testing launch of psql scripts
+
+# docker run -d --name "test_04" -P \
+#        -v $DIR/Assets:/init_scripts \
+#        -e "LOCALE=es_ES" \
+#        -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" \
+#        -e "CREATE_USER=project" \
+#        -e "CREATE_USER_PASSWD=project_pass" \
+#        geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+
+
+# # Testing backup of user database
+
+# mkdir -p $HOST_BASE/test_05_output
+# chown $USER:$GROUP $HOST_BASE
+
+# docker run -d --name "test_05" -P \
+#        -v $HOST_BASE/test_05_output:/output \
+#        -v $DIR/Assets:/init_scripts \
+#        -e "UGID=${UUID};${UGID}" \
+#        -e "LOCALE=es_ES" \
+#        -e "CREATE_USER=project" \
+#        -e "CREATE_USER_PASSWD=project_pass" \
+#        -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" \
+#        -e "BACKUP_DB=project" \
+#        geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+
+# echo Waiting for container test_05 to perform initalization...
+
+# sleep $WAIT_TIME
+
+# docker exec -ti test_05 make_backups
+
+
+# # Testing backup restoration
+
+# docker run -d --name "test_06" -P \
+#        -v $DIR/Assets:/Assets \
+#        -e "UGID=${UUID};${UGID}" \
+#        -e "LOCALE=es_ES" \
+#        -e "PSQL_SCRIPTS=/Assets/Create_role.sql" \
+#        -e "PG_RESTORE=-C -F c -v -U postgres /Assets/project.backup" \
+#        geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+
+
+# Testing all variables
+
+mkdir -p $HOST_BASE/test_07_output
+mkdir -p $HOST_BASE/test_07_data
 chown $USER:$GROUP $HOST_BASE
 
-docker run -d --name "test_05" -P -v $HOST_BASE/test_05_output:/output -v $DIR/SQL_Scripts:/init_scripts -e "UID=${UUID}" -e "GID=${UGID}" -e "LOCALE=es_ES" -e "CREATE_USER=project" -e "CREATE_USER_PASSWD=project_pass" -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" -e "BACKUP_DB=project" geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+# export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
+#     docker run -d --name "test_07" -P \
+# 	   -v $DIR/Assets:/init_scripts \
+# 	   -v $HOST_BASE/test_07_output:/output_changed \
+# 	   -v $HOST_BASE/test_07_data:/data_changed \
+# 	   -e "POSTGRES_PASSWD=${PGPASSWD}" \
+#            -e "POSTGRES_DATA_FOLDER=/data_changed" \
+# 	   -e "POSTGRES_OUTPUT_FOLDER=/output_changed" \
+# 	   -e "ENCODING=UTF8" \
+# 	   -e "LOCALE=es_ES" \
+# 	   -e "PSQL_SCRIPTS=/init_scripts/Schema02_DDL.sql" \
+# 	   -e "CREATE_USER=project" \
+# 	   -e "CREATE_USER_PASSWD=project_pass" \
+# 	   -e "BACKUP_DB=project" \
+# 	   -e "PG_RESTORE=-C -F c -v -U postgres /init_scripts/project.backup" \
+# 	   -e "UGID=${UUID};${UGID}" \
+# 	   -e "PG_HBA=host project project 0.0.0.0/0 trust" \
+# 	   -e "PG_CONF=max_connections=10#listen_addresses='*'#shared_buffers=256MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'" \
+# 	   geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 
-echo Waiting for container test_05 to perform initalization...
+# echo Waiting for container test_07 to perform initalization...
 
-sleep 30
+# sleep $WAIT_TIME
 
-docker exec -ti test_05 make_backups
+# docker exec -ti test_07 make_backups
 
 
-# Testing backup restoration
 
-docker run -d --name "test_06" -P -v $DIR:/output -e "UID=${UUID}" -e "GID=${UGID}" -e "LOCALE=es_ES" -v $DIR/SQL_Scripts:/init_scripts -e "PSQL_SCRIPTS=/init_scripts/Create_role.sql" -e "PG_RESTORE=-C -F c -v -U postgres /output/project.backup" geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
+    docker run -ti --rm --name "test_07" -P \
+	   -v $DIR/Assets:/init_scripts \
+	   -v $HOST_BASE/test_07_output:/output_changed \
+	   -v $HOST_BASE/test_07_data:/data_changed \
+	   --entrypoint /bin/bash \
+	   -e "POSTGRES_PASSWD=${PGPASSWD}" \
+           -e "POSTGRES_DATA_FOLDER=/data_changed" \
+	   -e "POSTGRES_OUTPUT_FOLDER=/output_changed" \
+	   -e "ENCODING=UTF-8" \
+	   -e "LOCALE=es_ES" \
+	   -e "PSQL_SCRIPTS=/init_scripts/Schema02_DDL.sql" \
+	   -e "CREATE_USER=project" \
+	   -e "CREATE_USER_PASSWD=project_pass" \
+	   -e "BACKUP_DB=project" \
+	   -e "PG_RESTORE=-C -F c -v -U postgres /init_scripts/project.backup" \
+	   -e "UGID=${UUID};${UGID}" \
+	   -e "PG_HBA=host project project 0.0.0.0/0 trust" \
+	   -e "PG_CONF=max_connections=10#listen_addresses='*'#shared_buffers=256MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'" \
+	   geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+

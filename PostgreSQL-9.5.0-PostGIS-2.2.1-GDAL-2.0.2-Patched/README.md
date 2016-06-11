@@ -65,7 +65,7 @@ Containers can be configured by means of setting environmental variables:
 
 - __LOCALE:__ locale for the data store and the default database, if any. Defaults to _en_US_;
 
-- __PSQL_SCRIPTS:__ psql scripts to be executed on the data store once created. See [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up) for more details;
+- __PSQL_SCRIPTS:__ psql scripts to be executed on the data store once created. Defaults to _null_, meaning no action is to be taken. See [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up) for more details;
 
 - __CREATE_USER:__ creates an user and a default database with this owner at startup. Defaults to _null_, in which case no user and database will be created (very bad luck if you want your user and database to be called 'null' :| );
 
@@ -73,11 +73,9 @@ Containers can be configured by means of setting environmental variables:
 
 - __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases](#Backing Up Databases) for details;
 
-- __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details;
+- __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details. Defaults to _null_, meaning that no action is to be taken;
 
-- __UID:__ the user ID to map container postgres user to. Defaults to 1000. Check [User Mapping](#User Mapping) for details;
-
-- __GID:__ the group ID to map container postgres user to. Defaults to 1000. Check [User Mapping](#User Mapping) for details;
+- __UGID:__ the user and group ID, separated by a semicolon, to map container postgres user to. Defaults to _null;null_, meaning that the system will ultimately assign the ID. Check [User Mapping](#User Mapping) for details;
 
 - __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
@@ -167,9 +165,13 @@ User Mapping
 
 The container will create an inner _postgres_ user and group for running the service. The UID and GID of this objects can be adjusted to match one at the host, so files in mounted volumes will be owned by the matched host user. The logic behind user mapping is as follows:
 
-- if the __data__ exposed volume is mounted to a host folder (like as using the -v option), UID and GID of the owner of the host folder will be read and the container _postgres_ user and group will match them;
+- if the env variable __UGID__ is set, the ID will be taken from it;
 
-- if the __data__ exposed volume is not mounted, will be owned by default by the container's root, and the default _postgres_ user and group will be created with the values of env variables __UID__ and __GID__, respectively. By default, both are set to 1000.
+- if the __output__ exposed volume is mounted to a host folder (like as using the -v option), UID and GID of the owner of the host folder will be read and the container _postgres_ user and group will match them;
+
+- same if __data__ is exposed as a host volume;
+
+- if nothing of the above happens, the user will be created with ID assigned by the system.
 
 
 Backing Up Databases

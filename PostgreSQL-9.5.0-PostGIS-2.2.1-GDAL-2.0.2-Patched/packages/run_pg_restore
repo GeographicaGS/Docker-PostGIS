@@ -8,4 +8,5 @@ import os
 restores = os.environ["PG_RESTORE"].split(";")
 
 for r in restores:
-    call("pg_restore -h localhost -p 5432 %s" % r, shell=True)
+    if r<>"null":
+        call("pg_restore -h localhost -p 5432 %s" % r, shell=True)

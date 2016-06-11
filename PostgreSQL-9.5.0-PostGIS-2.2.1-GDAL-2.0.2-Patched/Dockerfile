@@ -18,22 +18,20 @@ ENV GOSU_VERSION 1.9
 ENV SFCGAL_VERSION 1.3.0
 ENV ENCODING UTF-8
 ENV LOCALE en_US
-ENV PSQL_SCRIPTS /usr/local/Dummy_psql_command.sql
+ENV PSQL_SCRIPTS null
 ENV TERM xterm
 ENV GDAL_DATA /usr/local/share/gdal
 ENV CREATE_USER null
 ENV CREATE_USER_PASSWD null
 ENV BACKUP_DB null
-ENV PG_RESTORE -V
-ENV UID 1000
-ENV GID 1000
+ENV PG_RESTORE null
+ENV UGID null;null
 ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
 
 
 # Load assets
 WORKDIR $ROOTDIR/
-ADD packages/Dummy_psql_command.sql $ROOTDIR
 ADD packages/run.sh /usr/local/bin/
 ADD packages/run_psql_scripts /usr/local/bin/
 ADD packages/run_pg_restore /usr/local/bin
