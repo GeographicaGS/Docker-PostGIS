@@ -19,5 +19,5 @@ if len(sys.argv)>1:
 if dbs!=["null"]:
     for db in dbs:
         prefix = datetime.datetime.now().isoformat().replace(":","_").replace(".","_")
-        call('su postgres -c "pg_dump -b -C -E %s -f %s -F c -v -Z 9 -h localhost -p 5432 -U postgres %s"' %
-             (encoding, folder+"/"+hostname+"-"+prefix+"-"+db+".backup", db))
+        call('su postgres -c "pg_dump -b -C -E %s -f %s -F c -v -Z 9 -h localhost -p 5432 -U postgres %s"' % \
+             (encoding, folder+"/"+hostname+"-"+prefix+"-"+db+".backup", db), shell=True)

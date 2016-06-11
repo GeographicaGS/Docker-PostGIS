@@ -58,4 +58,4 @@ docker exec -ti test_05 make_backups
 
 # Testing backup restoration
 
-docker run -d --name "test_06" -P -v $HOST_BASE/test_05_output:/output -e "UID=${UUID}" -e "GID=${UGID}" -e "LOCALE=es_ES" -v $DIR/SQL_Scripts:/init_scripts -e "PSQL_SCRIPTS=/init_scripts/Create_role.sql" -e "PG_RESTORE=-C -F c -v -U postgres /output/project.backup" geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+docker run -d --name "test_06" -P -v $DIR:/output -e "UID=${UUID}" -e "GID=${UGID}" -e "LOCALE=es_ES" -v $DIR/SQL_Scripts:/init_scripts -e "PSQL_SCRIPTS=/init_scripts/Create_role.sql" -e "PG_RESTORE=-C -F c -v -U postgres /output/project.backup" geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched

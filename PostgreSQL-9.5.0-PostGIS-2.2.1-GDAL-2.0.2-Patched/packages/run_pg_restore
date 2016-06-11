@@ -8,21 +8,4 @@ import os
 restores = os.environ["PG_RESTORE"].split(";")
 
 for r in restores:
-    command = [
-        "pg_restore",
-        "-h", "localhost",
-        "-p", "5432"]
-
-    for i in r.split("-"):
-        a = i.strip().split(" ")
-        
-        if a<>[""]:
-            command.append("-%s" % a[0])
-
-            if len(a)>1:
-                command.append(a[1])
-
-            if len(a)>2:
-                command.append(a[2])
-
-    call(command)
+    call("pg_restore -h localhost -p 5432 %s" % r, shell=True)

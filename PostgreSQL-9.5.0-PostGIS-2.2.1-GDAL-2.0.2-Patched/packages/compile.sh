@@ -129,3 +129,4 @@ chmod 777 /usr/local/bin/pg_hba_conf
 
 chmod 777 /usr/local/bin/postgresql_conf
 
+chmod 755 /usr/local/bin/gosu
