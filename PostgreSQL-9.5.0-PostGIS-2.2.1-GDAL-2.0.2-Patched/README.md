@@ -213,6 +213,12 @@ The image allows for restoration of database dumps created by __pg_dump__. The _
 -e "PG_RESTORE=-C -F c -v -d postgres -U postgres /path/post1.backup;-d databasename -F c -v -U postgres /path/post2.backup;-C -F c -O -v -d postgres -U postgres post3.backup"
 ```
 
+As a base, __pg_restore__ is launched with the prefix:
+
+```Shell
+pg_restore -h localhost -p 5432
+```
+
 Please refer to the __pg_restore__ and __pg_dump__ official documentation for more details. Host is always localhost and port is always 5432, so no need to declare.
 
 Restores are performed after executing any script passed to the container with the __PSQL_SCRIPTS__ variable. If any role must be present at restoration time, create it with a psql script before.
