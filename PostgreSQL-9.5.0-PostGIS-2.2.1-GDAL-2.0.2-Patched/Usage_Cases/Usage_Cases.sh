@@ -140,13 +140,13 @@ export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut
 	   -e "POSTGRES_OUTPUT_FOLDER=/output_changed" \
 	   -e "ENCODING=UTF-8" \
 	   -e "LOCALE=es_ES" \
-	   -e "PSQL_SCRIPTS=/init_scripts/Schema02_DDL.sql" \
-	   -e "CREATE_USER=project" \
-	   -e "CREATE_USER_PASSWD=project_pass" \
+	   -e "PSQL_SCRIPTS=/init_scripts/Create_role.sql;/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql;/init_scripts/Schema02_DDL.sql" \
+	   -e "CREATE_USER=project2" \
+	   -e "CREATE_USER_PASSWD=project_pass2" \
 	   -e "BACKUP_DB=project" \
 	   -e "PG_RESTORE=-C -F c -v -U postgres /init_scripts/project.backup" \
 	   -e "UGID=${UUID};${UGID}" \
-	   -e "PG_HBA=host project project 0.0.0.0/0 trust" \
+	   -e "PG_HBA=local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust#host project project 0.0.0.0/0 trust" \
 	   -e "PG_CONF=max_connections=10#listen_addresses='*'#shared_buffers=256MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'" \
 	   geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 

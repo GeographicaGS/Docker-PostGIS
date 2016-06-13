@@ -8,7 +8,12 @@ import os
 psqlscripts = os.environ["PSQL_SCRIPTS"].split(";")
 
 for psqlscript in psqlscripts:
-    if pgsqlscript<>"null":
+    if psqlscript<>"null":
+        print
+        print "-----------------------------------"
+        print "Running psql script: %s" % psqlscript
+        print "-----------------------------------"
+        
         call([
             "psql",
             "-h", "localhost",

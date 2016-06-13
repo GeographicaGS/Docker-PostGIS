@@ -21,9 +21,8 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
     UUID="${Array[0]}"
     UGID="${Array[1]}"
 
-    echo kkk: $UUID, $UGID
-    
-    echo Datafolder UID: $UID_DATA, GID: $GID_DATA
+    echo Data folder UID: $UID_DATA, GID: $GID_DATA
+    echo Output folder UID: $UID_OUT, GID: $GID_OUT
 
     # User and group ID precedence
     if [ ! $UUID = "null" ] && [ ! $UGID = "null" ]; then
@@ -84,6 +83,11 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
 
     # Check if CREATE_USER is not null
     if ! [ "$CREATE_USER" = "null" ]; then
+
+	echo ---------------------------------
+	echo Creating database and user ${CREATE_USER}
+	echo ---------------------------------
+	
 	su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create user ${CREATE_USER} with login password '${CREATE_USER_PASSWD}';\""
 	su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create database ${CREATE_USER} with owner ${CREATE_USER};\""
     fi

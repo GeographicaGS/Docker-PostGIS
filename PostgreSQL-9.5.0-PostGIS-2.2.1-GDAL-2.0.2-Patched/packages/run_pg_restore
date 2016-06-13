@@ -9,4 +9,6 @@ restores = os.environ["PG_RESTORE"].split(";")
 
 for r in restores:
     if r<>"null":
+        print "Restoring PostgreSQL dump: %s" % r
+        
         call("pg_restore -h localhost -p 5432 %s" % r, shell=True)

@@ -65,15 +65,15 @@ Containers can be configured by means of setting environmental variables:
 
 - __LOCALE:__ locale for the data store and the default database, if any. Defaults to _en_US_;
 
-- __PSQL_SCRIPTS:__ psql scripts to be executed on the data store once created. Defaults to _null_, meaning no action is to be taken. See [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up) for more details;
+- __PSQL_SCRIPTS:__ semicolon separated psql scripts to be executed on the data store once created, in absolute path. Defaults to _null_, meaning no action is to be taken. See [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up) for more details;
 
-- __CREATE_USER:__ creates an user and a default database with this owner at startup. Defaults to _null_, in which case no user and database will be created (very bad luck if you want your user and database to be called 'null' :| );
+- __CREATE_USER:__ creates an user and a default database with this owner at startup. Defaults to _null_, in which case no user and database will be created (very bad luck if you want your user and database to be called 'null' :| ). This user and database are created before any psql script is executed or any backup is restored;
 
 - __CREATE_USER_PASSWD:__ set the password for the aforementioned user. See [Passwords](#Passwords) for more details. Defaults to _null_;
 
 - __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases](#Backing Up Databases) for details;
 
-- __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details. Defaults to _null_, meaning that no action is to be taken;
+- __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details. Defaults to _null_, meaning that no action is to be taken. Restores are done after all psql scripts are executed;
 
 - __UGID:__ the user and group ID, separated by a semicolon, to map container postgres user to. Defaults to _null;null_, meaning that the system will ultimately assign the ID. Check [User Mapping](#User Mapping) for details;
 
@@ -255,7 +255,7 @@ ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 \
 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ```
 
-Modify this variable to configure at creation time. Obviously, for testing purposes, direct commands can be issued via __exec__.
+Modify this variable to configure at creation time. Keep in mind, however, that any value provided to this variable will supersede the default. Don't forget to include basic access permissions if you modify this variable, or the server will be hardly reachable. For testing purposes, direct commands can be issued via __exec__. Check __Usage Cases__ for examples.
 
 Configuration of __postgresql.conf__ follows an identical procedure. Command is __postgresql_conf__ and has the same syntax as __pg_hba_conf__. The environmental variable is __PG_CONF__, which defaults to:
 
