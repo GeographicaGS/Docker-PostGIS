@@ -116,6 +116,12 @@ geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 This one creates a container with a hard-mounted volume from local _demo_scripts_ to container's _/init_scripts_ where a couple of psql scripts will be stored. Creates an user and database called _project_ and executes on it the two mentioned scripts.
 
 
+Data Persistence
+----------------
+
+Datastore data can be persisted in a data volume or host mounted folder and be used later by another container. The container checks if __POSTGRES_DATA_FOLDER__ has a file _postgresql.conf_. If not, considers the datastore to be not created and creates an empty one.
+
+
 Passwords
 ---------
 
