@@ -4,7 +4,7 @@
 HOST_BASE=/home/malkab/Desktop/Docker_PostGIS_Tests
 
 # Time to wait for containers to launch the DB process
-WAIT_TIME=15
+WAIT_TIME=30
 
 # Host user and group to test user mapping
 USER=malkab
