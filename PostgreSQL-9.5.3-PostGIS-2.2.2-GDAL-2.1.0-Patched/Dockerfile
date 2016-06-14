@@ -7,31 +7,30 @@ MAINTAINER Juan Pedro Perez "jp.alcantara@geographica.gs"
 ENV POSTGRES_PASSWD postgres
 ENV ROOTDIR /usr/local/
 ENV POSTGRES_DATA_FOLDER /data
-ENV POSTGRES_OUTPUT_FOLDER /output
-ENV PG_VERSION 9.5.0
+ENV POSTGRES_BACKUPS_FOLDER /backups
+ENV PG_VERSION 9.5.3
 ENV GEOS_VERSION 3.5.0
 ENV PROJ4_VERSION 4.9.2
-ENV POSTGIS_VERSION 2.2.1
-ENV GDAL_VERSION 2.0.2
+ENV POSTGIS_VERSION 2.2.2
+ENV GDAL_VERSION 2.1.0
 ENV CGAL_VERSION 4.6.3
-ENV GOSU_VERSION 1.9
 ENV SFCGAL_VERSION 1.3.0
 ENV ENCODING UTF-8
 ENV LOCALE en_US
-ENV PSQL_SCRIPTS null
+ENV PSQL_SCRIPTS /usr/local/Dummy_psql_command.sql
 ENV TERM xterm
 ENV GDAL_DATA /usr/local/share/gdal
 ENV CREATE_USER null
 ENV CREATE_USER_PASSWD null
 ENV BACKUP_DB null
 ENV PG_RESTORE null
-ENV UGID null;null
 ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
 
 
 # Load assets
 WORKDIR $ROOTDIR/
+ADD packages/Dummy_psql_command.sql $ROOTDIR
 ADD packages/run.sh /usr/local/bin/
 ADD packages/run_psql_scripts /usr/local/bin/
 ADD packages/run_pg_restore /usr/local/bin
@@ -39,8 +38,6 @@ ADD packages/compile.sh $ROOTDIR/src/
 ADD packages/make_backups /usr/local/bin
 ADD packages/pg_hba_conf /usr/local/bin
 ADD packages/postgresql_conf /usr/local/bin
-ADD packages/folder_gid /usr/local/bin
-ADD packages/folder_uid /usr/local/bin
 
 ADD https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.bz2 $ROOTDIR/src/
 
@@ -73,6 +70,6 @@ EXPOSE 5432
 
 # Volumes
 VOLUME $POSTGRES_DATA_FOLDER
-VOLUME $POSTGRES_OUTPUT_FOLDER
+VOLUME $POSTGRES_BACKUPS_FOLDER
 
 ENTRYPOINT ["/usr/local/bin/run.sh"]

@@ -9,7 +9,7 @@ import datetime
 # Run psql scripts
 dbs = os.environ["BACKUP_DB"].split(";")
 encoding = os.environ["ENCODING"]
-folder = os.environ["POSTGRES_OUTPUT_FOLDER"]
+folder = os.environ["POSTGRES_BACKUPS_FOLDER"]
 hostname = os.environ["HOSTNAME"]
 
 # Take arguments if there are present
@@ -19,5 +19,16 @@ if len(sys.argv)>1:
 if dbs!=["null"]:
     for db in dbs:
         prefix = datetime.datetime.now().isoformat().replace(":","_").replace(".","_")
-        call('su postgres -c "pg_dump -b -C -E %s -f %s -F c -v -Z 9 -h localhost -p 5432 -U postgres %s"' % \
-             (encoding, folder+"/"+hostname+"-"+prefix+"-"+db+".backup", db), shell=True)
+        call([
+            "pg_dump",
+            "-b",
+            "-E", encoding,
+            "-f", folder+"/"+hostname+"-"+prefix+"-"+db+".backup",
+            "-F", "c",
+            "-v",
+            "-Z", "9",
+            "-h", "localhost",
+            "-p", "5432",
+            "-U", "postgres",
+            db
+            ])

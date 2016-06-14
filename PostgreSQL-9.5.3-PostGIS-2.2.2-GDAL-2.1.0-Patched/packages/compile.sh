@@ -8,7 +8,7 @@ apt-get update && apt-get install -y build-essential python python-dev libreadli
 # Grab gosu
 gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
 
-curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture)" > /dev/null 2>&1 && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture).asc" > /dev/null 2>&1 && gpg --verify /usr/local/bin/gosu.asc  > /dev/null 2>&1 && rm /usr/local/bin/gosu.asc  > /dev/null 2>&1 && chmod +x /usr/local/bin/gosu  > /dev/null 2>&1
+curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture)" > /dev/null 2>&1 && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture).asc" > /dev/null 2>&1 && gpg --verify /usr/local/bin/gosu.asc  > /dev/null 2>&1 && rm /usr/local/bin/gosu.asc  > /dev/null 2>&1 && chmod +x /usr/local/bin/gosu  > /dev/null 2>&1
 
 
 # Untar
@@ -33,6 +33,10 @@ cd src/postgresql-${PG_VERSION} ; make install ; cd ../..
 cd src/postgresql-${PG_VERSION}/contrib ; make all ; cd ../../..
 
 cd src/postgresql-${PG_VERSION}/contrib ; make install ; cd ../../..
+
+groupadd postgres
+
+useradd -r postgres -g postgres
 
 ldconfig
 
@@ -119,14 +123,13 @@ rm -Rf /usr/local/src
 
 chmod 755 /usr/local/bin/run.sh
 
-# chown postgres:postgres /usr/local/bin/run.sh
+chown postgres:postgres /usr/local/bin/run.sh
 
 chmod 755 /usr/local/bin/make_backups
 
-# chown postgres:postgres /usr/local/bin/make_backups
+chown postgres:postgres /usr/local/bin/make_backups
 
 chmod 777 /usr/local/bin/pg_hba_conf
 
 chmod 777 /usr/local/bin/postgresql_conf
 
-chmod 755 /usr/local/bin/gosu

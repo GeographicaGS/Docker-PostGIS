@@ -36,13 +36,13 @@ or pull it from Docker Hub:
 docker pull geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 ```
 
-The image exposes port 5432, a volume designated by enviroment variable __POSTGRES_DATA_FOLDER__ with the data folder, and another one __POSTGRES_OUTPUT_FOLDER__ for database output (like backups and the like).
+The image exposes port 5432, a volume designated by enviroment variable __POSTGRES_DATA_FOLDER__ with the data folder, and another one __POSTGRES_BACKUPS_FOLDER__ for database backups.
 
 
 Container Creation
 ------------------
 
-There are several options available to create containers. Check __Usage_Cases__ for testing. The most simple one:
+There are several options available to create containers. Check __container_creation_examples__ for testing. The most simple one:
 
 ```Shell
 # Simple.sh
@@ -51,7 +51,7 @@ docker run -d -P --name pgcontainer \
 geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 ```
 
-This will create a container with two default volumes, __/data__ and __/output__, for storing the data store and output, respectively. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
+This will create a container with two volumes, __/data__ and __/backups__, for storing the data store and backups, respectively. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
 
 Containers can be configured by means of setting environmental variables:
 
@@ -59,23 +59,21 @@ Containers can be configured by means of setting environmental variables:
 
 - __POSTGRES_DATA_FOLDER:__ in the rare case the data store folder is to be changed. Defaults to _/data_;
 
-- __POSTGRES_OUTPUT_FOLDER:__ in the even more rare case the ouput folder must be reassigned. Defaults to _/output_;
+- __POSTGRES_BACKUPS_FOLDER:__ in the even more rare case the backup folder must be reassigned. Defaults to _/backups_;
 
 - __ENCODING:__ encoding to create the data store and the default database, if applicable. Defaults to _UTF-8_;
 
 - __LOCALE:__ locale for the data store and the default database, if any. Defaults to _en_US_;
 
-- __PSQL_SCRIPTS:__ semicolon separated psql scripts to be executed on the data store once created, in absolute path. Defaults to _null_, meaning no action is to be taken. See [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up) for more details;
+- __PSQL_SCRIPTS:__ psql scripts to be executed on the data store once created. See [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up) for more details;
 
-- __CREATE_USER:__ creates an user and a default database with this owner at startup. Defaults to _null_, in which case no user and database will be created (very bad luck if you want your user and database to be called 'null' :| ). This user and database are created before any psql script is executed or any backup is restored;
+- __CREATE_USER:__ creates an user and a default database with this owner at startup. Defaults to _null_, in which case no user and database will be created (very bad luck if you want your user and database to be called 'null' :| );
 
 - __CREATE_USER_PASSWD:__ set the password for the aforementioned user. See [Passwords](#Passwords) for more details. Defaults to _null_;
 
 - __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases](#Backing Up Databases) for details;
 
-- __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details. Defaults to _null_, meaning that no action is to be taken. Restores are done after all psql scripts are executed;
-
-- __UGID:__ the user and group ID, separated by a semicolon, to map container postgres user to. Defaults to _null;null_, meaning that the system will ultimately assign the ID. Check [User Mapping](#User Mapping) for details;
+- __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details;
 
 - __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
@@ -159,25 +157,32 @@ geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 _script1.sql_ and _script2.sql_ will be executed on container startup. Scripts are executed as _postgres_.
 
 
+Restoring a Database Dump
+-------------------------
 
-User Mapping
-------------
+The image allows for restoration of database dumps created by __pg_dump__. The __PG_RESTORE__ environmental variable is used for this. It's a semicolon separated list of parameters for __pg_restore__:
 
-The container will create an inner _postgres_ user and group for running the service. The UID and GID of this objects can be adjusted to match one at the host, so files in mounted volumes will be owned by the matched host user. The logic behind user mapping is as follows:
+```Shell
+-e "PG_RESTORE=-C -F c -v -d postgres -U postgres /path/post1.backup;-d databasename -F c -v -U postgres /path/post2.backup;-C -F c -O -v -d postgres -U postgres post3.backup"
+```
 
-- if the env variable __UGID__ is set, the ID will be taken from it;
+Please refer to the __pg_restore__ and __pg_dump__ official documentation for more details. Host is always localhost and port is always 5432, so no need to declare.
 
-- if the __output__ exposed volume is mounted to a host folder (like as using the -v option), UID and GID of the owner of the host folder will be read and the container _postgres_ user and group will match them;
-
-- same if __data__ is exposed as a host volume;
-
-- if nothing of the above happens, the user will be created with ID assigned by the system.
+Restores are performed after executing any script passed to the container with the __PSQL_SCRIPTS__ variable. If any role must be present at restoration time, create it with a psql script before.
 
 
 Backing Up Databases
 --------------------
 
-This image provides a simple method to backup databases with __pg_dump__. Databases to be backed up is controlled by the __BACKUP_DB__ environmental variable, with the names of databases separated by a semicolon.
+This image provides a simple method to backup databases with __pg_dump__. Databases to be backed up is controlled by the __BACKUP_DB__ environmental variable. Several scenarios apply:
+
+- __CREATE_USER__ is specified: the default database by the name __CREATE_USER__ will be added automatically as the only database to be backed up;
+
+- __CREATE_USER__ is especified, but so does __BACKUP_DB__ itself: __BACKUP_DB__ takes precedence. So if you want to back up the CREATE_USER database and another one, be sure to include both of them in __BACKUP_DB__ (for example, _userdb;anotherdb_);
+
+- __CREATE_USER__ is not specified: no database will be set for automatic back up;
+
+- __CREATE_USER__ is not specified, but does __BACKUP_DB__: BACKUP_DB takes precedence as normal.
 
 To back up databases, a __docker exec__ is needed:
 
@@ -191,37 +196,11 @@ This command accepts data base names as arguments that overrides any __BACKUP_DB
 docker exec -ti containername make_backups database_a database_b
 ```
 
-Backups are stored at __POSTGRES_OUTPUT_FOLDER__, which is a exposed volume. Usage patterns may be hard mounting the volume (somewhat dirty) or better linking it to a SFTP or data container for remote retrieval. Backups are time stamped and the backup file has the following format:
+Backups are stored at __POSTGRES_BACKUPS_FOLDER__, which is a exposed volume. Usage patterns may be hard mounting the volume (somewhat dirty) or better linking it to a SFTP or data container for remote retrieval. Backups are time stamped and the backup file has the following format:
 
 ```text
 [container hash]-[ISO time stamp]-[database name].backup
 ```
-
-The command used for backups is:
-
-```Shell
-pg_dump -b -C -E [encoding] -f [backup file name] -F c -v -Z 9 -h localhost -p 5432 -U postgres [database name]
-```
-
-
-Restoring a Database Dump
--------------------------
-
-The image allows for restoration of database dumps created by __pg_dump__. The __PG_RESTORE__ environmental variable is used for this. It's a semicolon separated list of parameters for __pg_restore__:
-
-```Shell
--e "PG_RESTORE=-C -F c -v -d postgres -U postgres /path/post1.backup;-d databasename -F c -v -U postgres /path/post2.backup;-C -F c -O -v -d postgres -U postgres post3.backup"
-```
-
-As a base, __pg_restore__ is launched with the prefix:
-
-```Shell
-pg_restore -h localhost -p 5432
-```
-
-Please refer to the __pg_restore__ and __pg_dump__ official documentation for more details. Host is always localhost and port is always 5432, so no need to declare.
-
-Restores are performed after executing any script passed to the container with the __PSQL_SCRIPTS__ variable. If any role must be present at restoration time, create it with a psql script before.
 
 
 Configuring the Data Store
@@ -261,7 +240,7 @@ ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 \
 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ```
 
-Modify this variable to configure at creation time. Keep in mind, however, that any value provided to this variable will supersede the default. Don't forget to include basic access permissions if you modify this variable, or the server will be hardly reachable. For testing purposes, direct commands can be issued via __exec__. Check __Usage Cases__ for examples.
+Modify this variable to configure at creation time. Obviously, for testing purposes, direct commands can be issued via __exec__.
 
 Configuration of __postgresql.conf__ follows an identical procedure. Command is __postgresql_conf__ and has the same syntax as __pg_hba_conf__. The environmental variable is __PG_CONF__, which defaults to:
 

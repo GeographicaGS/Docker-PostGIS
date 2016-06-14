@@ -8,62 +8,17 @@ locale-gen ${LANG}
 
 # Check if data folder is empty. If it is, start the dataserver
 if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
-    echo Initilizing datastore...
-    
-    UID_DATA="$(folder_uid ${POSTGRES_DATA_FOLDER})"
-    GID_DATA="$(folder_gid ${POSTGRES_DATA_FOLDER})"
-
-    UID_OUT="$(folder_uid ${POSTGRES_OUTPUT_FOLDER})"
-    GID_OUT="$(folder_gid ${POSTGRES_OUTPUT_FOLDER})"    
-
-    set -- "$UGID"
-    IFS=";"; declare -a Array=($*)
-    UUID="${Array[0]}"
-    UGID="${Array[1]}"
-
-    echo Data folder UID: $UID_DATA, GID: $GID_DATA
-    echo Output folder UID: $UID_OUT, GID: $GID_OUT
-
-    # User and group ID precedence
-    if [ ! $UUID = "null" ] && [ ! $UGID = "null" ]; then
-	FUID=$UUID
-	FGID=$UGID
-
-	echo Identified custom user ID: $FUID, $FGID
-    elif [ ! $UID_OUT = 0 ] && [ ! $GID_OUT = 0 ]; then
-	FUID=$UID_OUT
-	FGID=$GID_OUT
-
-	echo Identified output folder user ID: $FUID, $FGID
-    elif [ ! $UID_DATA = 0 ] && [ ! $GID_DATA = 0 ]; then
-	FUID=$UID_DATA
-	FGID=$GID_DATA
-
-	echo Identified data folder user ID: $FUID, $FGID
-    else
-	FUID=-1
-	FGID=-1
-
-	echo User ID to be determined by system
-    fi
-
-    if [ $FUID = -1 ] && [ $FGID = -1 ]; then
-    	groupadd postgres
-    	useradd -r --home $POSTGRES_DATA_FOLDER -g postgres postgres
-    else
-    	groupadd -g $FGID postgres
-    	useradd -r --home $POSTGRES_DATA_FOLDER --uid $FUID --gid $FGID postgres	
-    fi
-
-    echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
+    echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e    
     
     # Modify data store
+    mkdir -p ${POSTGRES_DATA_FOLDER}    
     chown postgres:postgres ${POSTGRES_DATA_FOLDER}
     chmod 700 ${POSTGRES_DATA_FOLDER}
 
-    # Modify output folder
-    chown postgres:postgres ${POSTGRES_OUTPUT_FOLDER}
-    chmod 700 ${POSTGRES_OUTPUT_FOLDER}
+    # Create backups folder
+    mkdir -p ${POSTGRES_BACKUPS_FOLDER}
+    chown postgres:postgres ${POSTGRES_BACKUPS_FOLDER}
+    chmod 700 ${POSTGRES_BACKUPS_FOLDER}
     
     # Create datastore
     su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"
@@ -83,11 +38,6 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
 
     # Check if CREATE_USER is not null
     if ! [ "$CREATE_USER" = "null" ]; then
-
-	echo ---------------------------------
-	echo Creating database and user ${CREATE_USER}
-	echo ---------------------------------
-	
 	su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create user ${CREATE_USER} with login password '${CREATE_USER_PASSWD}';\""
 	su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create database ${CREATE_USER} with owner ${CREATE_USER};\""
     fi
@@ -100,11 +50,6 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
     
     # Stop the server
     su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
-
-else
-    
-    echo Datastore already exists...
-    
 fi
 
 
