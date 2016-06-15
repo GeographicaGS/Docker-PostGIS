@@ -14,6 +14,8 @@ docker stop test_04
 docker stop test_05
 docker stop test_06
 docker stop test_07
+docker stop test_08_a
+docker stop test_08_b
 
 
 docker rm -v test_00
@@ -24,4 +26,7 @@ docker rm -v test_04
 docker rm -v test_05
 docker rm -v test_06
 docker rm -v test_07
+docker rm -v test_08_pgdata
+docker rm -v test_08_a
+docker rm -v test_08_b
 
