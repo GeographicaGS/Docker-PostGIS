@@ -263,8 +263,8 @@ docker exec -ti whatevercontainer pg_hba_conf a \
 but at startup it is controlled by an environment variable, __PG_HBA__, which defaults to:
 
 ```txt
-ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 \
-trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
+ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust# \
+host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ```
 
 This defaults should be submitted for basic operation. For universal access, for example for testing, add:
