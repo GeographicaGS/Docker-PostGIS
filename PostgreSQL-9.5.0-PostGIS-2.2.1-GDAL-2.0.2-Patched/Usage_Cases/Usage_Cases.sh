@@ -133,7 +133,7 @@ docker exec -ti test_07 make_backups
 
 docker create --name test_08_pgdata -v /data debian /bin/true
 
-docker run -d --name test_08_a --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+docker run -d --name test_08_a -P --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 
 echo Waiting for container test_08_a to initalize
 
@@ -141,4 +141,4 @@ sleep $WAIT_TIME
 
 docker stop test_08_a
 
-docker run -d --name test_08_b --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+docker run -d --name test_08_b -P --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
