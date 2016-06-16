@@ -6,9 +6,10 @@ LANG=${LOCALE}.${ENCODING}
 locale-gen ${LANG}
 
 
-# Check if data folder is empty. If it is, start the dataserver
-if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
-    echo Initilizing datastore...
+# Check if user postgres exists
+
+if ! [ id postgres > /dev/null 2>&1 ] ; then
+    echo Creating postgres user
     
     UID_DATA="$(folder_uid ${POSTGRES_DATA_FOLDER})"
     GID_DATA="$(folder_gid ${POSTGRES_DATA_FOLDER})"
@@ -56,7 +57,13 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
     fi
 
     echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
+fi    
+
     
+# Check if data folder is empty. If it is, start the dataserver
+if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
+    echo Initilizing datastore...
+        
     # Modify data store
     chown postgres:postgres ${POSTGRES_DATA_FOLDER}
     chmod 700 ${POSTGRES_DATA_FOLDER}

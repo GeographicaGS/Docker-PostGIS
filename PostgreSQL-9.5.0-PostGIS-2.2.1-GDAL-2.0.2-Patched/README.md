@@ -116,6 +116,12 @@ geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 This one creates a container with a hard-mounted volume from local _demo_scripts_ to container's _/init_scripts_ where a couple of psql scripts will be stored. Creates an user and database called _project_ and executes on it the two mentioned scripts.
 
 
+Data Persistence
+----------------
+
+Datastore data can be persisted in a data volume or host mounted folder and be used later by another container. The container checks if __POSTGRES_DATA_FOLDER__ has a file _postgresql.conf_. If not, considers the datastore to be not created and creates an empty one.
+
+
 Passwords
 ---------
 
@@ -259,6 +265,12 @@ but at startup it is controlled by an environment variable, __PG_HBA__, which de
 ```txt
 ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 \
 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
+```
+
+This defaults should be submitted for basic operation. For universal access, for example for testing, add:
+
+```txt
+host all all 0.0.0.0/0 trust
 ```
 
 Modify this variable to configure at creation time. Keep in mind, however, that any value provided to this variable will supersede the default. Don't forget to include basic access permissions if you modify this variable, or the server will be hardly reachable. For testing purposes, direct commands can be issued via __exec__. Check __Usage Cases__ for examples.
