@@ -4,7 +4,7 @@
 HOST_BASE=/home/malkab/Desktop/Docker_PostGIS_Tests
 
 # Time to wait for containers to launch the DB process
-WAIT_TIME=30
+WAIT_TIME=10
 
 # Host user and group to test user mapping
 USER=malkab
@@ -64,7 +64,7 @@ docker run -d --name "test_04" -P \
 # Testing backup of user database
 
 mkdir -p $HOST_BASE/test_05_output
-chown $USER:$GROUP $HOST_BASE
+chown -R $USER:$GROUP $HOST_BASE
 
 docker run -d --name "test_05" -P \
        -v $HOST_BASE/test_05_output:/output \
@@ -99,7 +99,7 @@ docker run -d --name "test_06" -P \
 
 mkdir -p $HOST_BASE/test_07_output
 mkdir -p $HOST_BASE/test_07_data
-chown $USER:$GROUP $HOST_BASE
+chown -R $USER:$GROUP $HOST_BASE
 
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
     docker run -d --name "test_07" -P \
@@ -131,7 +131,10 @@ docker exec -ti test_07 make_backups
 
 # Testing datastore persistence and reutilization
 
-docker create --name test_08_pgdata -v /data debian /bin/true
+mkdir -p $HOST_BASE/test_08_pgdata
+chown -R $USER:$GROUP $HOST_BASE
+
+docker create --name test_08_pgdata -v $HOST_BASE/test_08_pgdata:/data debian /bin/true
 
 docker run -d --name test_08_a -P --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 

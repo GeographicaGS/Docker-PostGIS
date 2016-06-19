@@ -61,7 +61,7 @@ fi
 
     
 # Check if data folder is empty. If it is, start the dataserver
-if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
+if [ -z "$(ls -A "$POSTGRES_DATA_FOLDER")" ]; then
     echo Initilizing datastore...
         
     # Modify data store
@@ -71,6 +71,10 @@ if ! [ -f "${POSTGRES_DATA_FOLDER}/postgresql.conf" ]; then
     # Modify output folder
     chown postgres:postgres ${POSTGRES_OUTPUT_FOLDER}
     chmod 700 ${POSTGRES_OUTPUT_FOLDER}
+
+    # Create log folder
+    mkdir -p ${POSTGRES_DATA_FOLDER}/logs
+    chown postgres:postgres ${POSTGRES_DATA_FOLDER}/logs
     
     # Create datastore
     su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"

@@ -275,14 +275,34 @@ host all all 0.0.0.0/0 trust
 
 Modify this variable to configure at creation time. Keep in mind, however, that any value provided to this variable will supersede the default. Don't forget to include basic access permissions if you modify this variable, or the server will be hardly reachable. For testing purposes, direct commands can be issued via __exec__. Check __Usage Cases__ for examples.
 
-Configuration of __postgresql.conf__ follows an identical procedure. Command is __postgresql_conf__ and has the same syntax as __pg_hba_conf__. The environmental variable is __PG_CONF__, which defaults to:
+Configuration of __postgresql.conf__ follows an identical procedure. Command is __postgresql_conf__ and has the same syntax as __pg_hba_conf__. The environmental variable is __PG_CONF__, which defaults to the following configuration:
 
 ```txt
-ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB# \
-dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'"
+max_connections=100
+listen_addresses='*'
+shared_buffers=128MB
+dynamic_shared_memory_type=posix
+log_timezone='UTC'
+datestyle='iso, mdy'
+timezone='UTC'
+lc_messages='en_US.UTF-8'
+lc_monetary='en_US.UTF-8'
+lc_numeric='en_US.UTF-8'
+lc_time='en_US.UTF-8'
+log_statement='all'
+log_directory='pg_log'                    
+log_filename='postgresql-%Y-%m-%d_%H%M%S.log'
+logging_collector=on
+client_min_messages=notice
+log_min_messages=notice
+log_line_prefix='%a %u %d %r %h %m %i %e'
+log_destination='stderr,csvlog'
+log_rotation_size=500MB
 ```
 
 At creation time, language, encoding, and locale info is added based on env variables __LOCALE__ and __ENCODING__.
+
+Logs are stored at __$POSTGRES_DATA_FOLDER/pg_log__.
 
 
 Killing the Container
