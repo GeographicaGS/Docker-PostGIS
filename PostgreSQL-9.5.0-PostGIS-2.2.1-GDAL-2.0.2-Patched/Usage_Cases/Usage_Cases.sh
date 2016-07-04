@@ -19,11 +19,21 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # The simplest, for basic debugging
 
+echo
+echo test_00
+echo -------
+echo
+
 docker run -d --name "test_00" -P \
        geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 
 
 # Change UID and GID from postgres user to match that of /data host mounted volume
+
+echo
+echo test_01
+echo -------
+echo
 
 mkdir -p $HOST_BASE/test_01_data
 chown -R $USER:$GROUP $HOST_BASE
@@ -35,6 +45,11 @@ docker run -d -P --name "test_01" \
 
 # Testing locale generation and user creation
 
+echo
+echo test_02
+echo -------
+echo
+
 docker run -d -P --name "test_02" \
        -e "LOCALE=ru_RU" \
        -e "CREATE_USER=project" \
@@ -44,6 +59,11 @@ docker run -d -P --name "test_02" \
 
 # Testing encrypted password
 
+echo
+echo test_03
+echo -------
+echo
+
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
     docker run -d -P --name "test_03" \
 	   -e "POSTGRES_PASSWD=${PGPASSWD}" \
@@ -51,6 +71,11 @@ export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut
 
 
 # Testing launch of psql scripts
+
+echo
+echo test_04
+echo -------
+echo
 
 docker run -d --name "test_04" -P \
        -v $DIR/Assets:/init_scripts \
@@ -62,6 +87,11 @@ docker run -d --name "test_04" -P \
 
 
 # Testing backup of user database
+
+echo
+echo test_05
+echo -------
+echo
 
 mkdir -p $HOST_BASE/test_05_output
 chown -R $USER:$GROUP $HOST_BASE
@@ -86,6 +116,11 @@ docker exec -ti test_05 make_backups
 
 # Testing backup restoration
 
+echo
+echo test_06
+echo -------
+echo
+
 docker run -d --name "test_06" -P \
        -v $DIR/Assets:/Assets \
        -e "UGID=${UUID};${UGID}" \
@@ -96,6 +131,11 @@ docker run -d --name "test_06" -P \
 
 
 # Testing all variables
+
+echo
+echo test_07
+echo -------
+echo
 
 mkdir -p $HOST_BASE/test_07_output
 mkdir -p $HOST_BASE/test_07_data
@@ -130,6 +170,11 @@ docker exec -ti test_07 make_backups
 
 
 # Testing datastore persistence and reutilization
+
+echo
+echo test_08
+echo -------
+echo
 
 mkdir -p $HOST_BASE/test_08_pgdata
 chown -R $USER:$GROUP $HOST_BASE

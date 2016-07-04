@@ -72,13 +72,13 @@ if [ -z "$(ls -A "$POSTGRES_DATA_FOLDER")" ]; then
     chown postgres:postgres ${POSTGRES_OUTPUT_FOLDER}
     chmod 700 ${POSTGRES_OUTPUT_FOLDER}
 
+    # Create datastore
+    su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"
+
     # Create log folder
     mkdir -p ${POSTGRES_DATA_FOLDER}/logs
     chown postgres:postgres ${POSTGRES_DATA_FOLDER}/logs
     
-    # Create datastore
-    su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"
-
     # Erase default configuration and initialize it
     su postgres -c "rm ${POSTGRES_DATA_FOLDER}/pg_hba.conf"
     su postgres -c "pg_hba_conf a \"${PG_HBA}\""
@@ -91,7 +91,7 @@ if [ -z "$(ls -A "$POSTGRES_DATA_FOLDER")" ]; then
     # Establish postgres user password and run the database
     su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} start"
     su postgres -c "psql -h localhost -U postgres -p 5432 -c \"alter role postgres password '${POSTGRES_PASSWD}';\""
-
+    
     # Check if CREATE_USER is not null
     if ! [ "$CREATE_USER" = "null" ]; then
 
