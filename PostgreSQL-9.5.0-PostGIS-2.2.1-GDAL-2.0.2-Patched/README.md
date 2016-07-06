@@ -116,6 +116,33 @@ geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 This one creates a container with a hard-mounted volume from local _demo_scripts_ to container's _/init_scripts_ where a couple of psql scripts will be stored. Creates an user and database called _project_ and executes on it the two mentioned scripts.
 
 
+Executing Arbitrary Commands
+----------------------------
+
+The image can run arbitrary commands. This is useful for example for creating a temporary container for just dump a database, run a psql session with the one inside this image, or executing scripts into another container.
+
+Some examples:
+
+```Shell
+# Interactive pg_dump, will ask for password
+
+docker run --rm -ti -v /whatever/:/d --link the_container_running_the_database:pg \
+geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+pg_dump -b -E UTF8 -f /d/dump -F c -v -Z 9 -h pg -p 5432 -U postgres project
+
+# Full automatic pg_dump, with password as ENV variable
+
+docker run --rm -v /home/malkab/Desktop/:/d --link test_07:pg \
+geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
+-v -Z 9 -h pg -p 5432 -U postgres postgres
+
+# Interactive psql
+
+docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
+```
+
+
 Data Persistence
 ----------------
 
@@ -263,14 +290,13 @@ docker exec -ti whatevercontainer pg_hba_conf a \
 but at startup it is controlled by an environment variable, __PG_HBA__, which defaults to:
 
 ```txt
-ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust# \
-host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
+ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ```
 
 This defaults should be submitted for basic operation. For universal access, for example for testing, add:
 
 ```txt
-host all all 0.0.0.0/0 trust
+local all all trust#host all all 0.0.0.0/0 trust#host all all 127.0.0.1/32 trust#host all all ::1/128 trust
 ```
 
 Modify this variable to configure at creation time. Keep in mind, however, that any value provided to this variable will supersede the default. Don't forget to include basic access permissions if you modify this variable, or the server will be hardly reachable. For testing purposes, direct commands can be issued via __exec__. Check __Usage Cases__ for examples.
@@ -278,26 +304,7 @@ Modify this variable to configure at creation time. Keep in mind, however, that 
 Configuration of __postgresql.conf__ follows an identical procedure. Command is __postgresql_conf__ and has the same syntax as __pg_hba_conf__. The environmental variable is __PG_CONF__, which defaults to the following configuration:
 
 ```txt
-max_connections=100
-listen_addresses='*'
-shared_buffers=128MB
-dynamic_shared_memory_type=posix
-log_timezone='UTC'
-datestyle='iso, mdy'
-timezone='UTC'
-lc_messages='en_US.UTF-8'
-lc_monetary='en_US.UTF-8'
-lc_numeric='en_US.UTF-8'
-lc_time='en_US.UTF-8'
-log_statement='all'
-log_directory='pg_log'                    
-log_filename='postgresql-%Y-%m-%d_%H%M%S.log'
-logging_collector=on
-client_min_messages=notice
-log_min_messages=notice
-log_line_prefix='%a %u %d %r %h %m %i %e'
-log_destination='stderr,csvlog'
-log_rotation_size=500MB
+max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'#lc_messages='en_US.UTF-8'#lc_monetary='en_US.UTF-8'#lc_numeric='en_US.UTF-8'#lc_time='en_US.UTF-8'#log_statement='all'#log_directory='pg_log'#log_filename='postgresql-%Y-%m-%d_%H%M%S.log'#logging_collector=on#client_min_messages=notice#log_min_messages=notice#log_line_prefix='%a %u %d %r %h %m %i %e'#log_destination='stderr,csvlog'#log_rotation_size=500MB
 ```
 
 At creation time, language, encoding, and locale info is added based on env variables __LOCALE__ and __ENCODING__.

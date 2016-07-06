@@ -77,3 +77,5 @@ VOLUME $POSTGRES_OUTPUT_FOLDER
 
 STOPSIGNAL SIGINT
 ENTRYPOINT ["/usr/local/bin/run.sh"]
+
+CMD ["run_default"]

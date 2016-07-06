@@ -190,3 +190,35 @@ sleep $WAIT_TIME
 docker stop test_08_a
 
 docker run -d --name test_08_b -P --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+
+
+# Testing psql and pg_dump automatic session 
+
+echo
+echo test_09
+echo -------
+echo
+
+mkdir -p $HOST_BASE/test_09_out
+chown -R $USER:$GROUP $HOST_BASE
+
+echo
+echo pg_dump
+echo
+
+# pg_dump
+
+docker run --rm -v $HOST_BASE/test_09_out:/d --link test_07:pg \
+       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+       PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump_test_07 -F c \
+       -v -Z 9 -h pg -p 5432 -U postgres project
+
+echo
+echo psql command
+echo
+
+# psql command
+
+docker run --rm --link test_07:pg \
+       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+       PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres -c "\l"
