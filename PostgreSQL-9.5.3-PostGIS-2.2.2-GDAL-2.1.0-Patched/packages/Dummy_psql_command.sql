@@ -1,1 +1,0 @@
-\echo Dummy command

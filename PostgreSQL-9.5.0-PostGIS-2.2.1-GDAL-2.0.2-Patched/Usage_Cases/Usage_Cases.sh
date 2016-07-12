@@ -4,7 +4,7 @@
 HOST_BASE=/home/malkab/Desktop/Docker_PostGIS_Tests
 
 # Time to wait for containers to launch the DB process
-WAIT_TIME=30
+WAIT_TIME=10
 
 # Host user and group to test user mapping
 USER=malkab
@@ -19,11 +19,21 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # The simplest, for basic debugging
 
+echo
+echo test_00
+echo -------
+echo
+
 docker run -d --name "test_00" -P \
        geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 
 
 # Change UID and GID from postgres user to match that of /data host mounted volume
+
+echo
+echo test_01
+echo -------
+echo
 
 mkdir -p $HOST_BASE/test_01_data
 chown -R $USER:$GROUP $HOST_BASE
@@ -35,6 +45,11 @@ docker run -d -P --name "test_01" \
 
 # Testing locale generation and user creation
 
+echo
+echo test_02
+echo -------
+echo
+
 docker run -d -P --name "test_02" \
        -e "LOCALE=ru_RU" \
        -e "CREATE_USER=project" \
@@ -44,6 +59,11 @@ docker run -d -P --name "test_02" \
 
 # Testing encrypted password
 
+echo
+echo test_03
+echo -------
+echo
+
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
     docker run -d -P --name "test_03" \
 	   -e "POSTGRES_PASSWD=${PGPASSWD}" \
@@ -51,6 +71,11 @@ export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut
 
 
 # Testing launch of psql scripts
+
+echo
+echo test_04
+echo -------
+echo
 
 docker run -d --name "test_04" -P \
        -v $DIR/Assets:/init_scripts \
@@ -63,8 +88,13 @@ docker run -d --name "test_04" -P \
 
 # Testing backup of user database
 
+echo
+echo test_05
+echo -------
+echo
+
 mkdir -p $HOST_BASE/test_05_output
-chown $USER:$GROUP $HOST_BASE
+chown -R $USER:$GROUP $HOST_BASE
 
 docker run -d --name "test_05" -P \
        -v $HOST_BASE/test_05_output:/output \
@@ -86,6 +116,11 @@ docker exec -ti test_05 make_backups
 
 # Testing backup restoration
 
+echo
+echo test_06
+echo -------
+echo
+
 docker run -d --name "test_06" -P \
        -v $DIR/Assets:/Assets \
        -e "UGID=${UUID};${UGID}" \
@@ -97,9 +132,14 @@ docker run -d --name "test_06" -P \
 
 # Testing all variables
 
+echo
+echo test_07
+echo -------
+echo
+
 mkdir -p $HOST_BASE/test_07_output
 mkdir -p $HOST_BASE/test_07_data
-chown $USER:$GROUP $HOST_BASE
+chown -R $USER:$GROUP $HOST_BASE
 
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
     docker run -d --name "test_07" -P \
@@ -131,7 +171,15 @@ docker exec -ti test_07 make_backups
 
 # Testing datastore persistence and reutilization
 
-docker create --name test_08_pgdata -v /data debian /bin/true
+echo
+echo test_08
+echo -------
+echo
+
+mkdir -p $HOST_BASE/test_08_pgdata
+chown -R $USER:$GROUP $HOST_BASE
+
+docker create --name test_08_pgdata -v $HOST_BASE/test_08_pgdata:/data debian /bin/true
 
 docker run -d --name test_08_a -P --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
 
@@ -142,3 +190,35 @@ sleep $WAIT_TIME
 docker stop test_08_a
 
 docker run -d --name test_08_b -P --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+
+
+# Testing psql and pg_dump automatic session 
+
+echo
+echo test_09
+echo -------
+echo
+
+mkdir -p $HOST_BASE/test_09_out
+chown -R $USER:$GROUP $HOST_BASE
+
+echo
+echo pg_dump
+echo
+
+# pg_dump
+
+docker run --rm -v $HOST_BASE/test_09_out:/d --link test_07:pg \
+       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+       PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump_test_07 -F c \
+       -v -Z 9 -h pg -p 5432 -U postgres project
+
+echo
+echo psql command
+echo
+
+# psql command
+
+docker run --rm --link test_07:pg \
+       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+       PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres -c "\l"
