@@ -1,6 +1,20 @@
-Geographica's PostgreSQL / PostGIS Docker Images
-================================================
+# Geographica's PostgreSQL / PostGIS Docker Images
 
 This repository contains Docker image builds for PostgreSQL / PostGIS made by Geographica. This is the general README, please check version READMEs in the correponding folders.
 
 The philosophy behind Git / Docker tags correlation we ended up using is simple: the master branch of this repo contains as many folders containing different Docker image builds as Docker tags we like to have. We don't use Git tags nor branches to try to correlate with Docker tags. We try this in the past and was a mess. Each version packages makes a folder, each folder builds a __geographica/postgis__ Docker tag bundling different library versions.
+
+
+## Quick Tags Overview
+
+Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
+
+- __Awkward_Aardvark:__ released 2016-07-20. WIP.
+
+- __PostgreSQL-9.1.2-PostGIS-1.5.8-Patched:__ released a long time ago. A PG 9.1.2 with old PostGIS 1.5.8 patched for handling spanish SRS. For legacy applications.
+
+- __PostgreSQL-9.3.5-PostGIS-2.1.7-GDAL-1.11.2-Patched:__ released a long time ago. A PG 9.3.5 with PostGIS 2.1.7 and support for raster, also spanish patched. Legacy.
+
+- __PostgreSQL-9.4.5-PostGIS-2.2.0-GDAL-2.0.1-Patched:__ released some time ago. The same as above. Legacy.
+
+- __PostgreSQL-9.5.0-PostGIS-2.2.1-GDAL-2.0.2-Patched:__ released 2016-06-15. A lot of configuration options, maybe too much. Currently our workhorse.
