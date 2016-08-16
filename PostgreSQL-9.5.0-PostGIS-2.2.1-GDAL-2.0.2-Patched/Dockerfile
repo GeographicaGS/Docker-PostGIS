@@ -53,7 +53,7 @@ ADD https://raw.githubusercontent.com/GeographicaGS/Spanish-Geodetics-Patches/ma
 ADD https://raw.githubusercontent.com/GeographicaGS/Spanish-Geodetics-Patches/master/proj4/proj${PROJ4_VERSION}-patch/nad/epsg $ROOTDIR/src/
 
 ADD http://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz $ROOTDIR/src/
-ADD https://raw.githubusercontent.com/GeographicaGS/Spanish-Geodetics-Patches/master/postgis/postgis-${POSTGIS_VERSION}/spatial_ref_sys.sql $ROOTDIR/src/
+ADD https://raw.githubusercontent.com/GeographicaGS/Spanish-Geodetics-Patches/master/postgis/spatial_ref_sys.sql $ROOTDIR/src/
 
 ADD http://download.osgeo.org/gdal/2.0.2/gdal-${GDAL_VERSION}.tar.gz $ROOTDIR/src/
 ADD https://raw.githubusercontent.com/GeographicaGS/Spanish-Geodetics-Patches/master/gdal/gdal-patch-${GDAL_VERSION}/data/gcs.csv $ROOTDIR/src/
