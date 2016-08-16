@@ -24,7 +24,7 @@ cd src ; tar -xzvf SFCGAL-${SFCGAL_VERSION}.tar.gz ; cd ..
 
 
 # Compilation of PostgreSQL
-cd src/postgresql-${PG_VERSION} ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib --with-jsondir=/usr/include/json-c ; cd ../..
+cd src/postgresql-${PG_VERSION} ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib ; cd ../..
 
 cd src/postgresql-${PG_VERSION} ; make ; cd ../..
 
@@ -105,7 +105,7 @@ ldconfig
 # Compilation of PostGIS
 mv src/spatial_ref_sys.sql src/postgis-${POSTGIS_VERSION}/
 
-cd src/postgis-${POSTGIS_VERSION} ; ./configure --with-topology --with-sfcgal --with-raster ; cd ../..
+cd src/postgis-${POSTGIS_VERSION} ; ./configure --with-topology --with-sfcgal --with-raster --with-jsondir=/usr/include/json-c ; cd ../..
 
 cd src/postgis-${POSTGIS_VERSION} ; make ; cd ../..
 
