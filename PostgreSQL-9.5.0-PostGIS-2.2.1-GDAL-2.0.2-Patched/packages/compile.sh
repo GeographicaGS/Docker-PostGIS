@@ -2,7 +2,7 @@
 
 
 # Update and apt-get basic packages
-apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev curl cmake libgmp-dev libmpfr-dev libboost-dev libboost-thread-dev libboost-system-dev
+apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev curl cmake libgmp-dev libmpfr-dev libboost-dev libboost-thread-dev libboost-system-dev libjson-c-dev
 
 
 # Grab gosu
@@ -24,7 +24,7 @@ cd src ; tar -xzvf SFCGAL-${SFCGAL_VERSION}.tar.gz ; cd ..
 
 
 # Compilation of PostgreSQL
-cd src/postgresql-${PG_VERSION} ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib ; cd ../..
+cd src/postgresql-${PG_VERSION} ; ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib --with-jsondir=/usr/include/json-c ; cd ../..
 
 cd src/postgresql-${PG_VERSION} ; make ; cd ../..
 
