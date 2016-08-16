@@ -44,7 +44,7 @@ done
 
 # Update and apt-get basic packages
 
-apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev locales
+apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev locales libjson-c-dev
 
 localedef -i $LOCALE -c -f $ENCODING -A /usr/share/locale/locale.alias ${LOCALE}.${ENCODING}
 
@@ -125,7 +125,7 @@ ldconfig
 # Compilation of PostGIS
 mv src/spatial_ref_sys.sql src/postgis-${POSTGIS_VERSION}/
 
-cd src/postgis-${POSTGIS_VERSION} ; ./configure ; cd ../..
+cd src/postgis-${POSTGIS_VERSION} ; ./configure --with-jsondir=/usr/include/json-c ; cd ../..
 
 cd src/postgis-${POSTGIS_VERSION} ; make ; cd ../..
 
@@ -139,7 +139,3 @@ apt-get clean && rm -rf /var/lib/apt/lists/* && rm -Rf /usr/local/src && apt-get
 chmod 755 /usr/local/bin/run
 
 chown postgres:postgres /usr/local/bin/run
-
-
-
-
