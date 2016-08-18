@@ -2,7 +2,7 @@
 
 
 # Update and apt-get basic packages
-apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev curl cmake libgmp-dev libmpfr-dev libboost-dev libboost-thread-dev libboost-system-dev
+apt-get update && apt-get install -y build-essential python python-dev libreadline6-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev curl cmake libgmp-dev libmpfr-dev libboost-dev libboost-thread-dev libboost-system-dev libjson-c-dev
 
 
 # Grab gosu
@@ -105,7 +105,7 @@ ldconfig
 # Compilation of PostGIS
 mv src/spatial_ref_sys.sql src/postgis-${POSTGIS_VERSION}/
 
-cd src/postgis-${POSTGIS_VERSION} ; ./configure --with-topology --with-sfcgal --with-raster ; cd ../..
+cd src/postgis-${POSTGIS_VERSION} ; ./configure --with-topology --with-sfcgal --with-raster --with-jsondir=/usr/include/json-c ; cd ../..
 
 cd src/postgis-${POSTGIS_VERSION} ; make ; cd ../..
 
