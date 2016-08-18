@@ -14,12 +14,6 @@ apt-get update \
 	       libxslt-dev \
 	       curl \
 	       libjson-c-dev	       
-	       # cmake \
-	       # libgmp-dev \
-	       # libmpfr-dev \
-	       # libboost-dev \
-	       # libboost-thread-dev \
-	       # libboost-system-dev
 
 
 # Grab gosu
