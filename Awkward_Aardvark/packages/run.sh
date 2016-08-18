@@ -5,7 +5,7 @@ set -e
 # Generate locale
 LANG=${LOCALE}.${ENCODING}
 
-locale-gen ${LANG}
+locale-gen ${LANG} > /dev/null
 
 
 # Check if command is just "run_default"
@@ -14,7 +14,7 @@ if [ "$1" = 'run_default' ]; then
     
     # Check if user postgres exists
 
-    if ! [ id postgres > /dev/null 2>&1 ] ; then
+    if ! id postgres > /dev/null 2>&1; then
 	echo Creating postgres user
 	
 	UID_DATA="$(folder_uid ${POSTGRES_DATA_FOLDER})"

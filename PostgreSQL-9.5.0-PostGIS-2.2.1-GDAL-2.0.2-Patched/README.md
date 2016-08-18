@@ -1,5 +1,7 @@
 # Awkward Aardvark: PostgreSQL 9.5.0, PostGIS 2.2.1, Patched
 
+__WARNING:__ This image is deprecated. Use tag __Awkward Aardvark__ instead.
+
 ## Versions
 
 This Dockerfile compiles the following software:

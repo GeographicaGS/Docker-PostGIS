@@ -20,19 +20,19 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # The simplest, for basic debugging
 
 echo
-echo test_00
-echo -------
+echo test_00: Simple deployment
+echo --------------------------
 echo
 
 docker run -d --name "test_00" -P \
-       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+       geographica/postgis:awkward_aardvark
 
 
 # Change UID and GID from postgres user to match that of /data host mounted volume
 
 echo
-echo test_01
-echo -------
+echo test_01: Get UID and GID from mounted host volume
+echo -------------------------------------------------
 echo
 
 mkdir -p $HOST_BASE/test_01_data
@@ -40,41 +40,41 @@ chown -R $USER:$GROUP $HOST_BASE
 
 docker run -d -P --name "test_01" \
        -v $HOST_BASE/test_01_data:/data \
-       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+       geographica/postgis:awkward_aardvark
 
 
 # Testing locale generation and user creation
 
 echo
-echo test_02
-echo -------
+echo test_02: Locale and user generation
+echo -----------------------------------
 echo
 
 docker run -d -P --name "test_02" \
        -e "LOCALE=ru_RU" \
        -e "CREATE_USER=project" \
        -e "CREATE_USER_PASSWD=project_pass" \
-       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+       geographica/postgis:awkward_aardvark
 
 
 # Testing encrypted password
 
 echo
-echo test_03
-echo -------
+echo test_03: Encrypted password
+echo ---------------------------
 echo
 
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
     docker run -d -P --name "test_03" \
 	   -e "POSTGRES_PASSWD=${PGPASSWD}" \
-	   geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched 
+	   geographica/postgis:awkward_aardvark 
 
 
 # Testing launch of psql scripts
 
 echo
-echo test_04
-echo -------
+echo test_04: Launch of psql scripts
+echo -------------------------------
 echo
 
 docker run -d --name "test_04" -P \
@@ -83,14 +83,14 @@ docker run -d --name "test_04" -P \
        -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" \
        -e "CREATE_USER=project" \
        -e "CREATE_USER_PASSWD=project_pass" \
-       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+       geographica/postgis:awkward_aardvark
 
 
 # Testing backup of user database
 
 echo
-echo test_05
-echo -------
+echo test_05: Backup database
+echo ------------------------
 echo
 
 mkdir -p $HOST_BASE/test_05_output
@@ -105,7 +105,7 @@ docker run -d --name "test_05" -P \
        -e "CREATE_USER_PASSWD=project_pass" \
        -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" \
        -e "BACKUP_DB=project" \
-       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+       geographica/postgis:awkward_aardvark
 
 echo Waiting for container test_05 to perform initalization...
 
@@ -117,8 +117,8 @@ docker exec -ti test_05 make_backups
 # Testing backup restoration
 
 echo
-echo test_06
-echo -------
+echo test_06: Backup restoration
+echo ---------------------------
 echo
 
 docker run -d --name "test_06" -P \
@@ -127,14 +127,14 @@ docker run -d --name "test_06" -P \
        -e "LOCALE=es_ES" \
        -e "PSQL_SCRIPTS=/Assets/Create_role.sql" \
        -e "PG_RESTORE=-C -F c -v -U postgres /Assets/project.backup" \
-       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+       geographica/postgis:awkward_aardvark
 
 
 # Testing all variables
 
 echo
-echo test_07
-echo -------
+echo test_07: Test all ENV variables
+echo -------------------------------
 echo
 
 mkdir -p $HOST_BASE/test_07_output
@@ -152,14 +152,13 @@ export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut
 	   -e "ENCODING=UTF-8" \
 	   -e "LOCALE=es_ES" \
 	   -e "PSQL_SCRIPTS=/init_scripts/Create_role.sql;/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql;/init_scripts/Schema02_DDL.sql" \
-	   -e "CREATE_USER=project2" \
-	   -e "CREATE_USER_PASSWD=project_pass2" \
+	   -e "CREATE_USER=project2;project_pass2" \
 	   -e "BACKUP_DB=project" \
 	   -e "PG_RESTORE=-C -F c -v -d postgres -U postgres /init_scripts/project.backup" \
 	   -e "UGID=${UUID};${UGID}" \
 	   -e "PG_HBA=local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust#host project project 0.0.0.0/0 trust" \
 	   -e "PG_CONF=max_connections=10#listen_addresses='*'#shared_buffers=256MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'" \
-	   geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+	   geographica/postgis:awkward_aardvark
 
 	   
 echo Waiting for container test_07 to perform initalization...
@@ -172,8 +171,8 @@ docker exec -ti test_07 make_backups
 # Testing datastore persistence and reutilization
 
 echo
-echo test_08
-echo -------
+echo test_08: Datastore persistence and reutilization
+echo ------------------------------------------------
 echo
 
 mkdir -p $HOST_BASE/test_08_pgdata
@@ -181,7 +180,7 @@ chown -R $USER:$GROUP $HOST_BASE
 
 docker create --name test_08_pgdata -v $HOST_BASE/test_08_pgdata:/data debian /bin/true
 
-docker run -d --name test_08_a -P --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+docker run -d --name test_08_a -P --volumes-from test_08_pgdata geographica/postgis:awkward_aardvark
 
 echo Waiting for container test_08_a to initalize
 
@@ -189,14 +188,14 @@ sleep $WAIT_TIME
 
 docker stop test_08_a
 
-docker run -d --name test_08_b -P --volumes-from test_08_pgdata geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+docker run -d --name test_08_b -P --volumes-from test_08_pgdata geographica/postgis:awkward_aardvark
 
 
 # Testing psql and pg_dump automatic session 
 
 echo
-echo test_09
-echo -------
+echo test_09: psql and pg_dump automatic session
+echo -------------------------------------------
 echo
 
 mkdir -p $HOST_BASE/test_09_out
@@ -209,7 +208,7 @@ echo
 # pg_dump
 
 docker run --rm -v $HOST_BASE/test_09_out:/d --link test_07:pg \
-       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+       geographica/postgis:awkward_aardvark \
        PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump_test_07 -F c \
        -v -Z 9 -h pg -p 5432 -U postgres project
 
@@ -220,5 +219,50 @@ echo
 # psql command
 
 docker run --rm --link test_07:pg \
-       geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+       geographica/postgis:awkward_aardvark \
        PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres -c "\l"
+
+
+# Testing PostGIS
+
+echo
+echo test_10: PostGIS
+echo ----------------
+echo
+
+docker run -d --name test_10 -e "CREATE_USER=postgis;postgis" -P geographica/postgis:awkward_aardvark
+
+echo
+echo Waiting for container test_10 to initialize
+
+sleep $WAIT_TIME
+
+echo
+echo Create PostGIS extension
+
+docker run --rm --link test_10:pg geographica/postgis:awkward_aardvark PGPASSWORD="postgres" \
+       psql -h pg -U postgres postgis -c "create extension postgis;"
+
+echo
+echo Test GeoJSON
+
+docker run --rm --link test_10:pg geographica/postgis:awkward_aardvark \
+       PGPASSWORD="postgis" \
+       psql -h pg -U postgis postgis -c "SELECT ST_GeomFromGeoJSON('{\"type\":\"Point\",\"coordinates\":[-48.23456,20.12345]}');"
+
+echo
+echo Test PROJ4 datum shiftings
+
+docker run --rm -v $DIR/Assets:/Assets --link test_10:pg geographica/postgis:awkward_aardvark /Assets/proj4/proj4_test.sh
+
+echo
+echo Test GDAL datum shiftings
+
+docker run --rm -v $DIR/Assets:/Assets --link test_10:pg geographica/postgis:awkward_aardvark /Assets/gdal/gdal-test.sh
+
+echo
+echo Test PostGIS datum shiftings
+
+docker run --rm -v $DIR/Assets:/Assets --link test_10:pg geographica/postgis:awkward_aardvark \
+       PGPASSWORD="postgis" psql -h pg -U postgis postgis -c "\i /Assets/postgis/postgis_test.sql"
+

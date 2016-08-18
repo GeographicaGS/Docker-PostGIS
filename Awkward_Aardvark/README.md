@@ -14,11 +14,7 @@ This Dockerfile compiles the following software:
 
 - __GDAL 2.0.2:__ also patched;
 
-- __Postgis 2.2.1:__ patched as well;
-
-- __CGAL 4.6.3;__
-
-- __SFCGAL 1.3.0.__
+- __Postgis 2.2.1:__ patched as well.
 
 
 Image Creation
@@ -33,10 +29,10 @@ Build the image directly from Git (this can take a long time):
 or pull it from Docker Hub:
 
 ```Shell
-docker pull geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+docker pull geographica/postgis:awkward_aardvark
 ```
 
-The image exposes port 5432, a volume designated by enviroment variable __POSTGRES_DATA_FOLDER__ with the data folder, and another one __POSTGRES_OUTPUT_FOLDER__ for database output (like backups and the like).
+The image exposes port 5432, a volume designated by enviroment variable __POSTGRES_DATA_FOLDER__ with the data folder, and another one __POSTGRES_OUTPUT_FOLDER__ for database output (like backups).
 
 
 Container Creation
@@ -45,10 +41,8 @@ Container Creation
 There are several options available to create containers. Check __Usage_Cases__ for testing. The most simple one:
 
 ```Shell
-# Simple.sh
-
 docker run -d -P --name pgcontainer \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 This will create a container with two default volumes, __/data__ and __/output__, for storing the data store and output, respectively. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
@@ -57,25 +51,19 @@ Containers can be configured by means of setting environmental variables:
 
 - __POSTGRES_PASSWD:__ set the password for user postgres. See [Passwords](#Passwords) for more details. Defaults to _postgres_;
 
-- __POSTGRES_DATA_FOLDER:__ in the rare case the data store folder is to be changed. Defaults to _/data_;
-
-- __POSTGRES_OUTPUT_FOLDER:__ in the even more rare case the ouput folder must be reassigned. Defaults to _/output_;
-
 - __ENCODING:__ encoding to create the data store and the default database, if applicable. Defaults to _UTF-8_;
 
 - __LOCALE:__ locale for the data store and the default database, if any. Defaults to _en_US_;
 
 - __PSQL_SCRIPTS:__ semicolon separated psql scripts to be executed on the data store once created, in absolute path. Defaults to _null_, meaning no action is to be taken. See [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up) for more details;
 
-- __CREATE_USER:__ creates an user and a default database with this owner at startup. Defaults to _null_, in which case no user and database will be created (very bad luck if you want your user and database to be called 'null' :| ). This user and database are created before any psql script is executed or any backup is restored;
-
-- __CREATE_USER_PASSWD:__ set the password for the aforementioned user. See [Passwords](#Passwords) for more details. Defaults to _null_;
+- __CREATE_USER:__ creates an user and a default database with this owner at startup. The structure of this parameter is _USERNAME;PASSWORD_, and it defaults to _null;null_, in which case no user and database will be created (very bad luck if you want your user and database to be called 'null' :| ). This user and database are created before any psql script is executed or any backup is restored;
 
 - __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases](#Backing Up Databases) for details;
 
 - __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details. Defaults to _null_, meaning that no action is to be taken. Restores are done after all psql scripts are executed;
 
-- __UGID:__ the user and group ID, separated by a semicolon, to map container postgres user to. Defaults to _null;null_, meaning that the system will ultimately assign the ID. Check [User Mapping](#User Mapping) for details;
+- __UGID:__ the user and group ID for the postgres user, separated by a semicolon, to map container postgres user to. Defaults to _null;null_, meaning that the system will try to set the ID. Check [User Mapping](#User Mapping) for details;
 
 - __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
@@ -84,36 +72,32 @@ Containers can be configured by means of setting environmental variables:
 Some examples of container initializations:
 
 ```Shell
-# With_passwords.sh
-
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched 
+geographica/postgis:awkward_aardvark 
 ```
 
 This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](#Passwords) for details:
 
 ```Shell
-# Create_user.sh
-
 docker run -d -P --name ageworkshoptestpg -e "LOCALE=es_ES" -e "CREATE_USER=project"  \
 -e "CREATE_USER_PASSWD=project_pass" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 This will create the container with a spanish locale, and will create on startup an user and database called _project_, being _project_pass_ the password for the _project_ user. Additionaly, the _project_ database is set to be automatically backed up.
 
 ```Shell
-# With_scripts.sh
-
 docker run -d -P --name ageworkshoptestpg -v /home/demo_scripts/:/init_scripts/ \
 -e "LOCALE=es_ES" -e "CREATE_USER=project"  \
 -e "CREATE_USER_PASSWD=project_pass" -e "BACKUP_DB=project" \
 -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 This one creates a container with a hard-mounted volume from local _demo_scripts_ to container's _/init_scripts_ where a couple of psql scripts will be stored. Creates an user and database called _project_ and executes on it the two mentioned scripts.
+
+Please check folder __Usage_Cases__ for a set of usage cases bundled as a test suite of sorts.
 
 
 Executing Arbitrary Commands
@@ -127,19 +111,19 @@ Some examples:
 # Interactive pg_dump, will ask for password
 
 docker run --rm -ti -v /whatever/:/d --link the_container_running_the_database:pg \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+geographica/postgis:awkward_aardvark \
 pg_dump -b -E UTF8 -f /d/dump -F c -v -Z 9 -h pg -p 5432 -U postgres project
 
 # Full automatic pg_dump, with password as ENV variable
 
 docker run --rm -v /home/malkab/Desktop/:/d --link test_07:pg \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+geographica/postgis:awkward_aardvark \
 PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 -v -Z 9 -h pg -p 5432 -U postgres postgres
 
 # Interactive psql
 
-docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
+docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:awkward_aardvark \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
 
 
@@ -170,7 +154,7 @@ export USERPASSWD="md5"$(printf '%s' "userpass" ${USER} | md5sum | cut -d ' ' -f
 export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -e "CREATE_USER=${USER}" -e "CREATE_USER_PASSWD=${USERPASSWD}" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 Ugly, but effective. Keep in mind, however, that if you use provisioning methods like bash scripts or _Docker Compose_ others will still be able to read passwords from these sources, so keep them safe.
@@ -186,7 +170,7 @@ export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d 
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -v /localscripts/:/psql_scripts/ \
 -e "PSQL_SCRIPTS=/psql_scripts/script1.sql;/psql_scripts/script2.sql" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 _script1.sql_ and _script2.sql_ will be executed on container startup. Scripts are executed as _postgres_.
