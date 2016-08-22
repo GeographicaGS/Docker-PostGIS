@@ -1,8 +1,8 @@
-# Awkward Aardvark: PostgreSQL 9.5.0, PostGIS 2.2.1, Patched
+PostgreSQL 9.5.0, PostGIS 2.2.1, GDAL 2.0.2, Patched
+=====================================================
 
-__WARNING:__ This image is deprecated. Use tag __Awkward Aardvark__ instead.
-
-## Versions
+Versions
+--------
 
 This Dockerfile compiles the following software:
 
@@ -12,10 +12,13 @@ This Dockerfile compiles the following software:
 
 - __Proj 4.9.2:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
 
-- __Postgis 2.2.1:__ patched as well;
+- __GDAL 2.0.2:__ also patched;
+
+- __Postgis 2.2.1:__ patched as well.
 
 
-## Image Creation
+Image Creation
+--------------
 
 Build the image directly from Git (this can take a long time):
 
@@ -26,21 +29,20 @@ Build the image directly from Git (this can take a long time):
 or pull it from Docker Hub:
 
 ```Shell
-docker pull geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+docker pull geographica/postgis:awkward_aardvark
 ```
 
-The image exposes port 5432, a volume __/data/__ with the data folder, and another one __/output__ for database output (like backups and the like).
+The image exposes port 5432, a volume designated by enviroment variable __POSTGRES_DATA_FOLDER__ with the data folder, and another one __POSTGRES_OUTPUT_FOLDER__ for database output (like backups).
 
 
-## Container Creation
+Container Creation
+------------------
 
 There are several options available to create containers. Check __Usage_Cases__ for testing. The most simple one:
 
 ```Shell
-# Simple.sh
-
 docker run -d -P --name pgcontainer \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 This will create a container with two default volumes, __/data__ and __/output__, for storing the data store and output, respectively. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
@@ -53,56 +55,53 @@ Containers can be configured by means of setting environmental variables:
 
 - __LOCALE:__ locale for the data store and the default database, if any. Defaults to _en_US_;
 
-- __PSQL_SCRIPTS:__ semicolon separated psql scripts to be executed on the data store once created, in absolute path. Defaults to _null_, meaning no action is to be taken. See [Executing psql Scripts on Start Up] for more details;
+- __PSQL_SCRIPTS:__ semicolon separated psql scripts to be executed on the data store once created, in absolute path. Defaults to _null_, meaning no action is to be taken. See [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up) for more details;
 
-- __CREATE_USER:__ creates an user and a default database with this owner at startup. Defaults to _null;null_, in which case no user and no database will be created (very bad luck if you want your user and database to be called 'null' :| ). The format of this parameter is _username;password_. This user and database are created before any psql script is executed or any backup is restored;
+- __CREATE_USER:__ creates an user and a default database with this owner at startup. The structure of this parameter is _USERNAME;PASSWORD_, and it defaults to _null;null_, in which case no user and database will be created (very bad luck if you want your user and database to be called 'null' :| ). This user and database are created before any psql script is executed or any backup is restored;
 
-- __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases] for details;
+- __BACKUP_DB:__ semicolon separated names of databases to backup by default. Defaults to _null_, which means no database will be backed-up by default, or to _CREATE_USER_ in case any is used so default database will be backed up automatically. See [Backing Up Databases](#Backing Up Databases) for details;
 
-- __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump] for details. Defaults to _null_, meaning that no action is to be taken. Restores are done after all psql scripts are executed;
+- __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details. Defaults to _null_, meaning that no action is to be taken. Restores are done after all psql scripts are executed;
 
-- __UGID:__ the user and group ID, separated by a semicolon, to map container postgres user to. Defaults to _null;null_, meaning that the system will ultimately assign the ID. Check [User Mapping] for details;
+- __UGID:__ the user and group ID for the postgres user, separated by a semicolon, to map container postgres user to. Defaults to _null;null_, meaning that the system will try to set the ID. Check [User Mapping](#User Mapping) for details;
 
-- __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store] for details;
+- __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
-- __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store] for details.
+- __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](#Configuring the Data Store) for details.
 
 Some examples of container initializations:
 
 ```Shell
-# With_passwords.sh
-
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched 
+geographica/postgis:awkward_aardvark 
 ```
 
 This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](#Passwords) for details:
 
 ```Shell
-# Create_user.sh
-
 docker run -d -P --name ageworkshoptestpg -e "LOCALE=es_ES" -e "CREATE_USER=project"  \
 -e "CREATE_USER_PASSWD=project_pass" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 This will create the container with a spanish locale, and will create on startup an user and database called _project_, being _project_pass_ the password for the _project_ user. Additionaly, the _project_ database is set to be automatically backed up.
 
 ```Shell
-# With_scripts.sh
-
 docker run -d -P --name ageworkshoptestpg -v /home/demo_scripts/:/init_scripts/ \
 -e "LOCALE=es_ES" -e "CREATE_USER=project"  \
 -e "CREATE_USER_PASSWD=project_pass" -e "BACKUP_DB=project" \
 -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 This one creates a container with a hard-mounted volume from local _demo_scripts_ to container's _/init_scripts_ where a couple of psql scripts will be stored. Creates an user and database called _project_ and executes on it the two mentioned scripts.
 
+Please check folder __Usage_Cases__ for a set of usage cases bundled as a test suite of sorts.
 
-## Executing Arbitrary Commands
+
+Executing Arbitrary Commands
+----------------------------
 
 The image can run arbitrary commands. This is useful for example for creating a temporary container for just dump a database, run a psql session with the one inside this image, or executing scripts into another container.
 
@@ -112,28 +111,30 @@ Some examples:
 # Interactive pg_dump, will ask for password
 
 docker run --rm -ti -v /whatever/:/d --link the_container_running_the_database:pg \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+geographica/postgis:awkward_aardvark \
 pg_dump -b -E UTF8 -f /d/dump -F c -v -Z 9 -h pg -p 5432 -U postgres project
 
 # Full automatic pg_dump, with password as ENV variable
 
 docker run --rm -v /home/malkab/Desktop/:/d --link test_07:pg \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \
+geographica/postgis:awkward_aardvark \
 PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 -v -Z 9 -h pg -p 5432 -U postgres postgres
 
 # Interactive psql
 
-docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
+docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:awkward_aardvark \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
 
 
-## Data Persistence
+Data Persistence
+----------------
 
 Datastore data can be persisted in a data volume or host mounted folder and be used later by another container. The container checks if __POSTGRES_DATA_FOLDER__ has a file _postgresql.conf_. If not, considers the datastore to be not created and creates an empty one.
 
 
-## Passwords
+Passwords
+---------
 
 Passwords sent to the container with environment variables __POSTGRES_PASSWD__ and __CREATE_USER_PASSED__ can be passed either on plain text or already encrypted á la PostgreSQL. To pass it on plain text means that anybody with access to the __docker inspect__ command on the server will be able to read passwords. Encrypting them previously means that __docker inspect__ will show the encrypted password, adding an additional layer of secrecy.
 
@@ -153,13 +154,14 @@ export USERPASSWD="md5"$(printf '%s' "userpass" ${USER} | md5sum | cut -d ' ' -f
 export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -e "CREATE_USER=${USER}" -e "CREATE_USER_PASSWD=${USERPASSWD}" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 Ugly, but effective. Keep in mind, however, that if you use provisioning methods like bash scripts or _Docker Compose_ others will still be able to read passwords from these sources, so keep them safe.
 
 
-## Executing psql Scripts on Start Up
+Executing psql Scripts on Start Up
+----------------------------------
 
 The image can run __psql__ scripts on container's start up. To do so, put scripts inside the container (via a child container image that ADD them from the Dockerfile or mounting a volume) and configure the __PSQL_SCRIPTS__ environment variable. This variable must contain full paths inside the container to psql scripts separated by semicolons (;) that will be executed in order on container startup. For example:
 
@@ -168,13 +170,15 @@ export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d 
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -v /localscripts/:/psql_scripts/ \
 -e "PSQL_SCRIPTS=/psql_scripts/script1.sql;/psql_scripts/script2.sql" \
-geographica/postgis:postgresql-9.5.0-postgis-2.2.1-gdal-2.0.2-patched
+geographica/postgis:awkward_aardvark
 ```
 
 _script1.sql_ and _script2.sql_ will be executed on container startup. Scripts are executed as _postgres_.
 
 
-## User Mapping
+
+User Mapping
+------------
 
 The container will create an inner _postgres_ user and group for running the service. The UID and GID of this objects can be adjusted to match one at the host, so files in mounted volumes will be owned by the matched host user. The logic behind user mapping is as follows:
 
@@ -187,7 +191,8 @@ The container will create an inner _postgres_ user and group for running the ser
 - if nothing of the above happens, the user will be created with ID assigned by the system.
 
 
-## Backing Up Databases
+Backing Up Databases
+--------------------
 
 This image provides a simple method to backup databases with __pg_dump__. Databases to be backed up is controlled by the __BACKUP_DB__ environmental variable, with the names of databases separated by a semicolon.
 
@@ -216,7 +221,8 @@ pg_dump -b -C -E [encoding] -f [backup file name] -F c -v -Z 9 -h localhost -p 5
 ```
 
 
-## Restoring a Database Dump
+Restoring a Database Dump
+-------------------------
 
 The image allows for restoration of database dumps created by __pg_dump__. The __PG_RESTORE__ environmental variable is used for this. It's a semicolon separated list of parameters for __pg_restore__:
 
@@ -235,7 +241,8 @@ Please refer to the __pg_restore__ and __pg_dump__ official documentation for mo
 Restores are performed after executing any script passed to the container with the __PSQL_SCRIPTS__ variable. If any role must be present at restoration time, create it with a psql script before.
 
 
-## Configuring the Data Store
+Configuring the Data Store
+--------------------------
 
 The image allows for configuration of _pg_hba.conf_ and _postgresql.conf_ data store files at creation time and later. This is advanced stuff, refer to the PostgreSQL documentation for details.
 
@@ -289,7 +296,8 @@ At creation time, language, encoding, and locale info is added based on env vari
 Logs are stored at __$POSTGRES_DATA_FOLDER/pg_log__.
 
 
-## Killing the Container
+Killing the Container
+---------------------
 
 This container will handle signals send to it with _docker kill_ properly, so the database is shut down tidily. Thus:
 

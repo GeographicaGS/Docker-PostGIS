@@ -1,6 +1,8 @@
 PostgreSQL 9.4.5, PostGIS 2.2.0, GDAL 2.0.1, Patched
 =====================================================
 
+__WARNING:__ This image is deprecated. Use tag __Awkward Aardvark__ instead.
+
 This is the README.md for Docker tag __postgresql-9.4.5-postgis-2.2.0-gdal-2.0.1-patched__.
 
 Versions

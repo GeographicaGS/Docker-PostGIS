@@ -1,6 +1,8 @@
 PostgreSQL 9.3.5, PostGIS 2.1.7, GDAL 1.11.2, Patched
 =====================================================
 
+__WARNING:__ This image is deprecated. Use tag __Awkward Aardvark__ instead.
+
 Versions
 --------
 This Dockerfile compiles the following software:

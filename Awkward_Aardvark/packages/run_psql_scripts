@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+# coding=UTF-8
+
+from subprocess import call
+import os
+
+# Run psql scripts
+psqlscripts = os.environ["PSQL_SCRIPTS"].split(";")
+
+for psqlscript in psqlscripts:
+    if psqlscript<>"null":
+        print
+        print "-----------------------------------"
+        print "Running psql script: %s" % psqlscript
+        print "-----------------------------------"
+        
+        call([
+            "psql",
+            "-h", "localhost",
+            "-p", "5432",
+            "-U", "postgres",
+            "-f", psqlscript
+            ])

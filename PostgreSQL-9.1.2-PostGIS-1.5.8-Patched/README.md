@@ -3,6 +3,8 @@ PostgreSQL 9.1.2, PostGIS 1.5.8 Patched
 
 This is the README.md for Docker tag __postgresql-9.1.2-postgis-1.5.8-patched__.
 
+__WARNING:__ This image is deprecated. Use tag __Awkward Aardvark__ instead.
+
 Versions
 --------
 This Dockerfile compiles the following software:
