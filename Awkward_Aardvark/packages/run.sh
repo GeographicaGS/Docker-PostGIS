@@ -7,6 +7,7 @@ LANG=${LOCALE}.${ENCODING}
 
 locale-gen ${LANG} > /dev/null
 
+echo Locale ${LOCALE}.${ENCODING} generated
 
 # Check if command is just "run_default"
 
@@ -14,6 +15,8 @@ if [ "$1" = 'run_default' ]; then
     
     # Check if user postgres exists
 
+    echo Running server
+    
     if ! id postgres > /dev/null 2>&1; then
 	echo Creating postgres user
 	
@@ -23,13 +26,18 @@ if [ "$1" = 'run_default' ]; then
 	UID_OUT="$(folder_uid ${POSTGRES_OUTPUT_FOLDER})"
 	GID_OUT="$(folder_gid ${POSTGRES_OUTPUT_FOLDER})"    
 
-	set -- "$UGID"
-	IFS=";"; declare -a Array=($*)
-	UUID="${Array[0]}"
-	UGID="${Array[1]}"
+	if [ ! $UID_FOLDER = "null" ]; then
+	# set -- "$UGID"
+	# IFS=";"; declare -a Array=($*)
+	# UUID="${Array[0]}"
+	    # UGID="${Array[1]}"
+	    UUID="$(folder_uid ${UID_FOLDER})"
+	    UGID="$(folder_gid ${UID_FOLDER})"
+	fi
 
 	echo Data folder UID: $UID_DATA, GID: $GID_DATA
 	echo Output folder UID: $UID_OUT, GID: $GID_OUT
+	echo User folder UID: $UUID, GID: $UGID
 
 	# User and group ID precedence
 	if [ ! $UUID = "null" ] && [ ! $UGID = "null" ]; then

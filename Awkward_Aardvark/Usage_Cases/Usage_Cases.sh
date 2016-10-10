@@ -9,8 +9,6 @@ WAIT_TIME=10
 # Host user and group to test user mapping
 USER=malkab
 GROUP=malkab
-UUID=1000
-UGID=1000
 
 
 # Folder this script is in
@@ -93,13 +91,16 @@ echo test_05: Backup database
 echo ------------------------
 echo
 
+groupadd -g 2003 thedockergroup
+useradd --shell /bin/bash -M --uid 2002 --gid 2003 thedockeruser
+
 mkdir -p $HOST_BASE/test_05_output
-chown -R $USER:$GROUP $HOST_BASE
+chown -R 2002:2003 $HOST_BASE/test_05_output
 
 docker run -d --name "test_05" -P \
        -v $HOST_BASE/test_05_output:/output \
        -v $DIR/Assets:/init_scripts \
-       -e "UGID=${UUID};${UGID}" \
+       -e "UID_FOLDER=/output/" \
        -e "LOCALE=es_ES" \
        -e "CREATE_USER=project" \
        -e "CREATE_USER_PASSWD=project_pass" \
@@ -123,7 +124,6 @@ echo
 
 docker run -d --name "test_06" -P \
        -v $DIR/Assets:/Assets \
-       -e "UGID=${UUID};${UGID}" \
        -e "LOCALE=es_ES" \
        -e "PSQL_SCRIPTS=/Assets/Create_role.sql" \
        -e "PG_RESTORE=-C -F c -v -U postgres /Assets/project.backup" \
@@ -139,7 +139,8 @@ echo
 
 mkdir -p $HOST_BASE/test_07_output
 mkdir -p $HOST_BASE/test_07_data
-chown -R $USER:$GROUP $HOST_BASE
+chown -R $USER:$GROUP $HOST_BASE/test_07_output
+chown -R $USER:$GROUP $HOST_BASE/test_07_data
 
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
     docker run -d --name "test_07" -P \
@@ -155,7 +156,6 @@ export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut
 	   -e "CREATE_USER=project2;project_pass2" \
 	   -e "BACKUP_DB=project" \
 	   -e "PG_RESTORE=-C -F c -v -d postgres -U postgres /init_scripts/project.backup" \
-	   -e "UGID=${UUID};${UGID}" \
 	   -e "PG_HBA=local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust#host project project 0.0.0.0/0 trust" \
 	   -e "PG_CONF=max_connections=10#listen_addresses='*'#shared_buffers=256MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'" \
 	   geographica/postgis:awkward_aardvark
@@ -266,3 +266,23 @@ echo Test PostGIS datum shiftings
 docker run --rm -v $DIR/Assets:/Assets --link test_10:pg geographica/postgis:awkward_aardvark \
        PGPASSWORD="postgis" psql -h pg -U postgis postgis -c "\i /Assets/postgis/postgis_test.sql"
 
+
+# Testing custom user
+
+echo
+echo test_11: Custom User
+echo --------------------
+echo
+
+mkdir -p $HOST_BASE/test_11
+chown -R 2002:2003 $HOST_BASE/test_11
+
+docker run -d --name "test_11" -P \
+       -v $HOST_BASE/test_11:/src_data \
+       -e "UID_FOLDER=/src_data/" \
+       -e "LOCALE=es_ES" \
+       geographica/postgis:awkward_aardvark
+
+sleep $WAIT_TIME
+
+docker exec test_11 su -s /bin/bash -c "touch /src_data/touch" postgres

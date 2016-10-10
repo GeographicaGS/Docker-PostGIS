@@ -8,11 +8,11 @@ ENV POSTGRES_PASSWD postgres
 ENV ROOTDIR /usr/local/
 ENV POSTGRES_DATA_FOLDER /data
 ENV POSTGRES_OUTPUT_FOLDER /output
-ENV PG_VERSION 9.5.0
+ENV PG_VERSION 9.5.4
 ENV GEOS_VERSION 3.5.0
 ENV PROJ4_VERSION 4.9.2
 ENV GDAL_VERSION 2.0.2
-ENV POSTGIS_VERSION 2.2.1
+ENV POSTGIS_VERSION 2.2.2
 ENV GOSU_VERSION 1.9
 ENV ENCODING UTF-8
 ENV LOCALE en_US
@@ -21,7 +21,7 @@ ENV TERM xterm
 ENV CREATE_USER null;null
 ENV BACKUP_DB null
 ENV PG_RESTORE null
-ENV UGID null;null
+ENV UID_FOLDER null
 ENV PG_HBA "local all all trust#host all all 127.0.0.1/32 trust#host all all 0.0.0.0/0 md5#host all all ::1/128 trust"
 ENV PG_CONF "max_connections=100#listen_addresses='*'#shared_buffers=128MB#dynamic_shared_memory_type=posix#log_timezone='UTC'#datestyle='iso, mdy'#timezone='UTC'#log_statement='all'#log_directory='pg_log'#log_filename='postgresql-%Y-%m-%d_%H%M%S.log'#logging_collector=on#client_min_messages=notice#log_min_messages=notice#log_line_prefix='%a %u %d %r %h %m %i %e'#log_destination='stderr,csvlog'#log_rotation_size=500MB"
 

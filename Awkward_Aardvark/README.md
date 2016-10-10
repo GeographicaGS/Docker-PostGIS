@@ -1,6 +1,8 @@
 PostgreSQL 9.5.0, PostGIS 2.2.1, GDAL 2.0.2, Patched
 =====================================================
 
+<a name="Versions"></a>
+
 Versions
 --------
 
@@ -16,6 +18,8 @@ This Dockerfile compiles the following software:
 
 - __Postgis 2.2.1:__ patched as well.
 
+
+<a name="Image Creation"></a>
 
 Image Creation
 --------------
@@ -63,7 +67,7 @@ Containers can be configured by means of setting environmental variables:
 
 - __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details. Defaults to _null_, meaning that no action is to be taken. Restores are done after all psql scripts are executed;
 
-- __UGID:__ the user and group ID for the postgres user, separated by a semicolon, to map container postgres user to. Defaults to _null;null_, meaning that the system will try to set the ID. Check [User Mapping](#User Mapping) for details;
+- __UID_FOLDER:__ the folder in the container whose user and group ID must be matched for the postgres user. Defaults to _null_, meaning that the system will try to set the ID. Check [User Mapping](#User Mapping) for details;
 
 - __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
@@ -133,7 +137,7 @@ Data Persistence
 Datastore data can be persisted in a data volume or host mounted folder and be used later by another container. The container checks if __POSTGRES_DATA_FOLDER__ has a file _postgresql.conf_. If not, considers the datastore to be not created and creates an empty one.
 
 
-Passwords
+<a name="Passwords"></a>Passwords
 ---------
 
 Passwords sent to the container with environment variables __POSTGRES_PASSWD__ and __CREATE_USER_PASSED__ can be passed either on plain text or already encrypted á la PostgreSQL. To pass it on plain text means that anybody with access to the __docker inspect__ command on the server will be able to read passwords. Encrypting them previously means that __docker inspect__ will show the encrypted password, adding an additional layer of secrecy.
@@ -159,6 +163,8 @@ geographica/postgis:awkward_aardvark
 
 Ugly, but effective. Keep in mind, however, that if you use provisioning methods like bash scripts or _Docker Compose_ others will still be able to read passwords from these sources, so keep them safe.
 
+
+<a name="Executing psql Scripts on Start Up"></a>
 
 Executing psql Scripts on Start Up
 ----------------------------------

@@ -17,6 +17,7 @@ docker stop test_07
 docker stop test_08_a
 docker stop test_08_b
 docker stop test_10
+docker stop test_11
 
 
 docker rm -v test_00
@@ -31,4 +32,7 @@ docker rm -v test_08_pgdata
 docker rm -v test_08_a
 docker rm -v test_08_b
 docker rm -v test_10
+docker rm -v test_11
 
+userdel -r thedockeruser
+groupdel thedockergroup
