@@ -39,6 +39,8 @@ docker pull geographica/postgis:awkward_aardvark
 The image exposes port 5432, a volume designated by enviroment variable __POSTGRES_DATA_FOLDER__ with the data folder, and another one __POSTGRES_OUTPUT_FOLDER__ for database output (like backups).
 
 
+<a name="Container Creation"></a>
+
 Container Creation
 ------------------
 
@@ -104,6 +106,8 @@ This one creates a container with a hard-mounted volume from local _demo_scripts
 Please check folder __Usage_Cases__ for a set of usage cases bundled as a test suite of sorts.
 
 
+<a name="Executing Arbitrary Commands"></a>
+
 Executing Arbitrary Commands
 ----------------------------
 
@@ -130,6 +134,7 @@ PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:awkward_aardvark \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
 
+<a name="Data Persistence"></a>
 
 Data Persistence
 ----------------
@@ -137,7 +142,9 @@ Data Persistence
 Datastore data can be persisted in a data volume or host mounted folder and be used later by another container. The container checks if __POSTGRES_DATA_FOLDER__ has a file _postgresql.conf_. If not, considers the datastore to be not created and creates an empty one.
 
 
-<a name="Passwords"></a>Passwords
+<a name="Passwords"></a>
+
+Passwords
 ---------
 
 Passwords sent to the container with environment variables __POSTGRES_PASSWD__ and __CREATE_USER_PASSED__ can be passed either on plain text or already encrypted á la PostgreSQL. To pass it on plain text means that anybody with access to the __docker inspect__ command on the server will be able to read passwords. Encrypting them previously means that __docker inspect__ will show the encrypted password, adding an additional layer of secrecy.
@@ -182,6 +189,7 @@ geographica/postgis:awkward_aardvark
 _script1.sql_ and _script2.sql_ will be executed on container startup. Scripts are executed as _postgres_.
 
 
+<a name="User Mapping"></a>
 
 User Mapping
 ------------
@@ -196,6 +204,8 @@ The container will create an inner _postgres_ user and group for running the ser
 
 - if nothing of the above happens, the user will be created with ID assigned by the system.
 
+
+<a name="Backing Up Databases"></a>
 
 Backing Up Databases
 --------------------
@@ -227,6 +237,8 @@ pg_dump -b -C -E [encoding] -f [backup file name] -F c -v -Z 9 -h localhost -p 5
 ```
 
 
+<a name="Restoring a Database Dump"></a>
+
 Restoring a Database Dump
 -------------------------
 
@@ -246,6 +258,8 @@ Please refer to the __pg_restore__ and __pg_dump__ official documentation for mo
 
 Restores are performed after executing any script passed to the container with the __PSQL_SCRIPTS__ variable. If any role must be present at restoration time, create it with a psql script before.
 
+
+<a name="Configuring the Data Store"></a>
 
 Configuring the Data Store
 --------------------------
@@ -301,6 +315,8 @@ At creation time, language, encoding, and locale info is added based on env vari
 
 Logs are stored at __$POSTGRES_DATA_FOLDER/pg_log__.
 
+
+<a name="Killing the Container"></a>
 
 Killing the Container
 ---------------------
