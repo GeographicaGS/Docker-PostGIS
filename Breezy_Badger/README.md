@@ -1,4 +1,4 @@
-PostgreSQL 9.5.4, PostGIS 2.2.3, GDAL 2.0.3, Patched
+PostgreSQL 9.6.0, PostGIS 2.3.0, GDAL 2.1.1, Patched
 =====================================================
 
 <a name="Contents"></a>
@@ -28,15 +28,15 @@ Versions
 
 This Dockerfile compiles the following software:
 
-- __PostgreSQL 9.5.4;__
+- __PostgreSQL 9.6.0;__
 
 - __GEOS 3.5.0;__
 
 - __Proj 4.9.3:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
 
-- __GDAL 2.0.3:__ also patched;
+- __GDAL 2.1.1:__ also patched;
 
-- __Postgis 2.2.3:__ patched as well.
+- __Postgis 2.3.0:__ patched as well.
 
 
 <a name="Scripts"></a>

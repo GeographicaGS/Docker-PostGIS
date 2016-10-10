@@ -2,7 +2,7 @@
 
 # Docker Tag to test
 
-DOCKERTAG=awkward_aardvark
+DOCKERTAG=breezy_badger
 
 # Sets the base folder to mount volumes for testing
 HOST_BASE=/home/malkab/Desktop/Docker_PostGIS_Tests

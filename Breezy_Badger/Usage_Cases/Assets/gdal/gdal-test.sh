@@ -1,0 +1,44 @@
+#!/bin/bash
+
+echo From 23030 to 25830
+echo Results should be:
+echo 235094 4141906
+echo 265353.396 3987805.481
+echo ">>>"
+gdaltransform -s_srs epsg:23030 -t_srs epsg:25830 <<EOF
+235205.243 4142110.093
+265467 3988010
+EOF
+
+echo
+echo From 25830 to 23030
+echo Results should be:
+echo 235205.243 4142110.093
+echo 265467 3988010
+echo ">>>"
+gdaltransform -s_srs epsg:25830 -t_srs epsg:23030 <<EOF
+235094 4141906
+265353.396 3987805.481
+EOF
+
+echo
+echo From 4230 to 4258
+echo Results should be:
+echo -5.992110363888889 37.38608963055555
+echo -5.6034275000000004 36.00650777777778
+echo ">>>"
+gdaltransform -s_srs epsg:4230 -t_srs epsg:4258 <<EOF
+-5.990770927777778 37.387348808333336
+-5.6020916666666665 36.00780555555556
+EOF
+
+echo
+echo From 4258 to 4230
+echo Results should be:
+echo -5.990770927777778 37.387348808333336
+echo -5.6020916666666665 36.00780555555556
+echo ">>>"
+gdaltransform -s_srs epsg:4258 -t_srs epsg:4230 <<EOF
+-5.992110363888889 37.38608963055555 
+-5.6034275000000004 36.00650777777778
+EOF

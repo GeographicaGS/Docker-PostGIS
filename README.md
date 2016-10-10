@@ -9,7 +9,9 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
-- __Awkward_Aardvark:__ released 2016-07-20. PostgreSQL 9.5.0, PostGIS 2.2.1, GDAL 2.0.2, Patched. Currently our workhorse.
+- __Breezy_Badger:__ released 2016-10-10. PostgreSQL 9.6.0, PostGIS 2.3.0, GDAL 2.1.1, patched. Bleeding edge.
+
+- __Awkward_Aardvark:__ released 2016-07-20 and last updated at 2016-10-10. PostgreSQL 9.5.4, PostGIS 2.2.3, GDAL 2.0.3, Patched. Currently our workhorse.
 
 - __PostgreSQL-9.1.2-PostGIS-1.5.8-Patched:__ released a long time ago. A PG 9.1.2 with old PostGIS 1.5.8 patched for handling spanish SRS. For legacy applications.
 
