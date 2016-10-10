@@ -2,7 +2,7 @@
 \set PROMPT1 '%n@%M %~>'
 \pset null '[NULL]'
 \set VERBOSITY verbose
-\set HISTFILE /home/malkab/Dropbox/System-Linux/psql_history/psql_history- :DBNAME
+\set HISTFILE ~/psql_history- :DBNAME
 \set HISTCONTROL ignoredups
 \timing
 \x auto

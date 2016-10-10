@@ -1,6 +1,26 @@
 PostgreSQL 9.5.0, PostGIS 2.2.1, GDAL 2.0.2, Patched
 =====================================================
 
+<a name="Contents"></a>
+
+Contents
+--------
+
+- [Versions](#Versions)
+- [Scripts](#Scripts)
+- [Image Creation](#Image Creation)
+- [Container Creation](#Container Creation)
+- [Executing Arbitrary Commands](#Executing Arbitrary Commands)
+- [Data Persistence](#Data Persistence)
+- [Passwords](#Passwords)
+- [Executing psql Scripts on Start Up](#Executing psql Scripts on Start Up)
+- [User Mapping](#User Mapping)
+- [Backing Up Databases](#Backing Up Databases)
+- [Restoring a Database Dump](#Restoring a Database Dump)
+- [Configuring the Data Store](#Configuring the Data Store)
+- [Killing the Container](#Killing the Container)
+
+
 <a name="Versions"></a>
 
 Versions
@@ -8,15 +28,27 @@ Versions
 
 This Dockerfile compiles the following software:
 
-- __PostgreSQL 9.5.0;__
+- __PostgreSQL 9.5.4;__
 
 - __GEOS 3.5.0;__
 
-- __Proj 4.9.2:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
+- __Proj 4.9.3:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
 
-- __GDAL 2.0.2:__ also patched;
+- __GDAL 2.0.3:__ also patched;
 
-- __Postgis 2.2.1:__ patched as well.
+- __Postgis 2.2.3:__ patched as well.
+
+
+<a name="Scripts"></a>
+
+Scripts
+-------
+
+There is a script in this repo to help working with this image. __psql-docker__ opens a psql console on a standalone container to connect to other databases. To check how it works:
+
+```Shell
+psql-docker -h
+```
 
 
 <a name="Image Creation"></a>
@@ -196,7 +228,7 @@ User Mapping
 
 The container will create an inner _postgres_ user and group for running the service. The UID and GID of this objects can be adjusted to match one at the host, so files in mounted volumes will be owned by the matched host user. The logic behind user mapping is as follows:
 
-- if the env variable __UGID__ is set, the ID will be taken from it;
+- if the env variable __UID_FOLDER__ is set, the ID will be taken from the given folder;
 
 - if the __output__ exposed volume is mounted to a host folder (like as using the -v option), UID and GID of the owner of the host folder will be read and the container _postgres_ user and group will match them;
 
