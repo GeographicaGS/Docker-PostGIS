@@ -36,7 +36,7 @@ This Dockerfile compiles the following software:
 
 - __GDAL 2.0.3:__ also patched;
 
-- __Postgis 2.2.3:__ patched as well.
+- __PostGIS 2.2.3:__ patched as well.
 
 
 <a name="Scripts"></a>
