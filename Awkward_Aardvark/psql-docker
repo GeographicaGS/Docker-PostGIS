@@ -178,10 +178,13 @@ C+="-v $(pwd):/output/ "
 if [ "${#LINKS[@]}" -gt "0" ] ; then
     for ((i=0;i<=((${#LINKS[@]}-1));i++))
     do
+	# Only the container name is needed to link volumes, strip the alias
+	IFS=':'; CONNAME=($LINKS[i]); unset IFS;
+	
 	if ! [[ ${LINKS[i]} == *":"* ]] ; then
-	    C+="--link ${LINKS[i]}:postgis --volumes-from ${LINKS[i]} "
+	    C+="--link ${LINKS[i]}:postgis --volumes-from ${CONNAME[0]} "
 	else
-	    C+="--link ${LINKS[i]} --volumes-from ${LINKS[i]} "
+	    C+="--link ${LINKS[i]} --volumes-from ${CONNAME[0]} "
 	fi
     done;
 fi
