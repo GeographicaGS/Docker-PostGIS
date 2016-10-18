@@ -35,7 +35,8 @@ OPTIONS:
                               /home/$USER:/home is mounted by default.
    -l [container name]:[id]   Links to that container assigning the given ID to it.
                               Multiple links can be issued. If a single container is given
-                              and no ID is specified, "postgis" will be assumed as ID.
+                              and no ID is specified, "postgis" will be assumed as ID. Volumes
+                              are linked too.
    -p [folder]                A folder inside the container whose user ID must be mapped to 
                               the postgres user. Defaults to the /output/ folder.
 
@@ -179,9 +180,9 @@ if [ "${#LINKS[@]}" -gt "0" ] ; then
     for ((i=0;i<=((${#LINKS[@]}-1));i++))
     do
 	if ! [[ ${LINKS[i]} == *":"* ]] ; then
-	    C+="--link ${LINKS[i]}:postgis "
+	    C+="--link ${LINKS[i]}:postgis --volumes-from ${LINKS[i]} "
 	else
-	    C+="--link ${LINKS[i]} "
+	    C+="--link ${LINKS[i]} --volumes-from ${LINKS[i]} "
 	fi
     done;
 fi

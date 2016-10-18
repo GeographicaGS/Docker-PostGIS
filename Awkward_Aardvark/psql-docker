@@ -179,9 +179,9 @@ if [ "${#LINKS[@]}" -gt "0" ] ; then
     for ((i=0;i<=((${#LINKS[@]}-1));i++))
     do
 	if ! [[ ${LINKS[i]} == *":"* ]] ; then
-	    C+="--link ${LINKS[i]}:postgis "
+	    C+="--link ${LINKS[i]}:postgis --volumes-from ${LINKS[i]} "
 	else
-	    C+="--link ${LINKS[i]} "
+	    C+="--link ${LINKS[i]} --volumes-from ${LINKS[i]} "
 	fi
     done;
 fi
