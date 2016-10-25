@@ -65,7 +65,7 @@ Build the image directly from Git (this can take a long time):
 or pull it from Docker Hub:
 
 ```Shell
-docker pull geographica/postgis:awkward_aardvark
+docker pull geographica/postgis:breezy_badger
 ```
 
 The image exposes port 5432, a volume designated by enviroment variable __POSTGRES_DATA_FOLDER__ with the data folder, and another one __POSTGRES_OUTPUT_FOLDER__ for database output (like backups).
@@ -80,7 +80,7 @@ There are several options available to create containers. Check __Usage_Cases__ 
 
 ```Shell
 docker run -d -P --name pgcontainer \
-geographica/postgis:awkward_aardvark
+geographica/postgis:breezy_badger
 ```
 
 This will create a container with two default volumes, __/data__ and __/output__, for storing the data store and output, respectively. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
@@ -101,7 +101,7 @@ Containers can be configured by means of setting environmental variables:
 
 - __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details. Defaults to _null_, meaning that no action is to be taken. Restores are done after all psql scripts are executed;
 
-- __UID_FOLDER:__ the folder in the container whose user and group ID must be matched for the postgres user. Defaults to _null_, meaning that the system will try to set the ID. Check [User Mapping](#User Mapping) for details;
+- __UID_FOLDER:__ the folder in the container whose user and group ID must be matched for the postgres user. Defaults to _null_, meaning that the system will try to set the ID. Check [User Mapping](#User Mapping) for details. Please note that Docker for Mac on MacOS Sierra handles nicely the user mapping to the user running Docker, so this is not necessary;
 
 - __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
@@ -112,7 +112,7 @@ Some examples of container initializations:
 ```Shell
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
-geographica/postgis:awkward_aardvark 
+geographica/postgis:breezy_badger 
 ```
 
 This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](#Passwords) for details:
@@ -120,7 +120,7 @@ This __run__ command will create a container with a default options, but changin
 ```Shell
 docker run -d -P --name ageworkshoptestpg -e "LOCALE=es_ES" -e "CREATE_USER=project"  \
 -e "CREATE_USER_PASSWD=project_pass" \
-geographica/postgis:awkward_aardvark
+geographica/postgis:breezy_badger
 ```
 
 This will create the container with a spanish locale, and will create on startup an user and database called _project_, being _project_pass_ the password for the _project_ user. Additionaly, the _project_ database is set to be automatically backed up.
@@ -130,7 +130,7 @@ docker run -d -P --name ageworkshoptestpg -v /home/demo_scripts/:/init_scripts/ 
 -e "LOCALE=es_ES" -e "CREATE_USER=project"  \
 -e "CREATE_USER_PASSWD=project_pass" -e "BACKUP_DB=project" \
 -e "PSQL_SCRIPTS=/init_scripts/Schema00_DDL.sql;/init_scripts/Schema01_DDL.sql" \
-geographica/postgis:awkward_aardvark
+geographica/postgis:breezy_badger
 ```
 
 This one creates a container with a hard-mounted volume from local _demo_scripts_ to container's _/init_scripts_ where a couple of psql scripts will be stored. Creates an user and database called _project_ and executes on it the two mentioned scripts.
@@ -151,19 +151,19 @@ Some examples:
 # Interactive pg_dump, will ask for password
 
 docker run --rm -ti -v /whatever/:/d --link the_container_running_the_database:pg \
-geographica/postgis:awkward_aardvark \
+geographica/postgis:breezy_badger \
 pg_dump -b -E UTF8 -f /d/dump -F c -v -Z 9 -h pg -p 5432 -U postgres project
 
 # Full automatic pg_dump, with password as ENV variable
 
 docker run --rm -v /home/malkab/Desktop/:/d --link test_07:pg \
-geographica/postgis:awkward_aardvark \
+geographica/postgis:breezy_badger \
 PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 -v -Z 9 -h pg -p 5432 -U postgres postgres
 
 # Interactive psql
 
-docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:awkward_aardvark \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
+docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:breezy_badger \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
 
 <a name="Data Persistence"></a>
@@ -197,7 +197,7 @@ export USERPASSWD="md5"$(printf '%s' "userpass" ${USER} | md5sum | cut -d ' ' -f
 export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -e "CREATE_USER=${USER}" -e "CREATE_USER_PASSWD=${USERPASSWD}" \
-geographica/postgis:awkward_aardvark
+geographica/postgis:breezy_badger
 ```
 
 Ugly, but effective. Keep in mind, however, that if you use provisioning methods like bash scripts or _Docker Compose_ others will still be able to read passwords from these sources, so keep them safe.
@@ -215,7 +215,7 @@ export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d 
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -v /localscripts/:/psql_scripts/ \
 -e "PSQL_SCRIPTS=/psql_scripts/script1.sql;/psql_scripts/script2.sql" \
-geographica/postgis:awkward_aardvark
+geographica/postgis:breezy_badger
 ```
 
 _script1.sql_ and _script2.sql_ will be executed on container startup. Scripts are executed as _postgres_.
@@ -225,6 +225,8 @@ _script1.sql_ and _script2.sql_ will be executed on container startup. Scripts a
 
 User Mapping
 ------------
+
+Please note that Docker for Mac on MacOS Sierra handles nicely the user mapping to the user running Docker, so this is not necessary.
 
 The container will create an inner _postgres_ user and group for running the service. The UID and GID of this objects can be adjusted to match one at the host, so files in mounted volumes will be owned by the matched host user. The logic behind user mapping is as follows:
 

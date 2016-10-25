@@ -101,7 +101,7 @@ Containers can be configured by means of setting environmental variables:
 
 - __PG_RESTORE:__ semicolon separated names of database dumps to be restored. See [Restoring a Database Dump](#Restoring a Database Dump) for details. Defaults to _null_, meaning that no action is to be taken. Restores are done after all psql scripts are executed;
 
-- __UID_FOLDER:__ the folder in the container whose user and group ID must be matched for the postgres user. Defaults to _null_, meaning that the system will try to set the ID. Check [User Mapping](#User Mapping) for details;
+- __UID_FOLDER:__ the folder in the container whose user and group ID must be matched for the postgres user. Defaults to _null_, meaning that the system will try to set the ID. Check [User Mapping](#User Mapping) for details. Please note that Docker for Mac on MacOS Sierra handles nicely the user mapping to the user running Docker, so this is not necessary;
 
 - __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
@@ -225,6 +225,8 @@ _script1.sql_ and _script2.sql_ will be executed on container startup. Scripts a
 
 User Mapping
 ------------
+
+Please note that Docker for Mac on MacOS Sierra handles nicely the user mapping to the user running Docker, so this is not necessary.
 
 The container will create an inner _postgres_ user and group for running the service. The UID and GID of this objects can be adjusted to match one at the host, so files in mounted volumes will be owned by the matched host user. The logic behind user mapping is as follows:
 

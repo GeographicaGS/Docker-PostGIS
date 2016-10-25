@@ -190,7 +190,11 @@ if [ "${#LINKS[@]}" -gt "0" ] ; then
     done;
 fi
 
-C+="-e \"UID_FOLDER=${FOLDER}\" "
+# Check if Darwin is the OS, if not, consider UID_FOLDER
+if ! [ "$(uname -s)" == "Darwin" ]; then
+    C+="-e \"UID_FOLDER=${FOLDER}\" "
+fi
+
 C+="geographica/postgis:${VERSION} "
 C+="su postgres -c \"psql -h ${HOST} -p ${PORT} -U ${USER} ${DB}\""
 
