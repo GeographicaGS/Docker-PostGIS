@@ -195,7 +195,7 @@ if ! [ "$(uname -s)" == "Darwin" ]; then
     C+="-e \"UID_FOLDER=${FOLDER}\" "
 fi
 
-C+="geographica/postgis:${VERSION} "
+C+="-e LANG=C.UTF-8 geographica/postgis:${VERSION} "
 C+="su postgres -c \"psql -h ${HOST} -p ${PORT} -U ${USER} ${DB}\""
 
 
