@@ -1,4 +1,4 @@
-# Compilation of PostgreSQL, GEOS, Proj4, GDAL, CGAL, SFCGAL, and PostGIS 2
+# Compilation of PostgreSQL, GEOS, Proj4, GDAL, and PostGIS 2
 
 
 # Update and apt-get basic packages
