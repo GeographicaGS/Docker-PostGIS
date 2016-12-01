@@ -9,6 +9,8 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
+- __Deranged_Dingo:__ released 2016-12-01. PostgreSQL 9.4.10 and PostGIS 2.1.8, for legacy purposes.
+
 - __Chaotic_Cucumber:__ released 2016-11-28. Is a Breezy Badger with PgRouting installed.
 
 - __Breezy_Badger:__ released 2016-10-10. PostgreSQL 9.6.0, PostGIS 2.3.0, GDAL 2.1.1, patched. Bleeding edge.
@@ -22,3 +24,10 @@ Please refer to each tag README.md for full details. To get a quick overview ove
 - __PostgreSQL-9.4.5-PostGIS-2.2.0-GDAL-2.0.1-Patched:__ released some time ago. The same as above. Legacy.
 
 - __PostgreSQL-9.5.0-PostGIS-2.2.1-GDAL-2.0.2-Patched:__ released 2016-06-15. A lot of configuration options, maybe too much. This image is deprecated. Use tag __Awkward Aardvark__ instead.
+
+
+## Common
+
+Folder __00-Common__ holds commodities to be aplicable to all tags:
+
+- __psql-docker:__ this script launch an interactive psql session using a Docker image.
