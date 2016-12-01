@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# This script returns the GID of the owner of a folder
+
+# Usage:
+# folder_gid.sh folder
+
+PARENT="$(dirname $1)"
+DIR="$(basename $1)"
+
+GROUP_ID=`ls -lahn ${PARENT} | grep "[[:space:]]${DIR}$" | awk {'print $4'}`
+
+echo $GROUP_ID
