@@ -23,8 +23,6 @@ Please refer to each tag README.md for full details. To get a quick overview ove
 
 - __PostgreSQL-9.4.5-PostGIS-2.2.0-GDAL-2.0.1-Patched:__ released some time ago. The same as above. Legacy.
 
-- __PostgreSQL-9.5.0-PostGIS-2.2.1-GDAL-2.0.2-Patched:__ released 2016-06-15. A lot of configuration options, maybe too much. This image is deprecated. Use tag __Awkward Aardvark__ instead.
-
 
 ## Common
 
