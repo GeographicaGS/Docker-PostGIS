@@ -31,3 +31,7 @@ Please refer to each tag README.md for full details. To get a quick overview ove
 Folder __00-Common__ holds commodities to be aplicable to all tags:
 
 - __psql-docker:__ this script launch an interactive psql session using a Docker image.
+
+## Docker Hub
+
+[DockerHub repository link](https://hub.docker.com/r/geographica/postgis/)
