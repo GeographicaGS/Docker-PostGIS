@@ -27,7 +27,7 @@ OPTIONS:
    -h                         This help.
    -n [name]                  A name. If a container with the same name is present,
                               it will restart it. If not, it will be created.
-                              If not present, an interactive, --rm container 
+                              If not present, an interactive, --rm container
                               will be created.
    -t [version tag]           Launches a certain PostGIS version tag.
                               If not present, 'latest' will be issued.
@@ -37,8 +37,11 @@ OPTIONS:
                               Multiple links can be issued. If a single container is given
                               and no ID is specified, "postgis" will be assumed as ID. Volumes
                               are linked too.
-   -p [folder]                A folder inside the container whose user ID must be mapped to 
+   -p [folder]                A folder inside the container whose user ID must be mapped to
                               the postgres user. Defaults to the /output/ folder.
+
+   -u uid:gid                 Assign the given UID and GID to the postgres user. In Mac is not an
+                              issue, but in Linux it's critical.
 
 USAGE PATTERNS:
 
@@ -67,38 +70,41 @@ FOLDER="/output/"
 
 POS=0
 
-while getopts ":hn:t:l:v:p:" OPTION
+while getopts ":hn:t:l:v:p:u:" OPTION
 do
-    case $OPTION in
-	h)
-	    usage
-	    exit 1
-	    ;;
-	n)
-	    NAME=$OPTARG
-	    POS=$((POS+2))
-	    ;;
-	t)
-	    VERSION=$OPTARG
-	    POS=$((POS+2))
-	    ;;
-	v)
-	    VOLUMES+=("$OPTARG")
-	    POS=$((POS+2))
-	    ;;
-	l)
-	    LINKS+=("$OPTARG")
-	    POS=$((POS+2))
-	    ;;
-	p)
-	    FOLDER=$OPTARG
-	    POS=$((POS+2))	    
-	    ;;
-	?)
-	usage
-	exit
-	;;
-    esac
+  case $OPTION in
+  	h)
+  	    usage
+  	    exit 1
+  	    ;;
+  	n)
+  	    NAME=$OPTARG
+  	    POS=$((POS+2))
+  	    ;;
+  	t)
+  	    VERSION=$OPTARG
+  	    POS=$((POS+2))
+  	    ;;
+  	v)
+  	    VOLUMES+=("$OPTARG")
+  	    POS=$((POS+2))
+  	    ;;
+  	l)
+  	    LINKS+=("$OPTARG")
+  	    POS=$((POS+2))
+  	    ;;
+  	p)
+  	    FOLDER=$OPTARG
+  	    POS=$((POS+2))
+  	    ;;
+    u)  UGID=$OPTARG
+        POS=$((POS+2))
+        ;;
+  	?)
+  	usage
+  	exit
+  	;;
+  esac
 done
 
 
@@ -112,19 +118,19 @@ USER=$3
 DB=$4
 
 if [[ $HOST == "" ]] ; then
-    HOST="postgis"
+  HOST="postgis"
 fi
 
 if [[ $PORT == "" ]] ; then
-    PORT="5432"
+  PORT="5432"
 fi
 
 if [[ $USER == "" ]] ; then
-    USER="postgres"
+  USER="postgres"
 fi
 
 if [[ $DB == "" ]] ; then
-    DB="postgres"
+  DB="postgres"
 fi
 
 
@@ -143,29 +149,28 @@ C="docker "
 # Check for empty name for issuing an --rm -ti container
 
 if [ -z "$NAME" ] ; then
-    C+="run --rm -ti "
+  C+="run --rm -ti "
 else
-    # Check for existing container
-    DOCKERID=`docker ps -a -q -f name=${NAME}`
-    
-    if [ $DOCKERID ] ; then
-	C+="start ${NAME} "
-	
-	eval $C
-	exit 0
-    else
-	C+="run -ti --name ${NAME} "
-    fi
+  # Check for existing container
+  DOCKERID=`docker ps -a -q -f name=${NAME}`
+
+  if [ $DOCKERID ] ; then
+    C+="start ${NAME} "
+	  eval $C
+    exit 0
+  else
+    C+="run -ti --name ${NAME} "
+  fi
 fi
 
 
 # Volumes
 
 if [ "${#VOLUMES[@]}" -gt "0" ] ; then
-    for ((i=0;i<=((${#VOLUMES[@]}-1));i++))
-    do
-	C+="-v ${VOLUMES[i]} "
-    done;
+  for ((i=0;i<=((${#VOLUMES[@]}-1));i++))
+  do
+    C+="-v ${VOLUMES[i]} "
+  done;
 fi
 
 
@@ -177,28 +182,38 @@ C+="-v $(pwd):/output/ "
 # Links
 
 if [ "${#LINKS[@]}" -gt "0" ] ; then
-    for ((i=0;i<=((${#LINKS[@]}-1));i++))
-    do
-	# Only the container name is needed to link volumes, strip the alias
-	IFS=':'; CONNAME=($LINKS[i]); unset IFS;
-	
-	if ! [[ ${LINKS[i]} == *":"* ]] ; then
-	    C+="--link ${LINKS[i]}:postgis --volumes-from ${LINKS[i]} "
-	else
-	    C+="--link ${LINKS[i]} --volumes-from ${LINKS[i]} "
-	fi
-    done;
+  for ((i=0;i<=((${#LINKS[@]}-1));i++))
+  do
+    # Only the container name is needed to link volumes, strip the alias
+	  IFS=':'; CONNAME=($LINKS[i]); unset IFS;
+
+	  if ! [[ ${LINKS[i]} == *":"* ]] ; then
+      C+="--link ${LINKS[i]}:postgis --volumes-from ${LINKS[i]} "
+    else
+      C+="--link ${LINKS[i]} --volumes-from ${LINKS[i]} "
+    fi
+  done;
 fi
+
+
+# User UID and GID
+
+if [ -z "$UGID" ] ; then
+  IFS=':' ; R=($UGID)
+  C+="-e \"CUID=${R[0]}\" -e \"CGID=${R[1]}\" "
+  unset IFS
+fi
+
 
 # Check if Darwin is the OS, if not, consider UID_FOLDER
 if ! [ "$(uname -s)" == "Darwin" ]; then
-    C+="-e \"UID_FOLDER=${FOLDER}\" "
+  C+="-e \"UID_FOLDER=${FOLDER}\" "
 fi
 
 C+="-e LANG=C.UTF-8 geographica/postgis:${VERSION} "
 C+="su postgres -c \"psql -h ${HOST} -p ${PORT} -U ${USER} ${DB}\""
 
 
-# Launch 
+# Launch
 
 eval $C

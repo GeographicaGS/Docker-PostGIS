@@ -103,6 +103,8 @@ Containers can be configured by means of setting environmental variables:
 
 - __UID_FOLDER:__ the folder in the container whose user and group ID must be matched for the postgres user. Defaults to _null_, meaning that the system will try to set the ID. Check [User Mapping](#User Mapping) for details. Please note that Docker for Mac on MacOS Sierra handles nicely the user mapping to the user running Docker, so this is not necessary;
 
+- __CUID / CGID:__ custom UID and GID for the postgres user. Check [User Mapping](#User Mapping) for details;
+
 - __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
 - __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](#Configuring the Data Store) for details.
@@ -112,7 +114,7 @@ Some examples of container initializations:
 ```Shell
 export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
-geographica/postgis:breezy_badger 
+geographica/postgis:breezy_badger
 ```
 
 This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](#Passwords) for details:
@@ -229,6 +231,8 @@ User Mapping
 Please note that Docker for Mac on MacOS Sierra handles nicely the user mapping to the user running Docker, so this is not necessary.
 
 The container will create an inner _postgres_ user and group for running the service. The UID and GID of this objects can be adjusted to match one at the host, so files in mounted volumes will be owned by the matched host user. The logic behind user mapping is as follows:
+
+- if env variables __CUID__ and __CGID__ are set, postgres user will be created with this codes;
 
 - if the env variable __UID_FOLDER__ is set, the ID will be taken from the given folder;
 
@@ -380,4 +384,3 @@ pg_ctl -D . stop -m immediate
 
 docker kill -s SIGQUIT containername
 ```
-
