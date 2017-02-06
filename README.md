@@ -9,6 +9,8 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
+- __Eclectic_Equidna:__ released 2017-02-06. Basically an oversimplified version of Breezy Badger. Lots of features that impose an overhead has been removed. Functionality provided by those features can be easily achived by using accessory containers to perform operations on the PostGIS one.
+
 - __Deranged_Dingo:__ released 2016-12-01. PostgreSQL 9.4.10 and PostGIS 2.1.8, for legacy purposes.
 
 - __Chaotic_Cucumber:__ released 2016-11-28. Is a Breezy Badger with PgRouting installed.
