@@ -53,7 +53,7 @@ if [ "$1" = 'run_default' ]; then
     log "Stopping the server..."
 
     # Stop the server
-    su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
+    su postgres -c "pg_ctl -w -D /data/ stop"
   else
     log "Datastore already exists..."
   fi
