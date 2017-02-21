@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build --no-cache -t=geographica/postgis:eclectic_equidna .
+docker build -t=geographica/postgis:eclectic_equidna .
