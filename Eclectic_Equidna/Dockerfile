@@ -48,9 +48,6 @@ RUN src/compile.sh
 # Port
 EXPOSE 5432
 
-# Volumes
-VOLUME /data
-
 STOPSIGNAL SIGINT
 ENTRYPOINT ["/usr/local/bin/run.sh"]
 

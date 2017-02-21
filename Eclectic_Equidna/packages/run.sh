@@ -29,5 +29,7 @@ if [ "$1" = 'run_default' ]; then
   # Start the database
   exec gosu postgres postgres -D /data/
 else
+  log "Executing custom command ${1}"
+
   exec env "$@"
 fi

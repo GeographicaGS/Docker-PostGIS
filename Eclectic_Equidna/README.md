@@ -64,7 +64,7 @@ or pull it from Docker Hub:
 docker pull geographica/postgis:eclectic_equidna
 ```
 
-The image exposes port 5432 and a volume at _/data_ with the data storage.
+The image exposes port 5432.
 
 
 <a name="Container Creation"></a>
@@ -79,7 +79,7 @@ docker run -d -P --name pgcontainer \
 geographica/postgis:eclectic_equidna
 ```
 
-This will create a container with a default volume, __/data__, for storing the data store. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
+The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
 
 Containers can be configured by means of setting environmental variables:
 
@@ -137,7 +137,7 @@ docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/
 Data Persistence
 ----------------
 
-Datastore data can be persisted in a data volume or host mounted folder and be used later by another container. The container checks if __/data/__ is empty or not. If not, considers the datastore to be not created and creates an empty one.
+Datastore data can be persisted in a data volume or host mounted folder and be used later by another container. The container checks if folder __/data/__ is empty or not. If not, considers the datastore to be not created and creates an empty one.
 
 
 <a name="Passwords"></a>
