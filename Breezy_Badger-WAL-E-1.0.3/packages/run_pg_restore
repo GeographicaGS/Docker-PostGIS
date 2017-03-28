@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+# coding=UTF-8
+
+from subprocess import call
+import os
+
+# Run psql scripts
+restores = os.environ["PG_RESTORE"].split(";")
+
+for r in restores:
+    if r<>"null":
+        print
+        print "--------------------------------------------"
+        print "Restoring PostgreSQL dump: %s" % r
+        print "--------------------------------------------"        
+        
+        call("pg_restore -h localhost -p 5432 %s" % r, shell=True)

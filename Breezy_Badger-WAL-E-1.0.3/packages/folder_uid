@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# This script returns the UID of the owner of a folder
+
+# Usage:
+# folder_uid.sh folder
+
+PARENT="$(dirname $1)"
+DIR="$(basename $1)"
+
+USER_ID=`ls -lahn ${PARENT} | grep "[[:space:]]${DIR}$" | awk {'print $3'}`
+
+echo ${USER_ID}
