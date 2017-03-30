@@ -1,43 +1,44 @@
 #!/usr/bin/env python
 # coding=UTF-8
 
-import sys, os
+import os
+import sys
 
-pgHome = os.environ["POSTGRES_DATA_FOLDER"]
+PG_HOME = os.environ['POSTGRES_DATA_FOLDER']
+
 
 def error():
-    print "Usage:"
-    print "l: show postgresql.conf content"
-    print "a: adds hash-separated lines to postgresql.conf, for example postgresql_conf a \"listen_addresses='*'#shared_buffers=128MB\""
-    print "d: deletes hash-separated lines from pg_hba.conf, for example postgresql_conf d \"listen_addresses='*'#shared_buffers=128MB\""
+    print 'Usage:'
+    print 'l: show postgresql.conf content'
+    print 'a: adds hash-separated lines to [postgresql.conf | recovery.conf], for example postgresql_conf a "listen_addresses='*'#shared_buffers=128MB"'
+    print 'd: deletes hash-separated lines from pg_hba.conf, for example postgresql_conf d "listen_addresses='*'#shared_buffers=128MB"'
     sys.exit(1)
 
-    
-# Check if no argument is submitted
-if len(sys.argv)==1:
+
+# Check if the number of arguments
+if len(sys.argv) < 4:
     error()
 
-    
 # List command
-if sys.argv[1]=="l":
+if sys.argv[2] == 'l':
     try:
-        f = open("%s/postgresql.conf" % pgHome, "r")
+        f = open(os.path.join(PG_HOME, sys.argv[1]), 'r')
         print f.read()
         f.close()
+
     except:
         error()
 
     sys.exit(0)
-    
-        
+
 # Add command
-if sys.argv[1]=="a":
+if sys.argv[2] == 'a':
     try:
-        entries = sys.argv[2].split("#")
-        f = open("%s/postgresql.conf" % pgHome, "a")
-        
+        entries = sys.argv[3].split('#')
+        f = open(os.path.join(PG_HOME, sys.argv[1]), 'a')
+
         for i in entries:
-            f.write("%s\n" % i)
+            f.write('%s\n' % i)
 
         f.close()
     except:
@@ -45,25 +46,25 @@ if sys.argv[1]=="a":
 
     sys.exit(0)
 
-    
 # Delete command
-if sys.argv[1]=="d":
+if sys.argv[2] == 'd':
     try:
-        entries = sys.argv[2].split("#")
-        f = open("%s/postgresql.conf" % pgHome, "r")
+        entries = sys.argv[3].split('#')
+        f = open(os.path.join(PG_HOME, sys.argv[1]), 'r')
         lines = []
 
         for line in f:
-            if line.rstrip("\n") not in entries:
+            if line.rstrip('\n') not in entries:
                 lines.append(line)
 
         f.close()
-        f = open("%s/postgresql.conf" % pgHome, "w")
-            
+        f = open(os.path.join(PG_HOME, sys.argv[1]), 'w')
+
         for line in lines:
-            f.write("%s" % line)
+            f.write('%s' % line)
 
         f.close()
+
     except:
         error()
 

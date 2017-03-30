@@ -20,19 +20,19 @@ log "Locale ${LOCALE}.${ENCODING} generated"
 # Check if command is just "run_default"
 
 if [ "$1" = 'run_default' ]; then
-    
+
     # Check if user postgres exists
 
     log "Running server"
 
     # if ! id postgres > /dev/null 2>&1; then
     # 	echo Creating postgres user
-	
+
     # 	UID_DATA="$(folder_uid ${POSTGRES_DATA_FOLDER})"
     # 	GID_DATA="$(folder_gid ${POSTGRES_DATA_FOLDER})"
 
     # 	UID_OUT="$(folder_uid ${POSTGRES_OUTPUT_FOLDER})"
-    # 	GID_OUT="$(folder_gid ${POSTGRES_OUTPUT_FOLDER})"    
+    # 	GID_OUT="$(folder_gid ${POSTGRES_OUTPUT_FOLDER})"
 
     # 	if [ ! $UID_FOLDER = "null" ]; then
     # 	    UUID="$(folder_uid ${UID_FOLDER})"
@@ -71,17 +71,17 @@ if [ "$1" = 'run_default' ]; then
     # 	    useradd -r --home $POSTGRES_DATA_FOLDER -g postgres postgres
     # 	else
     # 	    groupadd -g $FGID postgres
-    # 	    useradd -r --home $POSTGRES_DATA_FOLDER --uid $FUID --gid $FGID postgres	
+    # 	    useradd -r --home $POSTGRES_DATA_FOLDER --uid $FUID --gid $FGID postgres
     # 	fi
 
     # 	echo "postgres:${POSTGRES_PASSWD}" | chpasswd -e
-    # fi    
+    # fi
 
-    
+
     # Check if data folder is empty. If it is, configure the dataserver
     if [ -z "$(ls -A "$POSTGRES_DATA_FOLDER")" ]; then
 	log "Initilizing datastore..."
-        
+
 	# Modify data store
 	chown postgres:postgres ${POSTGRES_DATA_FOLDER}
 	chmod 700 ${POSTGRES_DATA_FOLDER}
@@ -91,18 +91,18 @@ if [ "$1" = 'run_default' ]; then
 	chmod 700 ${POSTGRES_OUTPUT_FOLDER}
 
 	log "postgres user created..."
-	
+
 	# Create datastore
 	su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D ${POSTGRES_DATA_FOLDER}"
 
 	log "Datastore created..."
-	
+
 	# Create log folder
 	mkdir -p ${POSTGRES_DATA_FOLDER}/logs
 	chown postgres:postgres ${POSTGRES_DATA_FOLDER}/logs
 
 	log "Log folder created..."
-	
+
 	# Erase default configuration and initialize it
 	su postgres -c "rm ${POSTGRES_DATA_FOLDER}/pg_hba.conf"
 	su postgres -c "pg_hba_conf a \"${PG_HBA}\""
@@ -117,7 +117,7 @@ if [ "$1" = 'run_default' ]; then
 	su postgres -c "psql -h localhost -U postgres -p 5432 -c \"alter role postgres password '${POSTGRES_PASSWD}';\""
 
 	log "Configurating and adding postgres user to the database..."
-	
+
 	# Check if CREATE_USER is not null
 	if ! [ "$CREATE_USER" = "null;null" ]; then
 
@@ -129,34 +129,34 @@ if [ "$1" = 'run_default' ]; then
 	    IFS=";"; declare -a Array=($*)
 	    USERNAME="${Array[0]}"
 	    USERPASS="${Array[1]}"
-	    
+
 	    su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create user ${USERNAME} with login password '${USERPASS}';\""
 	    su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create database ${USERNAME} with owner ${USERNAME};\""
 	fi
 
 	log "Running custom scripts..."
-	
+
 	# Run scripts
 	python /usr/local/bin/run_psql_scripts
 
 	log "Restoring database..."
-	
+
 	# Restore backups
 	python /usr/local/bin/run_pg_restore
 
 	log "Stopping the server..."
-	
+
 	# Stop the server
 	su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
 
     else
-	
+
 	log "Datastore already exists..."
-	
+
     fi
 
     log "Starting the server..."
-    
+
     # Start the database
     exec gosu postgres postgres -D $POSTGRES_DATA_FOLDER
 else
