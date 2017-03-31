@@ -19,8 +19,8 @@ log "one $1"
 # Create user postgres if does not exists
 /usr/local/bin/create_postgres_user.sh
 
-# Check if command is just "run_default"
-if [ "$1" = 'run_default' ]; then
+# Check if command is just "run_default" or "run_configuration"
+if [ "$1" = 'run_default' ] || [ "$1" = 'run_configuration' ]; then
   log "Running server"
 
   # Check if data folder is empty. If it is, configure the dataserver
@@ -54,22 +54,19 @@ if [ "$1" = 'run_default' ]; then
 
     # Modify basic configuration
     su postgres -c "rm ${POSTGRES_DATA_FOLDER}/postgresql.conf"
+    PG_CONF="${PG_CONF}#lc_messages='${LANG}'#lc_monetary='${LANG}'#lc_numeric='${LANG}'#lc_time='${LANG}'"
 
     # Check if use the regular configuration or the one that uses WAL-E
     if [ "$PG_WAL" = "null" ]; then
-      PG_CONF="${PG_CONF}#lc_messages='${LANG}'#lc_monetary='${LANG}'#lc_numeric='${LANG}'#lc_time='${LANG}'"
       su postgres -c "postgresql_conf postgresql.conf a \"${PG_CONF}\""
 
     else
-      PG_WAL_CONF="${PG_WAL_CONF}#lc_messages='${LANG}'#lc_monetary='${LANG}'#lc_numeric='${LANG}'#lc_time='${LANG}'"
+      PG_WAL_CONF="${PG_CONF}#${PG_WAL_CONF}"
       su postgres -c "postgresql_conf postgresql.conf a \"${PG_WAL_CONF}\""
     fi
 
-    # Check if start recovery from S3 with WAL-E after PostgreSQL starts
-    if ! [ "$PG_WAL_RECOVERY" = "null" ]; then
-      log "A data recovery from S3 with WAL-E will be exectued after PostgreSQL starts"
-      su postgres -c "postgresql_conf recovery.conf a \"${PG_WAL_RECOVERY_CONF}\""
-    fi
+    log "The 'S3 with WAL-E' data recovery configuration has been saved in 'recovery.conf.rename'"
+    su postgres -c "postgresql_conf recovery.conf.rename a \"${PG_WAL_RECOVERY_CONF}\""
 
     # Establish postgres user password and run the database
     su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} start"
@@ -110,12 +107,13 @@ if [ "$1" = 'run_default' ]; then
     log "Datastore already exists..."
   fi
 
-  log "Starting the server..."
-
-  # Start the database
-  exec gosu postgres postgres -D $POSTGRES_DATA_FOLDER
-
-  su postgres -c "/usr/local/bin/wal-e backup-push /data"
 else
   exec env "$@"
+fi
+
+# Check if command is just "run_default"
+if [ "$1" = 'run_default' ]; then
+  log "Starting the server..."
+  # Start the database
+  exec gosu postgres postgres -D $POSTGRES_DATA_FOLDER
 fi

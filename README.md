@@ -24,7 +24,12 @@ archive_command='/usr/local/bin/wal-e wal-push %p'
 ### Base backup
 
 su postgres -c "/usr/local/bin/wal-e backup-push /data"
+
+/usr/local/bin/run.sh run_configuration
+su postgres -c "/usr/local/bin/wal-e backup-list"
 su postgres -c "/usr/local/bin/wal-e backup-fetch /data LATEST"
+mv /data/recovery.conf.rename /data/recovery.conf
+exec gosu postgres postgres -D /data
 
 ### recovery.conf
 
