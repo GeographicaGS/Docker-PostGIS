@@ -6,9 +6,6 @@ MAINTAINER Jose M. Camacho "jcamacho@geographica.gs"
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qqy install --no-install-recommends lzop pv python3-dev python3-pip
 
-# Remove this before merge with master
-RUN DEBIAN_FRONTEND=noninteractive apt-get -qqy install --no-install-recommends vim
-
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qqy autoremove
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qqy autoclean
 RUN rm -rf /var/lib/apt/lists/*
@@ -20,8 +17,8 @@ ARG WAL_TIMEOUT=300
 ENV PG_WAL_CONF "wal_level='archive'#archive_mode=on#archive_timeout=${WAL_TIMEOUT}#archive_command='/usr/local/bin/wal-e wal-push %p'"
 ENV PG_WAL_RECOVERY_CONF "restore_command='/usr/local/bin/wal-e wal-fetch %f %p'"
 ENV PG_WAL null
+ENV PG_WAL_RECOVERY null
 
 # Load assets
-RUN rm -f /usr/local/bin/run.sh /usr/local/bin/postgresql_conf
 ADD packages/run.sh /usr/local/bin/
 ADD packages/postgresql_conf /usr/local/bin

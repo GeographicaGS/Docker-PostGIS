@@ -55,54 +55,75 @@ if [ "$1" = 'run_default' ] || [ "$1" = 'run_configuration' ]; then
     # Modify basic configuration
     su postgres -c "rm ${POSTGRES_DATA_FOLDER}/postgresql.conf"
     PG_CONF="${PG_CONF}#lc_messages='${LANG}'#lc_monetary='${LANG}'#lc_numeric='${LANG}'#lc_time='${LANG}'"
+    PG_WAL_CONF="${PG_CONF}#${PG_WAL_CONF}"
 
     # Check if use the regular configuration or the one that uses WAL-E
     if [ "$PG_WAL" = "null" ]; then
-      su postgres -c "postgresql_conf postgresql.conf a \"${PG_CONF}\""
+      PG_CURRENT_CONF="${PG_CONF}"
 
     else
-      PG_WAL_CONF="${PG_CONF}#${PG_WAL_CONF}"
-      su postgres -c "postgresql_conf postgresql.conf a \"${PG_WAL_CONF}\""
+      PG_CURRENT_CONF="${PG_WAL_CONF}"
     fi
 
-    log "The 'S3 with WAL-E' data recovery configuration has been saved in 'recovery.conf.rename'"
-    su postgres -c "postgresql_conf recovery.conf.rename a \"${PG_WAL_RECOVERY_CONF}\""
+    su postgres -c "postgresql_conf postgresql.conf.regular a \"${PG_CONF}\""
+    su postgres -c "postgresql_conf postgresql.conf.wal a \"${PG_WAL_CONF}\""
+    su postgres -c "postgresql_conf postgresql.conf a \"${PG_CURRENT_CONF}\""
 
-    # Establish postgres user password and run the database
-    su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} start"
-    su postgres -c "psql -h localhost -U postgres -p 5432 -c \"alter role postgres password '${POSTGRES_PASSWD}';\""
-
-    log "Configurating and adding postgres user to the database..."
-
-    # Check if CREATE_USER is not null
-    if ! [ "$CREATE_USER" = "null;null" ]; then
-      log "-----------------------------------------"
-      log "Creating database and user ${CREATE_USER}"
-      log "-----------------------------------------"
-
-      set -- "$CREATE_USER"
-      IFS=";"; declare -a Array=($*)
-      USERNAME="${Array[0]}"
-      USERPASS="${Array[1]}"
-
-      su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create user ${USERNAME} with login password '${USERPASS}';\""
-      su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create database ${USERNAME} with owner ${USERNAME};\""
+    # Select the name for the recovery configuration file
+    PG_WAL_RECOVERY_FILE="recovery.conf.not_in_recovery"
+    if ! [ "$PG_WAL_RECOVERY" = "null" ]; then
+      PG_WAL_RECOVERY_FILE="recovery.conf"
     fi
 
-    log "Running custom scripts..."
+    log "The 'S3 with WAL-E' data recovery configuration has been saved in 'recovery.conf.not_in_recovery'"
+    su postgres -c "postgresql_conf ${PG_WAL_RECOVERY_FILE} a \"${PG_WAL_RECOVERY_CONF}\""
 
-    # Run scripts
-    python /usr/local/bin/run_psql_scripts
+    # If recovery mode IS activated
+    if ! [ "$PG_WAL_RECOVERY" = "null" ]; then
+      su postgres -c "/usr/local/bin/wal-e backup-fetch ${POSTGRES_DATA_FOLDER} LATEST"
 
-    log "Restoring database..."
+    # If recovery mode is NOT activated
+    else
+      # Establish postgres user password and run the database
+      su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} start"
+      su postgres -c "psql -h localhost -U postgres -p 5432 -c \"alter role postgres password '${POSTGRES_PASSWD}';\""
 
-    # Restore backups
-    python /usr/local/bin/run_pg_restore
+      log "Configurating and adding postgres user to the database..."
 
-    log "Stopping the server..."
+      # Check if CREATE_USER is not null
+      if ! [ "$CREATE_USER" = "null;null" ]; then
+        log "-----------------------------------------"
+        log "Creating database and user ${CREATE_USER}"
+        log "-----------------------------------------"
 
-    # Stop the server
-    su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
+        set -- "$CREATE_USER"
+        IFS=";"; declare -a Array=($*)
+        USERNAME="${Array[0]}"
+        USERPASS="${Array[1]}"
+
+        su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create user ${USERNAME} with login password '${USERPASS}';\""
+        su postgres -c "psql -h localhost -U postgres -p 5432 -c \"create database ${USERNAME} with owner ${USERNAME};\""
+      fi
+
+      log "Running custom scripts..."
+
+      # Run scripts
+      python /usr/local/bin/run_psql_scripts
+
+      log "Restoring database..."
+
+      # Restore backups
+      python /usr/local/bin/run_pg_restore
+
+      # Creating the WAL-E base backup
+      su postgres -c "/usr/local/bin/wal-e backup-push /data"
+
+      log "Stopping the server..."
+
+      # Stop the server
+      su postgres -c "pg_ctl -w -D ${POSTGRES_DATA_FOLDER} stop"
+    fi
+
   else
     log "Datastore already exists..."
   fi
