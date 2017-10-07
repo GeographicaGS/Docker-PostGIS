@@ -113,21 +113,23 @@ cd src/postgis-${POSTGIS_VERSION} ; make install ; cd ../..
 ldconfig
 
 
+# Creation of postgres user and group
+useradd --shell /bin/bash --home /data/ postgres
+
+
+# Creation of data folder
+mkdir -p /data/
+chmod 0700 /data/
+chown postgres:postgres /data/
+
+
 # Clean up
 rm -Rf /usr/local/src
 
 chmod 755 /usr/local/bin/run.sh
-
-chmod 755 /usr/local/bin/make_backups
 
 chmod 777 /usr/local/bin/pg_hba_conf
 
 chmod 777 /usr/local/bin/postgresql_conf
 
 chmod 755 /usr/local/bin/gosu
-
-chmod 755 /usr/local/bin/create_postgres_user.sh
-
-chmod 755 /usr/local/bin/folder_gid
-
-chmod 755 /usr/local/bin/folder_uid

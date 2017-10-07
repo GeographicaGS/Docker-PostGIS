@@ -3,7 +3,7 @@
 
 import sys, os
 
-pgHome = os.environ["POSTGRES_DATA_FOLDER"]
+pgHome = "/data/"
 
 def error():
     print "Usage:"
@@ -12,12 +12,12 @@ def error():
     print "d: deletes hash-separated lines from pg_hba.conf, for example postgresql_conf d \"listen_addresses='*'#shared_buffers=128MB\""
     sys.exit(1)
 
-    
+
 # Check if no argument is submitted
 if len(sys.argv)==1:
     error()
 
-    
+
 # List command
 if sys.argv[1]=="l":
     try:
@@ -28,14 +28,14 @@ if sys.argv[1]=="l":
         error()
 
     sys.exit(0)
-    
-        
+
+
 # Add command
 if sys.argv[1]=="a":
     try:
         entries = sys.argv[2].split("#")
         f = open("%s/postgresql.conf" % pgHome, "a")
-        
+
         for i in entries:
             f.write("%s\n" % i)
 
@@ -45,7 +45,7 @@ if sys.argv[1]=="a":
 
     sys.exit(0)
 
-    
+
 # Delete command
 if sys.argv[1]=="d":
     try:
@@ -59,7 +59,7 @@ if sys.argv[1]=="d":
 
         f.close()
         f = open("%s/postgresql.conf" % pgHome, "w")
-            
+
         for line in lines:
             f.write("%s" % line)
 
