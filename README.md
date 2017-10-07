@@ -9,13 +9,16 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
+
+- __Nimble_Newt:__ released 2017-10-07. PostgreSQL 10.0, PostGIS 2.4.0, GEOS 3.6, GDAL 2.2.2, patched. Bleeding edge.
+
 - __Eclectic_Equidna:__ released 2017-02-06. Basically an oversimplified version of Breezy Badger. Lots of features that impose an overhead has been removed. Functionality provided by those features can be easily achived by using accessory containers to perform operations on the PostGIS one.
 
 - __Deranged_Dingo:__ released 2016-12-01. PostgreSQL 9.4.10 and PostGIS 2.1.8, for legacy purposes.
 
 - __Chaotic_Cucumber:__ released 2016-11-28. Is a Breezy Badger with PgRouting installed.
 
-- __Breezy_Badger:__ released 2016-10-10. PostgreSQL 9.6.0, PostGIS 2.3.0, GDAL 2.1.1, patched. Bleeding edge.
+- __Breezy_Badger:__ released 2016-10-10. PostgreSQL 9.6.0, PostGIS 2.3.0, GDAL 2.1.1, patched.
 
 - __Awkward_Aardvark:__ released 2016-07-20 and last updated at 2016-10-10. PostgreSQL 9.5.4, PostGIS 2.2.3, GDAL 2.0.3, Patched. Currently our workhorse.
 
