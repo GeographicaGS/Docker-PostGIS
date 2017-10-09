@@ -1,18 +1,17 @@
-PostgreSQL 10.0, PostGIS 2.4, GEOS 3.6, GDAL 2.2.2, Patched
-=====================================================
+# PostgreSQL 10.0, PostGIS 2.4, GEOS 3.6, GDAL 2.2.2, Patched
 
 
-## Contents
+# Contents
 
-- [Versions](#Versions)
-- [Scripts](#Scripts)
-- [Image Creation](#Image-Creation)
-- [Container Creation](#Container-Creation)
-- [Executing Arbitrary Commands](#Executing-Arbitrary-Commands)
-- [Data Persistence](#Data-Persistence)
-- [Passwords](#Passwords)
-- [Configuring the Data Store](#Configuring-the-Data-Store)
-- [Killing the Container](#Killing-the-Container)
+- [Versions](#versions)
+- [Scripts](#scripts)
+- [Image Creation](#image-creation)
+- [Container Creation](#container-creation)
+- [Executing Arbitrary Commands](#executing-arbitrary-commands)
+- [Data Persistence](#data-persistence)
+- [Passwords](#passwords)
+- [Configuring the Data Store](#configuring-the-data-store)
+- [Killing the Container](#killing-the-container)
 
 
 ## Versions
@@ -200,7 +199,10 @@ At creation time, language, encoding, and locale info is added based on env vari
 Logs are stored at __$POSTGRES_DATA_FOLDER/pg_log__.
 
 
-## Killing the Container
+<a name="Killing the Container"></a>
+
+Killing the Container
+---------------------
 
 This container will handle signals send to it with _docker kill_ properly, so the database is shut down tidily. Thus:
 
