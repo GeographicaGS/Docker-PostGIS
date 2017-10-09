@@ -25,6 +25,7 @@ ADD packages/compile.sh /usr/local/src/
 ADD packages/pg_hba_conf /usr/local/bin
 ADD packages/postgresql_conf /usr/local/bin
 ADD packages/psqlrc /root/.psqlrc
+ADD packages/setup_datastore.sh /usr/local/bin
 ADD https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.bz2 /usr/local/src/
 ADD http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 /usr/local/src/
 ADD http://download.osgeo.org/proj/proj-${PROJ4_VERSION}.tar.gz /usr/local/src/
@@ -41,13 +42,11 @@ ADD https://raw.githubusercontent.com/GeographicaGS/Spanish-Geodetics-Patches/ma
 
 # Compilation
 RUN chmod 777 src/compile.sh
+RUN chmod 777 /usr/local/bin/setup_datastore.sh
 RUN src/compile.sh
 
 # Port
 EXPOSE 5432
-
-# Volumes
-VOLUME /data
 
 STOPSIGNAL SIGINT
 ENTRYPOINT ["/usr/local/bin/run.sh"]
