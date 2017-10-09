@@ -1,26 +1,20 @@
-PostgreSQL 10.0, PostGIS 2.4, GEOS 3.6, GDAL 2.2.2, Patched
-=====================================================
-
-<a name="Contents"></a>
-
-Contents
---------
-
-- [Versions](#Versions)
-- [Scripts](#Scripts)
-- [Image Creation](#Image Creation)
-- [Container Creation](#Container Creation)
-- [Executing Arbitrary Commands](#Executing Arbitrary Commands)
-- [Data Persistence](#Data Persistence)
-- [Passwords](#Passwords)
-- [Configuring the Data Store](#Configuring the Data Store)
-- [Killing the Container](#Killing the Container)
+# PostgreSQL 10.0, PostGIS 2.4, GEOS 3.6, GDAL 2.2.2, Patched
 
 
-<a name="Versions"></a>
+# Contents
 
-Versions
---------
+- [Versions](#versions)
+- [Scripts](#scripts)
+- [Image Creation](#image-creation)
+- [Container Creation](#container-creation)
+- [Executing Arbitrary Commands](#executing-arbitrary-commands)
+- [Data Persistence](#data-persistence)
+- [Passwords](#passwords)
+- [Configuring the Data Store](#configuring-the-data-store)
+- [Killing the Container](#killing-the-container)
+
+
+## Versions
 
 This Dockerfile compiles the following software:
 
@@ -35,10 +29,7 @@ This Dockerfile compiles the following software:
 - __PostGIS 2.4.0:__ patched as well.
 
 
-<a name="Scripts"></a>
-
-Scripts
--------
+## Scripts
 
 There is a script in this repo to help working with this image. __psql-docker__ opens a psql console on a standalone container to connect to other databases. To check how it works:
 
@@ -47,10 +38,7 @@ psql-docker -h
 ```
 
 
-<a name="Image Creation"></a>
-
-Image Creation
---------------
+## Image Creation
 
 Build the image directly from Git (this can take a long time):
 
@@ -67,10 +55,7 @@ docker pull geographica/postgis:nimble_newt
 The image exposes port 5432 and a volume at _/data_ with the data storage.
 
 
-<a name="Container Creation"></a>
-
-Container Creation
-------------------
+## Container Creation
 
 There are several options available to create containers. The most simple one:
 
@@ -103,10 +88,7 @@ geographica/postgis:nimble_newt
 This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](#Passwords) for details:
 
 
-<a name="Executing Arbitrary Commands"></a>
-
-Executing Arbitrary Commands
-----------------------------
+## Executing Arbitrary Commands
 
 The image can run arbitrary commands. This is useful for example for creating a temporary container for just dump a database, run a psql session with the one inside this image, or executing scripts into another container.
 
@@ -131,18 +113,13 @@ PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:nimble_newt \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
 
-<a name="Data Persistence"></a>
 
-Data Persistence
-----------------
+## Data Persistence
 
 Datastore data can be persisted in a data volume or host mounted folder and be used later by another container. The container checks if __/data/__ is empty or not. If not, considers the datastore to be not created and creates an empty one.
 
 
-<a name="Passwords"></a>
-
-Passwords
----------
+## Passwords
 
 Passwords sent to the container with environment variable __POSTGRES_PASSWD__ can be passed either on plain text or already encrypted á la PostgreSQL. To pass it on plain text means that anybody with access to the __docker inspect__ command on the server will be able to read passwords. Encrypting them previously means that __docker inspect__ will show the encrypted password, adding an additional layer of secrecy.
 
@@ -168,10 +145,7 @@ geographica/postgis:nimble_newt
 Ugly, but effective. Keep in mind, however, that if you use provisioning methods like bash scripts or _Docker Compose_ others will still be able to read passwords from these sources, so keep them safe.
 
 
-<a name="Configuring the Data Store"></a>
-
-Configuring the Data Store
---------------------------
+## Configuring the Data Store
 
 The image allows for configuration of _pg_hba.conf_ and _postgresql.conf_ data store files at creation time and later. This is advanced stuff, refer to the PostgreSQL documentation for details.
 

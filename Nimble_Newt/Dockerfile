@@ -38,6 +38,8 @@ ADD https://raw.githubusercontent.com/GeographicaGS/Spanish-Geodetics-Patches/ma
 ADD http://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz /usr/local/src/
 ADD https://raw.githubusercontent.com/GeographicaGS/Spanish-Geodetics-Patches/master/postgis/spatial_ref_sys.sql /usr/local/src/
 
+# Install national language (locale) data
+RUN apt-get update && apt-get install locales
 
 # Compilation
 RUN chmod 777 src/compile.sh
