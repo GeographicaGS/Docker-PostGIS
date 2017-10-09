@@ -8,13 +8,13 @@ Contents
 
 - [Versions](#Versions)
 - [Scripts](#Scripts)
-- [Image Creation](#Image Creation)
-- [Container Creation](#Container Creation)
-- [Executing Arbitrary Commands](#Executing Arbitrary Commands)
-- [Data Persistence](#Data Persistence)
+- [Image Creation](#Image-Creation)
+- [Container Creation](#Container-Creation)
+- [Executing Arbitrary Commands](#Executing-Arbitrary-Commands)
+- [Data Persistence](#Data-Persistence)
 - [Passwords](#Passwords)
-- [Configuring the Data Store](#Configuring the Data Store)
-- [Killing the Container](#Killing the Container)
+- [Configuring the Data Store](#Configuring-the-Data-Store)
+- [Killing the Container](#Killing-the-Container)
 
 
 <a name="Versions"></a>
