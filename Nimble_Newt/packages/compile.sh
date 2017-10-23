@@ -13,7 +13,13 @@ apt-get update \
 	       libxml2-dev \
 	       libxslt-dev \
 	       curl \
-	       libjson-c-dev
+	       libjson-c-dev \
+         pkg-config \
+         libprotobuf-c-dev \
+         libprotobuf-c1 \
+         libprotoc-dev \
+         protobuf-compiler \
+         protobuf-c-compiler
 
 
 # Grab gosu
