@@ -31,20 +31,6 @@ This Dockerfile compiles the following software:
 
 ## How to use
 
-This will create a container with a default volume, __/data__, for storing the data store. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
-
-Containers can be configured by means of setting environmental variables:
-
-- __POSTGRES_PASSWD:__ set the password for user postgres. See [Passwords](#Passwords) for more details. Defaults to _postgres_;
-
-- __ENCODING:__ encoding to create the data store and the default database, if applicable. Defaults to _UTF-8_;
-
-- __LOCALE:__ locale for the data store and the default database, if any. Defaults to _en_US_;
-
-- __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
-
-- __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](#Configuring the Data Store) for details.
-
 ### Using Docker compose
 docker-compose.yml:
 ```yml
@@ -70,6 +56,22 @@ docker-compose up
 ```
 docker run --name postgis -p 5432:5432 geographica/postgis:nimble_newt
 ```
+
+### Environment variables
+
+This will create a container with a default volume, __/data__, for storing the data store. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
+
+Containers can be configured by means of setting environmental variables:
+
+- __POSTGRES_PASSWD:__ set the password for user postgres. See [Passwords](#Passwords) for more details. Defaults to _postgres_;
+
+- __ENCODING:__ encoding to create the data store and the default database, if applicable. Defaults to _UTF-8_;
+
+- __LOCALE:__ locale for the data store and the default database, if any. Defaults to _en_US_;
+
+- __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
+
+- __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](#Configuring the Data Store) for details.
 
 ## Scripts
 
