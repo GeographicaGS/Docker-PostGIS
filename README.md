@@ -10,7 +10,7 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
 
-- [__Nimble_Newt:__](Nimble_Newt) released 2017-10-07. PostgreSQL 10.0, PostGIS 2.4.0, GEOS 3.6, GDAL 2.2.2, patched. Bleeding edge.
+- [__Nimble_Newt:__](Nimble_Newt) released 2017-10-07. PostgreSQL 10.0, PostGIS 2.4.1, GEOS 3.6, GDAL 2.2.2, patched. Bleeding edge.
 
 - [__Eclectic_Equidna:__](Eclectic_Equidna) released 2017-02-06. Basically an oversimplified version of Breezy Badger. Lots of features that impose an overhead has been removed. Functionality provided by those features can be easily achived by using accessory containers to perform operations on the PostGIS one.
 

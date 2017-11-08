@@ -26,42 +26,10 @@ This Dockerfile compiles the following software:
 
 - __GDAL 2.2.2:__ also patched;
 
-- __PostGIS 2.4.0:__ patched as well.
+- __PostGIS 2.4.1:__ patched as well.
 
 
-## Scripts
-
-There is a script in this repo to help working with this image. __psql-docker__ opens a psql console on a standalone container to connect to other databases. To check how it works:
-
-```Shell
-psql-docker -h
-```
-
-
-## Image Creation
-
-Build the image directly from Git (this can take a long time):
-
-```Shell
-./build.sh
-```
-
-or pull it from Docker Hub:
-
-```Shell
-docker pull geographica/postgis:nimble_newt
-```
-
-The image exposes port 5432 and a volume at _/data_ with the data storage.
-
-
-## Container Creation
-
-There are several options available to create containers. The most simple one:
-
-```Shell
-docker run -d -P --name pgcontainer geographica/postgis:nimble_newt
-```
+## How to use
 
 This will create a container with a default volume, __/data__, for storing the data store. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
 
@@ -77,16 +45,29 @@ Containers can be configured by means of setting environmental variables:
 
 - __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](#Configuring the Data Store) for details.
 
-Some examples of container initializations:
-
-```Shell
-export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
-docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
-geographica/postgis:nimble_newt
+Docker compose exampe:
+```yml
+version: "3"
+services:
+  postgis:
+    image: geographica/postgis:nimble_newt
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/data
+    environment:
+      - POSTGRES_PASSWD=postgres
+volumes:
+  db-data:
 ```
 
-This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](#Passwords) for details:
+## Scripts
 
+There is a script in this repo to help working with this image. __psql-docker__ opens a psql console on a standalone container to connect to other databases. To check how it works:
+
+```Shell
+psql-docker -h
+```
 
 ## Executing Arbitrary Commands
 
@@ -112,7 +93,6 @@ PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 
 docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:nimble_newt \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
-
 
 ## Data Persistence
 
@@ -201,8 +181,8 @@ Logs are stored at __$POSTGRES_DATA_FOLDER/pg_log__.
 
 <a name="Killing the Container"></a>
 
-Killing the Container
----------------------
+## Killing the Container
+
 
 This container will handle signals send to it with _docker kill_ properly, so the database is shut down tidily. Thus:
 
