@@ -38,8 +38,7 @@ docker-compose up
 docker run --name postgis -p 5432:5432 geographica/postgis:nimble_newt
 ```
 
-### Environment variables
-
+### Environment variables
 This will create a container with a default volume, __/data__, for storing the data store. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
 
 Containers can be configured by means of setting environmental variables:
