@@ -1,33 +1,14 @@
 # PostgreSQL 10.0, PostGIS 2.4, GEOS 3.6, GDAL 2.2.2
 
-
 # Contents
-
+- [How to use](#how-to-use)
 - [Versions](#versions)
 - [Scripts](#scripts)
-- [Image Creation](#image-creation)
-- [Container Creation](#container-creation)
 - [Executing Arbitrary Commands](#executing-arbitrary-commands)
 - [Data Persistence](#data-persistence)
 - [Passwords](#passwords)
 - [Configuring the Data Store](#configuring-the-data-store)
 - [Killing the Container](#killing-the-container)
-
-
-## Versions
-
-This Dockerfile compiles the following software:
-
-- __PostgreSQL 10.0;__
-
-- __GEOS 3.6.0;__
-
-- __Proj 4.9.3:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
-
-- __GDAL 2.2.2:__ also patched;
-
-- __PostGIS 2.4.1:__ patched as well.
-
 
 ## How to use
 
@@ -72,6 +53,21 @@ Containers can be configured by means of setting environmental variables:
 - __PG_HBA:__ configuration of _pg_hba.con_ access file. See [Configuring the Data Store](#Configuring the Data Store) for details;
 
 - __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](#Configuring the Data Store) for details.
+
+## Versions
+
+This Dockerfile compiles the following software:
+
+- __PostgreSQL 10.0;__
+
+- __GEOS 3.6.0;__
+
+- __Proj 4.9.3:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
+
+- __GDAL 2.2.2:__ also patched;
+
+- __PostGIS 2.4.1:__ patched as well.
+
 
 ## Scripts
 
