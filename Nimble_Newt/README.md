@@ -1,4 +1,4 @@
-# PostgreSQL 10.0, PostGIS 2.4, GEOS 3.6, GDAL 2.2.2, Patched
+# PostgreSQL 10.0, PostGIS 2.4, GEOS 3.6, GDAL 2.2.2
 
 
 # Contents
@@ -45,7 +45,8 @@ Containers can be configured by means of setting environmental variables:
 
 - __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](#Configuring the Data Store) for details.
 
-Docker compose exampe:
+### Using Docker compose
+docker-compose.yml:
 ```yml
 version: "3"
 services:
@@ -59,6 +60,15 @@ services:
       - POSTGRES_PASSWD=postgres
 volumes:
   db-data:
+```
+Run:
+```bash
+docker-compose up
+```
+
+### Without compose
+```
+docker run --name postgis -p 5432:5432 geographica/postgis:nimble_newt
 ```
 
 ## Scripts
