@@ -1,7 +1,7 @@
 \set QUIET 1
 \set PROMPT1 '%n@%M %~>'
 \pset null '[NULL]'
-\set VERBOSITY verbose
+\set VERBOSITY terse
 \set HISTFILE ~/psql_history- :DBNAME
 \set HISTCONTROL ignoredups
 \timing
