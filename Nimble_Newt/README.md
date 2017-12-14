@@ -1,68 +1,44 @@
-# PostgreSQL 10.0, PostGIS 2.4, GEOS 3.6, GDAL 2.2.2, Patched
-
+# PostgreSQL 10.0, PostGIS 2.4, GEOS 3.6, GDAL 2.2.2
 
 # Contents
-
+- [How to use](#how-to-use)
 - [Versions](#versions)
 - [Scripts](#scripts)
-- [Image Creation](#image-creation)
-- [Container Creation](#container-creation)
 - [Executing Arbitrary Commands](#executing-arbitrary-commands)
 - [Data Persistence](#data-persistence)
 - [Passwords](#passwords)
 - [Configuring the Data Store](#configuring-the-data-store)
 - [Killing the Container](#killing-the-container)
 
+## How to use
 
-## Versions
-
-This Dockerfile compiles the following software:
-
-- __PostgreSQL 10.0;__
-
-- __GEOS 3.6.0;__
-
-- __Proj 4.9.3:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
-
-- __GDAL 2.2.2:__ also patched;
-
-- __PostGIS 2.4.0:__ patched as well.
-
-
-## Scripts
-
-There is a script in this repo to help working with this image. __psql-docker__ opens a psql console on a standalone container to connect to other databases. To check how it works:
-
-```Shell
-psql-docker -h
+### Using Docker compose
+docker-compose.yml:
+```yml
+version: "3"
+services:
+  postgis:
+    image: geographica/postgis:nimble_newt
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/data
+    environment:
+      - POSTGRES_PASSWD=postgres
+volumes:
+  db-data:
+```
+Run:
+```bash
+docker-compose up
 ```
 
-
-## Image Creation
-
-Build the image directly from Git (this can take a long time):
-
-```Shell
-./build.sh
+### Without compose
+```
+docker run --name postgis -p 5432:5432 geographica/postgis:nimble_newt
 ```
 
-or pull it from Docker Hub:
-
-```Shell
-docker pull geographica/postgis:nimble_newt
-```
-
-The image exposes port 5432 and a volume at _/data_ with the data storage.
-
-
-## Container Creation
-
-There are several options available to create containers. The most simple one:
-
-```Shell
-docker run -d -P --name pgcontainer geographica/postgis:nimble_newt
-```
-
+### Environment variables
 This will create a container with a default volume, __/data__, for storing the data store. The default encoding will be __UTF-8__, and the locale __en_US__. No additional modification or action is taken.
 
 Containers can be configured by means of setting environmental variables:
@@ -77,16 +53,28 @@ Containers can be configured by means of setting environmental variables:
 
 - __PG_CONF:__ configuration of _postgresql.conf_ See [Configuring the Data Store](#Configuring the Data Store) for details.
 
-Some examples of container initializations:
+## Versions
+
+This Dockerfile compiles the following software:
+
+- __PostgreSQL 10.0;__
+
+- __GEOS 3.6.0;__
+
+- __Proj 4.9.3:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
+
+- __GDAL 2.2.2:__ also patched;
+
+- __PostGIS 2.4.1:__ patched as well.
+
+
+## Scripts
+
+There is a script in this repo to help working with this image. __psql-docker__ opens a psql console on a standalone container to connect to other databases. To check how it works:
 
 ```Shell
-export PGPASSWD="md5"$(printf '%s' "new_password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
-docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
-geographica/postgis:nimble_newt
+psql-docker -h
 ```
-
-This __run__ command will create a container with a default options, but changing the _postgres_ password to _new_password_here_, and sending it already encrypted to the container. Check [Passwords](#Passwords) for details:
-
 
 ## Executing Arbitrary Commands
 
@@ -112,7 +100,6 @@ PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 
 docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:nimble_newt \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
-
 
 ## Data Persistence
 
@@ -201,8 +188,8 @@ Logs are stored at __$POSTGRES_DATA_FOLDER/pg_log__.
 
 <a name="Killing the Container"></a>
 
-Killing the Container
----------------------
+## Killing the Container
+
 
 This container will handle signals send to it with _docker kill_ properly, so the database is shut down tidily. Thus:
 
