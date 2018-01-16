@@ -57,15 +57,15 @@ Containers can be configured by means of setting environmental variables:
 
 This Dockerfile compiles the following software:
 
-- __PostgreSQL 10.0;__
+- __PostgreSQL 10.1;__
 
-- __GEOS 3.6.0;__
+- __GEOS 3.6.2;__
 
 - __Proj 4.9.3:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
 
-- __GDAL 2.2.2:__ also patched;
+- __GDAL 2.2.3:__ also patched;
 
-- __PostGIS 2.4.1:__ patched as well.
+- __PostGIS 2.4.3:__ patched as well.
 
 
 ## Scripts
