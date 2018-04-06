@@ -10,7 +10,9 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
 
-- [__Pleasant_Yacare:__](Pleasant_Yacare) released 2018-01-16. PostgreSQL 10.1, PostGIS 2.4.3, GEOS 3.6.2, GDAL 2.2.3, patched. Bleeding edge.
+- [__new_version:__](new_version) released 2018-04-xx. PostgreSQL 10.3, PostGIS 2.4.3, GEOS 3.6.2, GDAL 2.2.4, patched. Bleeding edge.
+
+- [__Pleasant_Yacare:__](Pleasant_Yacare) released 2018-01-16. PostgreSQL 10.1, PostGIS 2.4.3, GEOS 3.6.2, GDAL 2.2.3, patched.
 
 - [__Nimble_Newt:__](Nimble_Newt) released 2017-10-07. PostgreSQL 10.0, PostGIS 2.4.1, GEOS 3.6.0, GDAL 2.2.2, patched.
 
