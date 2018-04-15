@@ -1,4 +1,4 @@
-# PostgreSQL 10.3 PostGIS 2.4.3, GEOS 3.6.2, GDAL 2.2.4
+# PostgreSQL 10.3 PostGIS 2.4.4, GEOS 3.6.2, GDAL 2.2.4
 
 # Contents
 - [How to use](#how-to-use)
@@ -18,7 +18,7 @@ docker-compose.yml:
 version: "3"
 services:
   postgis:
-    image: geographica/postgis:pleasant_yacare
+    image: geographica/postgis:new_version
     ports:
       - "5432:5432"
     volumes:
@@ -35,7 +35,7 @@ docker-compose up
 
 ### Without compose
 ```
-docker run --name postgis -p 5432:5432 geographica/postgis:pleasant_yacare
+docker run --name postgis -p 5432:5432 geographica/postgis:new_version
 ```
 
 ### Environment variables
@@ -57,15 +57,15 @@ Containers can be configured by means of setting environmental variables:
 
 This Dockerfile compiles the following software:
 
-- __PostgreSQL 10.1;__
+- __PostgreSQL 10.3;__
 
 - __GEOS 3.6.2;__
 
 - __Proj 4.9.3:__ patched with the spanish national grid for conversion between ED50 to ETRS89;
 
-- __GDAL 2.2.3:__ also patched;
+- __GDAL 2.2.4:__ also patched;
 
-- __PostGIS 2.4.3:__ patched as well.
+- __PostGIS 2.4.4:__ patched as well.
 
 
 ## Scripts
@@ -86,19 +86,19 @@ Some examples:
 # Interactive pg_dump, will ask for password
 
 docker run --rm -ti -v /whatever/:/d --link the_container_running_the_database:pg \
-geographica/postgis:pleasant_yacare \
+geographica/postgis:new_version \
 pg_dump -b -E UTF8 -f /d/dump -F c -v -Z 9 -h pg -p 5432 -U postgres project
 
 # Full automatic pg_dump, with password as ENV variable
 
 docker run --rm -v /home/malkab/Desktop/:/d --link test_07:pg \
-geographica/postgis:pleasant_yacare \
+geographica/postgis:new_version \
 PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 -v -Z 9 -h pg -p 5432 -U postgres postgres
 
 # Interactive psql
 
-docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:pleasant_yacare \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
+docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:new_version \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
 
 ## Data Persistence
@@ -126,7 +126,7 @@ export USERPASSWD="md5"$(printf '%s' "userpass" ${USER} | md5sum | cut -d ' ' -f
 export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -e "CREATE_USER=${USER}" -e "CREATE_USER_PASSWD=${USERPASSWD}" \
-geographica/postgis:pleasant_yacare
+geographica/postgis:new_version
 ```
 
 Ugly, but effective. Keep in mind, however, that if you use provisioning methods like bash scripts or _Docker Compose_ others will still be able to read passwords from these sources, so keep them safe.
