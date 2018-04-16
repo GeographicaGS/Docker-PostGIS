@@ -10,7 +10,7 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
 
-- [__new_version:__](new_version) released 2018-04-xx. PostgreSQL 10.3, PostGIS 2.4.4, GEOS 3.6.2, GDAL 2.2.4, patched. Bleeding edge.
+- [__Quick_Quail:__](Quick_Quail) released 2018-04-16. PostgreSQL 10.3, PostGIS 2.4.4, GEOS 3.6.2, GDAL 2.2.4, patched. Bleeding edge.
 
 - [__Pleasant_Yacare:__](Pleasant_Yacare) released 2018-01-16. PostgreSQL 10.1, PostGIS 2.4.3, GEOS 3.6.2, GDAL 2.2.3, patched.
 
@@ -35,7 +35,7 @@ Please refer to each tag README.md for full details. To get a quick overview ove
 
 ## Common
 
-Folder [__00-Common__](00-Common) holds commodities to be aplicable to all tags:
+Folder [__00-Common__](00-Common) holds commodities to be applicable to all tags:
 
 - __psql-docker:__ this script launch an interactive psql session using a Docker image.
 
