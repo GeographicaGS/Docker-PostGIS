@@ -24,6 +24,8 @@ if [ "$1" = 'run_default' ]; then
   if [ -z "$(ls -A "/data/")" ]; then
     log "Initializing datastore..."
 
+    chown postgres:postgres /data
+    
     # Create datastore
     su postgres -c "initdb --encoding=${ENCODING} --locale=${LANG} --lc-collate=${LANG} --lc-monetary=${LANG} --lc-numeric=${LANG} --lc-time=${LANG} -D /data/"
 
