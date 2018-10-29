@@ -84,7 +84,7 @@ ldconfig
 # Compilation of GDAL
 cd src/gdal-${GDAL_VERSION} ; ./configure ; cd ../..
 
-cd src/gdal-${GDAL_VERSION} ; make -j; cd ../..
+cd src/gdal-${GDAL_VERSION} ; make; cd ../..
 
 cd src/gdal-${GDAL_VERSION} ; make install ; cd ../..
 
