@@ -61,7 +61,7 @@ This Dockerfile compiles the following software:
 
 - __GEOS 3.7.1__
 
-- __Proj 5.2.0__
+- __Proj 6.0.0__
 
 - __GDAL 2.4__
 
