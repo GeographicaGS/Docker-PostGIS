@@ -80,9 +80,6 @@ curl -o /usr/local/bin/gosu \
     && rm /usr/local/bin/gosu.asc > /dev/null 2>&1 \
     && chmod +x /usr/local/bin/gosu > /dev/null 2>&1
 
-# chmod 755 /usr/local/bin/gosu
-
-
 # Compilation of PostgreSQL
 cd src/postgresql-${PG_VERSION}
     ./configure --prefix=/usr/local --with-pgport=5432 --with-python --with-openssl --with-libxml --with-libxslt --with-zlib
