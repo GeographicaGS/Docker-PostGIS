@@ -1,4 +1,4 @@
-# PostgreSQL 11.2 PostGIS 2.5.1 GEOS 3.7.1, GDAL 2.4, PROJ4 5.2.0
+# PostgreSQL 11.2 PostGIS 2.5.1 GEOS 3.7.1, GDAL 2.4.1, PROJ 6.0
 
 # Contents
 - [How to use](#how-to-use)
@@ -63,9 +63,9 @@ This Dockerfile compiles the following software:
 
 - __Proj 6.0.0__
 
-- __GDAL 2.4__
+- __GDAL 2.4.1__
 
-- __PostGIS 2.5.1__
+- __PostGIS 2.5.2__
 
 
 ## Scripts
