@@ -10,7 +10,9 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
 
-- [__Spry_Sparrow:__](Spry_Sparrow) released 2018-29-10. PostgreSQL 11.0, PostGIS 2.5, GEOS 3.7, PROJ4 5.2, GDAL 2.3.2. Bleeding edge.
+- [__Tasty_Termite:__](Tasty_Termite) released 2019-03-TODO. PostgreSQL 11.2, PostGIS 2.5.2, GEOS 3.7.1, PROJ4 6.0, GDAL 2.4.1. Bleeding edge.
+
+- [__Spry_Sparrow:__](Spry_Sparrow) released 2018-29-10. PostgreSQL 11.0, PostGIS 2.5, GEOS 3.7, PROJ4 5.2, GDAL 2.3.2.
 
 - [__Rapid_Reedbuck:__](Rapid_Reedbuck) released 2018-09-15. PostgreSQL 10.5, PostGIS 2.4.5, GEOS 3.7.0, PROJ4 5.1.0, GDAL 2.3.1.
 
