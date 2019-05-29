@@ -122,7 +122,7 @@ ldconfig
 ## This `mv` fail from a long time ago.
 # mv src/spatial_ref_sys.sql src/postgis-${POSTGIS_VERSION}/
 cd src/postgis-${POSTGIS_VERSION}
-    ./configure --with-topology --with-raster --with-jsondir=/usr/include/json-c
+    ./configure --with-topology --with-raster --with-jsondir=/usr
     make -j "$(nproc)"
     make install
 cd ../..
