@@ -36,6 +36,9 @@ RUN src/compile.sh
 
 VOLUME /data
 
+RUN chmod +x /usr/local/bin/pg_hba_conf
+RUN chmod +x /usr/local/bin/postgresql_conf
+
 STOPSIGNAL SIGINT
 COPY packages/run.sh /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/run.sh"]
