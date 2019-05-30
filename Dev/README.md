@@ -1,5 +1,7 @@
 # PostgreSQL 12beta1 PostGIS 3.0.0alpha1 GEOS 3.7.2, GDAL 2.4.1, PROJ 6.1
 
+This image uses the development versions of PostgreSQL and PostGIS.
+
 # Contents
 - [How to use](#how-to-use)
 - [Versions](#versions)
