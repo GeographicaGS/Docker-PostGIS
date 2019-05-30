@@ -1,7 +1,7 @@
 version: "3"
 services:
   postgis:
-    image: geographica/postgis:dev
+    image: geographica/postgis:dev_diplodocus
     ports:
       - "5432:5432"
     volumes:
