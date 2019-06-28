@@ -71,7 +71,13 @@ curl --progress-bar http://download.osgeo.org/postgis/source/postgis-${POSTGIS_V
 
 
 # Grab gosu
-gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
+for server in ha.pool.sks-keyservers.net \
+              hkp://p80.pool.sks-keyservers.net:80 \
+              keyserver.ubuntu.com \
+              hkp://keyserver.ubuntu.com:80 \
+              pgp.mit.edu; do
+    gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || echo "Trying new server..."
+done
 
 curl -o /usr/local/bin/gosu \
      -SL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture)" > \
@@ -118,9 +124,6 @@ cd ../..
 ldconfig
 
 # Compilation of PostGIS
-
-## This `mv` fail from a long time ago.
-# mv src/spatial_ref_sys.sql src/postgis-${POSTGIS_VERSION}/
 cd src/postgis-${POSTGIS_VERSION}
     ./configure --with-topology --with-raster --with-jsondir=/usr
     make -j "$(nproc)"
