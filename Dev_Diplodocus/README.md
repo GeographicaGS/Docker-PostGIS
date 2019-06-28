@@ -1,4 +1,4 @@
-# PostgreSQL 12beta1 PostGIS 3.0.0alpha1 GEOS 3.7.2, GDAL 2.4.1, PROJ 6.1
+# PostgreSQL 12beta2 PostGIS 3.0.0alpha2 GEOS 3.7.2, GDAL 2.4.1, PROJ 6.1
 
 This image uses the development versions of PostgreSQL and PostGIS.
 
@@ -59,7 +59,7 @@ Containers can be configured by means of setting environmental variables:
 
 This Dockerfile compiles the following software:
 
-- __PostgreSQL 12beta1__
+- __PostgreSQL 12beta2__
 
 - __GEOS 3.7.2__
 
@@ -67,7 +67,7 @@ This Dockerfile compiles the following software:
 
 - __GDAL 2.4.1__
 
-- __PostGIS 3.0.0alpha1__
+- __PostGIS 3.0.0alpha2__
 
 
 ## Scripts
