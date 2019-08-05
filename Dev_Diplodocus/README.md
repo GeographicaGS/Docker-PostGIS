@@ -1,4 +1,4 @@
-# PostgreSQL 12beta2 PostGIS 3.0.0alpha2 GEOS 3.7.2, GDAL 2.4.1, PROJ 6.1
+# PostgreSQL 12beta2 PostGIS 3.0.0alpha3 GEOS 3.7.2, PROJ 6.1
 
 This image uses the development versions of PostgreSQL and PostGIS.
 
@@ -63,11 +63,9 @@ This Dockerfile compiles the following software:
 
 - __GEOS 3.7.2__
 
-- __Proj 6.1.0__
+- __Proj 6.1.1__
 
-- __GDAL 2.4.1__
-
-- __PostGIS 3.0.0alpha2__
+- __PostGIS 3.0.0alpha3__
 
 
 ## Scripts
