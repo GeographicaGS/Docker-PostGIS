@@ -1,5 +1,5 @@
 #!/bin/bash
-# Compilation of PostgreSQL, GEOS, Proj, and PostGIS
+# Compilation of PostgreSQL, GEOS, Proj4, and PostGIS
 set -exu
 
 exec_dir=$PWD
@@ -106,7 +106,7 @@ cd src/geos-${GEOS_VERSION}
 cd ../..
 ldconfig
 
-# Compilation of Proj
+# Compilation of Proj4
 cd src/proj-${PROJ4_VERSION}
     ./configure
     make -j "$(nproc)"
