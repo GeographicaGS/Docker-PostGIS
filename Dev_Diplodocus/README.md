@@ -1,4 +1,4 @@
-# PostgreSQL 12beta2 PostGIS 3.0.0alpha3 GEOS 3.7.2, PROJ 6.1
+# PostgreSQL 12.0 PostGIS 3.0.0rc2 GEOS 3.8.0, PROJ 6.2
 
 This image uses the development versions of PostgreSQL and PostGIS.
 
