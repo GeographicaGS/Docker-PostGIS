@@ -96,6 +96,10 @@ cd src/postgresql-${PG_VERSION}
     make all
     make install
 cd ../..
+
+cd src/postgresql-${PG_VERSION}/contrib ; make all ; cd ../../..
+cd src/postgresql-${PG_VERSION}/contrib ; make install ; cd ../../..
+
 ldconfig
 
 # Compilation of GEOS
