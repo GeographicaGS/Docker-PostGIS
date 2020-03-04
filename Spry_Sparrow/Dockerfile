@@ -4,7 +4,7 @@ FROM ubuntu:latest
 # Environment
 ENV PG_VERSION 11.0
 ENV GEOS_VERSION 3.7.0
-ENV PROJ4_VERSION 5.2.0
+ENV PROJ_VERSION 5.2.0
 ENV GDAL_VERSION 2.3.2
 ENV POSTGIS_VERSION 2.5.0
 ENV GOSU_VERSION 1.9
@@ -25,7 +25,7 @@ ADD packages/postgresql_conf /usr/local/bin
 ADD packages/psqlrc /root/.psqlrc
 ADD https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.bz2 /usr/local/src/
 ADD http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 /usr/local/src/
-ADD http://download.osgeo.org/proj/proj-${PROJ4_VERSION}.tar.gz /usr/local/src/
+ADD http://download.osgeo.org/proj/proj-${PROJ_VERSION}.tar.gz /usr/local/src/
 ADD http://download.osgeo.org/gdal/${GDAL_VERSION}/gdal-${GDAL_VERSION}.tar.gz /usr/local/src/
 ADD http://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz /usr/local/src/
 

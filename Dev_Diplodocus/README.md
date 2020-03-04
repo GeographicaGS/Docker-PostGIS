@@ -1,4 +1,4 @@
-# PostgreSQL 12.0 PostGIS 3.0.0 GEOS 3.8.0, PROJ 6.2
+# PostgreSQL 12.2 PostGIS 3.0.1 GEOS 3.8.0, PROJ 6.3.1
 
 This image uses the development versions of PostgreSQL and PostGIS.
 
@@ -59,13 +59,13 @@ Containers can be configured by means of setting environmental variables:
 
 This Dockerfile compiles the following software:
 
-- __PostgreSQL 12.0__
+- __PostgreSQL 12.2__
 
 - __GEOS 3.8.0__
 
-- __Proj 6.2.0__
+- __Proj 6.3.1__
 
-- __PostGIS 3.0.0__
+- __PostGIS 3.0.1__
 
 
 ## Scripts

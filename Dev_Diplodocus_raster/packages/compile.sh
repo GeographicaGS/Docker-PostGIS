@@ -116,7 +116,7 @@ ldconfig
 
 # Compilation of PostGIS
 cd src/postgis-${POSTGIS_VERSION}
-    ./configure --with-topology --without-raster --with-jsondir=/usr
+    ./configure --with-topology --with-jsondir=/usr
     make -j "$(nproc)"
     make install
 cd ../..

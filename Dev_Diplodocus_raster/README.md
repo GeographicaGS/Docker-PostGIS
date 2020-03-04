@@ -1,4 +1,6 @@
-# PostgreSQL 11.0 PostGIS 2.5.0 GEOS 3.7, GDAL 2.3.2, PROJ 5.2.0
+# PostgreSQL 12.2 PostGIS 3.0.1 GEOS 3.8.0, PROJ 6.3.1 GDAL 3.0.4
+
+This image uses the development versions of PostgreSQL and PostGIS (with raster support).
 
 # Contents
 - [How to use](#how-to-use)
@@ -18,7 +20,7 @@ docker-compose.yml:
 version: "3"
 services:
   postgis:
-    image: geographica/postgis:spry_sparrow
+    image: geographica/postgis:dev_diplodocus_raster
     ports:
       - "5432:5432"
     volumes:
@@ -35,7 +37,7 @@ docker-compose up
 
 ### Without compose
 ```
-docker run --name postgis -p 5432:5432 geographica/postgis:spry_sparrow
+docker run --name postgis -p 5432:5432 geographica/postgis:dev_diplodocus_raster
 ```
 
 ### Environment variables
@@ -57,15 +59,15 @@ Containers can be configured by means of setting environmental variables:
 
 This Dockerfile compiles the following software:
 
-- __PostgreSQL 11.0__
+- __PostgreSQL 12.2__
 
-- __GEOS 3.7.0__
+- __GEOS 3.8.0__
 
-- __Proj 5.2.0__
+- __Proj 6.3.1__
 
-- __GDAL 2.3.2__
+- __PostGIS 3.0.1__
 
-- __PostGIS 2.5.0__
+- __GDAL 3.0.4__
 
 
 ## Scripts
@@ -86,19 +88,19 @@ Some examples:
 # Interactive pg_dump, will ask for password
 
 docker run --rm -ti -v /whatever/:/d --link the_container_running_the_database:pg \
-geographica/postgis:spry_sparrow \
+geographica/postgis:dev_diplodocus_raster \
 pg_dump -b -E UTF8 -f /d/dump -F c -v -Z 9 -h pg -p 5432 -U postgres project
 
 # Full automatic pg_dump, with password as ENV variable
 
 docker run --rm -v /home/malkab/Desktop/:/d --link test_07:pg \
-geographica/postgis:spry_sparrow \
+geographica/postgis:dev_diplodocus_raster \
 PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 -v -Z 9 -h pg -p 5432 -U postgres postgres
 
 # Interactive psql
 
-docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:spry_sparrow \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
+docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:dev_diplodocus_raster \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
 
 ## Data Persistence
@@ -126,7 +128,7 @@ export USERPASSWD="md5"$(printf '%s' "userpass" ${USER} | md5sum | cut -d ' ' -f
 export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -e "CREATE_USER=${USER}" -e "CREATE_USER_PASSWD=${USERPASSWD}" \
-geographica/postgis:spry_sparrow
+geographica/postgis:dev_diplodocus_raster
 ```
 
 Ugly, but effective. Keep in mind, however, that if you use provisioning methods like bash scripts or _Docker Compose_ others will still be able to read passwords from these sources, so keep them safe.
