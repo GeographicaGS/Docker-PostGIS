@@ -1,4 +1,4 @@
-# Compilation of PostgreSQL, GEOS, Proj4, GDAL, and PostGIS 2
+# Compilation of PostgreSQL, GEOS, Proj, GDAL, and PostGIS 2
 
 
 # Update and apt-get basic packages
@@ -39,7 +39,7 @@ curl -o /usr/local/bin/gosu \
 # Untar
 cd src ; tar -xjvf postgresql-${PG_VERSION}.tar.bz2 ; cd ..
 cd src ; tar -xjvf geos-${GEOS_VERSION}.tar.bz2 ; cd ..
-cd src ; tar -xvf proj-${PROJ4_VERSION}.tar.gz ; cd ..
+cd src ; tar -xvf proj-${PROJ_VERSION}.tar.gz ; cd ..
 cd src ; tar -xvf gdal-${GDAL_VERSION}.tar.gz ; cd ..
 cd src ; tar -xvf postgis-${POSTGIS_VERSION}.tar.gz ; cd ..
 
@@ -71,12 +71,12 @@ cd src/geos-${GEOS_VERSION} ; make install ; cd ../..
 ldconfig
 
 
-# Compilation of Proj 4
-cd src/proj-${PROJ4_VERSION} ; ./configure ; cd ../..
+# Compilation of Proj
+cd src/proj-${PROJ_VERSION} ; ./configure ; cd ../..
 
-cd src/proj-${PROJ4_VERSION} ; make ; cd ../..
+cd src/proj-${PROJ_VERSION} ; make ; cd ../..
 
-cd src/proj-${PROJ4_VERSION} ; make install ; cd ../..
+cd src/proj-${PROJ_VERSION} ; make install ; cd ../..
 
 ldconfig
 

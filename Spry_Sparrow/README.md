@@ -1,4 +1,4 @@
-# PostgreSQL 11.0 PostGIS 2.5.0 GEOS 3.7, GDAL 2.3.2, PROJ4 5.2.0
+# PostgreSQL 11.0 PostGIS 2.5.0 GEOS 3.7, GDAL 2.3.2, PROJ 5.2.0
 
 # Contents
 - [How to use](#how-to-use)
