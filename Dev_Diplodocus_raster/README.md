@@ -20,7 +20,7 @@ docker-compose.yml:
 version: "3"
 services:
   postgis:
-    image: geographica/postgis:dev_diplodocus
+    image: geographica/postgis:dev_diplodocus_raster
     ports:
       - "5432:5432"
     volumes:
@@ -37,7 +37,7 @@ docker-compose up
 
 ### Without compose
 ```
-docker run --name postgis -p 5432:5432 geographica/postgis:dev_diplodocus
+docker run --name postgis -p 5432:5432 geographica/postgis:dev_diplodocus_raster
 ```
 
 ### Environment variables
@@ -67,6 +67,8 @@ This Dockerfile compiles the following software:
 
 - __PostGIS 3.0.1__
 
+- __GDAL 3.0.4__
+
 
 ## Scripts
 
@@ -86,19 +88,19 @@ Some examples:
 # Interactive pg_dump, will ask for password
 
 docker run --rm -ti -v /whatever/:/d --link the_container_running_the_database:pg \
-geographica/postgis:dev_diplodocus \
+geographica/postgis:dev_diplodocus_raster \
 pg_dump -b -E UTF8 -f /d/dump -F c -v -Z 9 -h pg -p 5432 -U postgres project
 
 # Full automatic pg_dump, with password as ENV variable
 
 docker run --rm -v /home/malkab/Desktop/:/d --link test_07:pg \
-geographica/postgis:dev_diplodocus \
+geographica/postgis:dev_diplodocus_raster \
 PGPASSWORD="new_password_here" pg_dump -b -E UTF8 -f /d/dump33 -F c \
 -v -Z 9 -h pg -p 5432 -U postgres postgres
 
 # Interactive psql
 
-docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:dev_diplodocus \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
+docker run --rm -ti -v /home/malkab/Desktop/:/d --link test_07:pg \ geographica/postgis:dev_diplodocus_raster \ PGPASSWORD="new_password_here" psql -h pg -p 5432 -U postgres postgres
 ```
 
 ## Data Persistence
@@ -126,7 +128,7 @@ export USERPASSWD="md5"$(printf '%s' "userpass" ${USER} | md5sum | cut -d ' ' -f
 export PGPASSWD="md5"$(printf '%s' "password_here" "postgres" | md5sum | cut -d ' ' -f 1) && \
 docker run -d -P --name ageworkshoptestpg -e "POSTGRES_PASSWD=${PGPASSWD}" \
 -e "CREATE_USER=${USER}" -e "CREATE_USER_PASSWD=${USERPASSWD}" \
-geographica/postgis:dev_diplodocus
+geographica/postgis:dev_diplodocus_raster
 ```
 
 Ugly, but effective. Keep in mind, however, that if you use provisioning methods like bash scripts or _Docker Compose_ others will still be able to read passwords from these sources, so keep them safe.

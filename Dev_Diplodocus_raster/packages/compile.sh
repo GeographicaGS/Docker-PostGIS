@@ -1,5 +1,5 @@
 #!/bin/bash
-# Compilation of PostgreSQL, GEOS, and PostGIS
+# Compilation of PostgreSQL, GEOS, Proj4, and PostGIS
 set -exu
 
 exec_dir=$PWD
@@ -65,6 +65,7 @@ apt-get update \
 # Download & untar sources
 curl --progress-bar https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.bz2 | tar xj -C /usr/local/src/
 curl --progress-bar http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 | tar xj -C /usr/local/src/
+curl --progress-bar http://download.osgeo.org/proj/proj-${PROJ4_VERSION}.tar.gz | tar xz -C /usr/local/src/
 curl --progress-bar http://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz | tar xz -C /usr/local/src/
 
 
@@ -105,9 +106,17 @@ cd src/geos-${GEOS_VERSION}
 cd ../..
 ldconfig
 
+# Compilation of Proj4
+cd src/proj-${PROJ4_VERSION}
+    ./configure
+    make -j "$(nproc)"
+    make install
+cd ../..
+ldconfig
+
 # Compilation of PostGIS
 cd src/postgis-${POSTGIS_VERSION}
-    ./configure --with-topology --without-raster --with-jsondir=/usr
+    ./configure --with-topology --with-jsondir=/usr
     make -j "$(nproc)"
     make install
 cd ../..
