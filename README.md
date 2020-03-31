@@ -9,6 +9,8 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
+- [__Dev_Diplodocus_raster__](Dev_Diplodocus_raster) released 2020-03-27. PostgreSQL 12.2, PostGIS 3.0.1, GEOS 3.8.0, PROJ 6.3.1, GDAL 3.0.4. Development version.
+
 - [__Dev_Diplodocus__](Dev_Diplodocus) released 2019-10-15. PostgreSQL 12.0 PostGIS 3.0.0 GEOS 3.8.0, PROJ 6.2. Development version.
 
 - [__Tasty_Termite:__](Tasty_Termite) released 2019-03-26. PostgreSQL 11.2, PostGIS 2.5.2, GEOS 3.7.1, PROJ4 6.0, GDAL 2.4.1. Bleeding edge.
