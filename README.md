@@ -9,7 +9,7 @@ The philosophy behind Git / Docker tags correlation we ended up using is simple:
 
 Please refer to each tag README.md for full details. To get a quick overview over tags capabilities:
 
-- [__Unbiased_uakari__](Unbiased_uakari) released 2020-04-10. PostgreSQL 12.2. PostGIS 3.0.1 GEOS 3.8.0, PROJ 6.3.1. Bleeding edge.
+- [__Unbiased_Uakari__](Unbiased_Uakari) released 2020-04-10. PostgreSQL 12.2. PostGIS 3.0.1 GEOS 3.8.0, PROJ 6.3.1. Bleeding edge.
 
 - [__Dev_Diplodocus__](Dev_Diplodocus) released 2020-04-10. PostgreSQL 12.2. PostGIS 3.0.1 GEOS 3.8.0, PROJ 6.3.1. Development version.
 
